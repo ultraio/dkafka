@@ -1,0 +1,59 @@
+image: golang:1.17
+
+cache:
+  paths:
+    - /apt-cache
+    - /go/src/github.com
+    - /go/src/golang.org
+    - /go/src/google.golang.org
+    - /go/src/gopkg.in
+
+stages:
+  - test
+  - build
+
+# before_script:
+#   - mkdir -p /go/src/gitlab.com/pantomath-io /go/src/_/builds
+#   - cp -r $CI_PROJECT_DIR /go/src/gitlab.com/pantomath-io/pantomath
+#   - ln -s /go/src/gitlab.com/pantomath-io /go/src/_/builds/pantomath-io
+#   - make dep
+
+unit_tests:
+  stage: test
+  script:
+    - make test
+
+# race_detector:
+#   stage: test
+#   script:
+#     - make race
+
+# memory_sanitizer:
+#   stage: test
+#   script:
+#     - make msan
+
+code_coverage:
+  stage: test
+  script:
+    - make cov
+
+code_coverage_report:
+  stage: test
+  script:
+    - make covhtml
+  only:
+  - master
+
+# lint_code:
+#   stage: test
+#   script:
+#     - make lint
+
+build:
+  stage: build
+  script:
+    - make
+  artifacts:
+    paths:
+    - dkafka

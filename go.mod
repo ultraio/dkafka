@@ -18,13 +18,13 @@ require (
 	github.com/spf13/cobra v1.1.3
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.7.0
-	github.com/streamingfast/bstream v0.0.2-0.20210811181043-4c1920a7e3e3 // indirect
+	github.com/streamingfast/bstream v0.0.2-0.20210811181043-4c1920a7e3e3
 	github.com/streamingfast/derr v0.0.0-20210811180100-9138d738bcec
-	github.com/streamingfast/dgrpc v0.0.0-20210811180351-8646818518b2 // indirect
-	github.com/streamingfast/dlauncher v0.0.0-20210811194929-f06e488e63da // indirect
-	github.com/streamingfast/logging v0.0.0-20210811175431-f3b44b61606a // indirect
-	github.com/streamingfast/pbgo v0.0.6-0.20210812023556-e996f9c4fb86 // indirect
-	github.com/streamingfast/shutter v1.5.0 // indirect
+	github.com/streamingfast/dgrpc v0.0.0-20210811180351-8646818518b2
+	github.com/streamingfast/dlauncher v0.0.0-20210811194929-f06e488e63da
+	github.com/streamingfast/logging v0.0.0-20210811175431-f3b44b61606a
+	github.com/streamingfast/pbgo v0.0.6-0.20210812023556-e996f9c4fb86
+	github.com/streamingfast/shutter v1.5.0
 	github.com/tidwall/gjson v1.6.7
 	go.uber.org/zap v1.17.0
 	golang.org/x/oauth2 v0.0.0-20210805134026-6f1e6394065a

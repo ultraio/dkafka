@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/streamingfast/derr"
 	"github.com/dfuse-io/dkafka"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/streamingfast/derr"
 	"go.uber.org/zap"
 )
 
@@ -78,6 +78,8 @@ func publishRunE(cmd *cobra.Command, args []string) error {
 		KafkaCursorPartition:       int32(viper.GetUint32("global-kafka-cursor-partition")),
 		KafkaCursorConsumerGroupID: viper.GetString("global-kafka-cursor-consumer-group-id"),
 		KafkaTransactionID:         viper.GetString("global-kafka-transaction-id"),
+		KafkaCompressionType:       viper.GetString("kafka-compression-type"),
+		KafkaCompressionLevel:      viper.GetInt32("kafka-compression-level"),
 		CommitMinDelay:             viper.GetDuration("publish-cmd-delay-between-commits"),
 
 		EventSource:     viper.GetString("publish-cmd-event-source"),

@@ -44,6 +44,8 @@ type Config struct {
 	KafkaSSLAuth           bool
 	KafkaSSLClientCertFile string
 	KafkaSSLClientKeyFile  string
+	KafkaCompressionType   string
+	KafkaCompressionLevel  int32
 
 	KafkaCursorConsumerGroupID string
 	KafkaTransactionID         string
