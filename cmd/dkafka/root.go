@@ -17,9 +17,6 @@ var RootCmd = &cobra.Command{
 	Long:  "",
 }
 
-//
-var compressionTypes = NewEnumFlag("none", "gzip", "snappy", "lz4", "zstd")
-
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -40,8 +37,6 @@ func init() {
 	RootCmd.PersistentFlags().Bool("kafka-ssl-auth", false, "authenticate to kafka endpoints using client certificate (requires {kafka-ssl-enable}")
 	RootCmd.PersistentFlags().String("kafka-ssl-client-cert-file", "./client.crt.pem", "path to client certificate to authenticate to kafka endpoint")
 	RootCmd.PersistentFlags().String("kafka-ssl-client-key-file", "./client.key.pem", "path to client key to authenticate to kafka endpoint")
-	RootCmd.PersistentFlags().Var(compressionTypes, "kafka-compression-type", compressionTypes.Help("Specify the compression type to use when produce messages"))
-	RootCmd.PersistentFlags().Int8("kafka-compression-level", -1, "Compression level parameter for compression type algorithm")
 
 	RootCmd.PersistentFlags().String("kafka-transaction-id", "dkafkatransaction", "Unique ID for transactions")
 

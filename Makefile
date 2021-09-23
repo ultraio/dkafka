@@ -3,6 +3,12 @@ PKG := "./cmd/$(PROJECT_NAME)"
 PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
 COVERAGE_DIR := "./"
+INCLUDE_EXPRESSION ?= "executed && action=='create' && account=='eosio.nft.ft' && receiver=='eosio.nft.ft'"
+KEY_EXPRESSION ?= "[transaction_id]"
+COMPRESSION_TYPE ?= "none"
+COMPRESSION_LEVEL ?= -1
+KUBECONFIG ?= ~/.kube/dev.dfuse.kube
+START_BLOCK ?= 0
 # Source:
 #   https://about.gitlab.com/blog/2017/11/27/go-tools-and-gitlab-how-to-do-continuous-integration-like-a-boss/
 #   https://gitlab.com/pantomath-io/demo-tools/-/tree/master
@@ -38,6 +44,28 @@ build: ## Build the binary file
 
 clean: ## Remove previous build
 	@rm -f $(PROJECT_NAME) coverage.cov coverage.html
+
+up: ## Launch docker compose
+	@docker-compose up -d
+
+
+start: build up ## start dkafka localy
+	./dkafka publish \
+		--dfuse-firehose-grpc-addr=localhost:9000 \
+		--abicodec-grpc-addr=localhost:9001 \
+		--fail-on-undecodable-db-op \
+		--kafka-cursor-topic="cursor" \
+		--kafka-topic="io.dkafka.test" \
+		--dfuse-firehose-include-expr=$(INCLUDE_EXPRESSION) \
+		--event-keys-expr=$(KEY_EXPRESSION) \
+		--event-type-expr="'TestNotification'" \
+		--kafka-compression-type=$(COMPRESSION_TYPE) \
+		--kafka-compression-level=$(COMPRESSION_LEVEL) \
+		--start-block-num=$(START_BLOCK)
+
+forward: ## open port forwarding on dfuse dev
+	KUBECONFIG=$(KUBECONFIG) kubectl -n ultra-dev port-forward firehose-v3-0 9000 &
+	KUBECONFIG=$(KUBECONFIG) kubectl -n ultra-dev port-forward svc/abicodec-v3 9001:9000 &
 
 help: ## Display this help screen
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

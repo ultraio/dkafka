@@ -45,7 +45,7 @@ type Config struct {
 	KafkaSSLClientCertFile string
 	KafkaSSLClientKeyFile  string
 	KafkaCompressionType   string
-	KafkaCompressionLevel  int32
+	KafkaCompressionLevel  int
 
 	KafkaCursorConsumerGroupID string
 	KafkaTransactionID         string
@@ -80,7 +80,6 @@ func New(config *Config) *App {
 
 func (a *App) Run() error {
 	go startPrometheusMetrics("/metrics", ":9102")
-
 	// get and setup the dfuse fetcher that gets a stream of blocks, includes the filter, will include the auth token resolver/refresher
 	addr := a.config.DfuseGRPCEndpoint
 	plaintext := strings.Contains(addr, "*")
@@ -111,11 +110,9 @@ func (a *App) Run() error {
 		StopBlockNum:      a.config.StopBlockNum,
 	}
 
-	conf := createKafkaConfig(a.config)
-
 	var producer *kafka.Producer
 	if !a.config.BatchMode || !a.config.DryRun {
-		producer, err = getKafkaProducer(conf, a.config.KafkaTransactionID)
+		producer, err = getKafkaProducer(createKafkaConfigWithCompression(a.config), a.config.KafkaTransactionID)
 		if err != nil {
 			return fmt.Errorf("getting kafka producer: %w", err)
 		}
@@ -151,7 +148,7 @@ func (a *App) Run() error {
 		zlog.Info("running in batch mode, ignoring cursors")
 		cp = &nilCheckpointer{}
 	} else {
-		cp = newKafkaCheckpointer(conf, a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID, producer)
+		cp = newKafkaCheckpointer(createKafkaConfig(a.config), a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID, producer)
 
 		cursor, err := cp.Load()
 		switch err {
@@ -347,18 +344,18 @@ func (a *App) Run() error {
 					dedupeMap[eventKey] = true
 
 					headers := []kafka.Header{
-						kafka.Header{
+						{
 							Key:   "ce_id",
 							Value: hashString(fmt.Sprintf("%s%s%d%s%s", blk.Id, trx.Id, act.ExecutionIndex, msg.Step.String(), eventKey)),
 						},
 						sourceHeader,
 						specHeader,
-						kafka.Header{
+						{
 							Key:   "ce_type",
 							Value: []byte(eventType),
 						},
 						contentTypeHeader,
-						kafka.Header{
+						{
 							Key:   "ce_time",
 							Value: []byte(blk.MustTime().Format("2006-01-02T15:04:05.9Z")),
 						},
@@ -415,4 +412,50 @@ func createKafkaConfig(appConf *Config) kafka.ConfigMap {
 		//conf["ssl.key.password"] = "keypass"
 	}
 	return conf
+}
+
+func createKafkaConfigWithCompression(appConf *Config) kafka.ConfigMap {
+	conf := createKafkaConfig(appConf)
+	compressionType := appConf.KafkaCompressionType
+	conf["compression.type"] = compressionType
+	conf["compression.level"] = getCompressionLevel(compressionType, appConf)
+	return conf
+}
+
+// CompressionLevel defines the min and max values
+type CompressionLevel struct {
+	Min, Max int
+}
+
+// see documentation https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
+var COMPRESSIONS = map[string]CompressionLevel{
+	"none":   {0, 0},
+	"gzip":   {0, 9},
+	"snappy": {0, 0},
+	"lz4":    {0, 12},
+	"zstd":   {-1, -1},
+}
+
+func (level CompressionLevel) normalize(value int) int {
+	if value > level.Max {
+		zlog.Warn("Invalid compression cannot be more than 12", zap.Int("current", value), zap.Int("max", level.Max))
+		return level.Max
+	}
+	if value < level.Min {
+		zlog.Warn("Invalid compression cannot be less than -1", zap.Int("current", value), zap.Int("min", level.Min))
+		return level.Min
+	}
+	return value
+}
+
+func getCompressionLevel(compressionType string, config *Config) int {
+	compressionLevel := config.KafkaCompressionLevel
+	if compressionLevel == -1 {
+		return compressionLevel
+	}
+	level, ok := COMPRESSIONS[compressionType]
+	if !ok {
+		return -1
+	}
+	return level.normalize(compressionLevel)
 }

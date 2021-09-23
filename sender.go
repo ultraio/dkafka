@@ -70,34 +70,6 @@ func (s *kafkaSender) Commit(ctx context.Context, cursor string) error {
 	return nil
 }
 
-func getCompressionLevel(compressionType string, config *Config) (int32, error) {
-	return config.KafkaCompressionLevel, nil
-}
-
-func getKafkaProducerWithCompressionConfig(conf kafka.ConfigMap, config *Config) (kafka.ConfigMap, error) {
-	producerConfig := cloneConfig(conf)
-	compressionType := config.KafkaCompressionType
-	producerConfig["compression.type"] = compressionType
-	compressionLevel, err := getCompressionLevel(compressionType, config)
-	if err != nil {
-		return nil, err
-	}
-	producerConfig["compression.level"] = compressionLevel
-	return producerConfig, nil
-}
-
-func getKafkaProducerWithCompression(conf kafka.ConfigMap, config *Config) (*kafka.Producer, error) {
-	producerConfig := cloneConfig(conf)
-	compressionType := config.KafkaCompressionType
-	producerConfig["compression.type"] = compressionType
-	compressionLevel, err := getCompressionLevel(compressionType, config)
-	if err != nil {
-		return nil, err
-	}
-	producerConfig["compression.level"] = compressionLevel
-	return getKafkaProducer(conf, config.KafkaTransactionID)
-}
-
 func getKafkaProducer(conf kafka.ConfigMap, name string) (*kafka.Producer, error) {
 	producerConfig := cloneConfig(conf)
 	if name != "" {

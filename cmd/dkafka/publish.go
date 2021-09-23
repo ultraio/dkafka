@@ -19,8 +19,16 @@ var PublishCmd = &cobra.Command{
 	RunE:  publishRunE,
 }
 
+var compressionTypes = NewEnumFlag("none", "gzip", "snappy", "lz4", "zstd")
+
+var compressionLevel int8
+var compressionType string
+
 func init() {
 	RootCmd.AddCommand(PublishCmd)
+
+	PublishCmd.Flags().Var(compressionTypes, "kafka-compression-type", compressionTypes.Help("Specify the compression type to use when produce messages"))
+	PublishCmd.Flags().Int8("kafka-compression-level", int8(-1), "Compression level parameter for compression type algorithm")
 
 	PublishCmd.Flags().Duration("delay-between-commits", time.Second*10, "no commits to kafka blow this delay, except un shutdown")
 
@@ -78,8 +86,8 @@ func publishRunE(cmd *cobra.Command, args []string) error {
 		KafkaCursorPartition:       int32(viper.GetUint32("global-kafka-cursor-partition")),
 		KafkaCursorConsumerGroupID: viper.GetString("global-kafka-cursor-consumer-group-id"),
 		KafkaTransactionID:         viper.GetString("global-kafka-transaction-id"),
-		KafkaCompressionType:       viper.GetString("kafka-compression-type"),
-		KafkaCompressionLevel:      viper.GetInt32("kafka-compression-level"),
+		KafkaCompressionType:       viper.GetString("publish-cmd-kafka-compression-type"),
+		KafkaCompressionLevel:      viper.GetInt("publish-cmd-kafka-compression-level"),
 		CommitMinDelay:             viper.GetDuration("publish-cmd-delay-between-commits"),
 
 		EventSource:     viper.GetString("publish-cmd-event-source"),

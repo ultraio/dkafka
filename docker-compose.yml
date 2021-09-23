@@ -1,0 +1,38 @@
+version: '3.5'
+services:
+  zookeeper:
+    image: quay.io/ultraio/kafka:2.12_2.4.1_11.0.6u10_1
+    container_name: zookeeper
+    ports:
+      - "127.0.0.1:2181:2181"
+    command: ["/opt/kafka/bin/zookeeper-server-start.sh", "/opt/kafka/config/zookeeper.properties"]
+  kafka:
+    image: quay.io/ultraio/kafka:2.12_2.4.1_11.0.6u10_1
+    container_name: kafka
+    restart: always
+    ports:
+      - "9092:9092"
+    command: ["dockerize", "-wait", "tcp://zookeeper:2181", "-timeout", "60s", "-wait-retry-interval", "5s", "start-kafka.sh"]
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LOCALHOST://127.0.0.1:9092,KAFKA-REST://kafka:9093
+      KAFKA_LISTENERS: LOCALHOST://:9092,KAFKA-REST://:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LOCALHOST:PLAINTEXT,KAFKA-REST:PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_INTER_BROKER_LISTENER_NAME: LOCALHOST
+    depends_on:
+      - zookeeper
+  kafka-hq:
+    image: tchiotludo/kafkahq
+    container_name: kafka-hq
+    restart: always
+    environment:
+      KAFKAHQ_CONFIGURATION: |
+        kafkahq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "kafka:9093"
+    ports:
+      - 8080:8080
+    depends_on:
+      - kafka
