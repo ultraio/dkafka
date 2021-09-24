@@ -19,6 +19,8 @@ stages:
 #   - make dep
 
 unit_tests:
+  tags:
+    - docker
   stage: test
   script:
     - make test
@@ -34,11 +36,15 @@ unit_tests:
 #     - make msan
 
 code_coverage:
+  tags:
+    - docker
   stage: test
   script:
     - make cov
 
 code_coverage_report:
+  tags:
+    - docker
   stage: test
   script:
     - make covhtml
@@ -51,6 +57,8 @@ code_coverage_report:
 #     - make lint
 
 build:
+  tags:
+    - docker
   stage: build
   script:
     - make
