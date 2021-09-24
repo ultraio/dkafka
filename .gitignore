@@ -1,4 +1,4 @@
-dkafka
+./dkafka
 coverage
 coverage.cov
 coverage.html
