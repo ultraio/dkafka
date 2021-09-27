@@ -32,9 +32,11 @@ msan: dep ## Run memory sanitizer
 	@go test -msan -short .
 
 cov: ## Generate global code coverage report
+	@mkdir -p $(COVERAGE_DIR)
 	@go test -covermode=count -coverprofile $(COVERAGE_DIR)/coverage.cov
 
 covhtml: ## Generate global code coverage report in HTML
+	@mkdir -p $(COVERAGE_DIR)
 	@go tool cover -html=$(COVERAGE_DIR)/coverage.cov -o $(COVERAGE_DIR)/coverage.html
 
 dep: ## Get the dependencies
