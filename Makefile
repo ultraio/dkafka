@@ -2,7 +2,9 @@ PROJECT_NAME := "dkafka"
 PKG := "./cmd/$(PROJECT_NAME)"
 PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
-COVERAGE_DIR := "./"
+BUILD_DIR := "./build"
+BINARY_PATH := $(BUILD_DIR)/$(PROJECT_NAME)
+COVERAGE_DIR := $(BUILD_DIR)
 INCLUDE_EXPRESSION ?= "executed && action=='create' && account=='eosio.nft.ft' && receiver=='eosio.nft.ft'"
 KEY_EXPRESSION ?= "[transaction_id]"
 COMPRESSION_TYPE ?= "none"
@@ -40,17 +42,17 @@ dep: ## Get the dependencies
 	@go get -u github.com/golang/lint/golint
 
 build: ## Build the binary file
-	@go build -v $(PKG)
+	@go build -o $(BINARY_PATH) -v $(PKG)
 
 clean: ## Remove previous build
-	@rm -f $(PROJECT_NAME) coverage.cov coverage.html
+	@rm -rf $(BUILD_DIR)
 
 up: ## Launch docker compose
 	@docker-compose up -d
 
 
 start: build up ## start dkafka localy
-	./dkafka publish \
+	$(BINARY_PATH) publish \
 		--dfuse-firehose-grpc-addr=localhost:9000 \
 		--abicodec-grpc-addr=localhost:9001 \
 		--fail-on-undecodable-db-op \
