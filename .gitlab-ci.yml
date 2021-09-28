@@ -88,7 +88,7 @@ build-docker:
   #   - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
     - docker login "quay.io" --username "${QUAY_USERNAME}" --password "${QUAY_PASSWORD}"
-    - docker build --no-cache --tag "quay.io/ultraio/dkafka:${VERSION}"
+    - docker build --no-cache --tag "quay.io/ultraio/dkafka:${VERSION}" .
     - docker push "quay.io/ultraio/dkafka:${VERSION}"
     - docker tag "quay.io/ultraio/dkafka:${VERSION}" "quay.io/ultraio/dkafka:latest"
     - docker push "quay.io/ultraio/dkafka:latest"
