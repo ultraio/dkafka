@@ -10,12 +10,6 @@ stages:
   - test
   - build
   - image
-# before_script:
-#   - mkdir -p /go/src/gitlab.com/pantomath-io /go/src/_/builds
-#   - cp -r $CI_PROJECT_DIR /go/src/gitlab.com/pantomath-io/pantomath
-#   - ln -s /go/src/gitlab.com/pantomath-io /go/src/_/builds/pantomath-io
-#   - make dep
-
 
 .golang_based:
   tags:
@@ -60,6 +54,8 @@ code_coverage_report:
   - master
 
 # lint_code:
+#   extends:
+#     - .golang_based
 #   stage: test
 #   script:
 #     - make lint
