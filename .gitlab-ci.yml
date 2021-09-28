@@ -79,13 +79,13 @@ build-docker:
   image: docker:git
   services:
     - docker:19.03.12-dind
-  # rules:
-  #   - if: $CI_COMMIT_TAG
-  #     variables:
-  #       VERSION: "${CI_COMMIT_TAG}"
-  #     when: never
-  #   - if: '$CI_COMMIT_BRANCH == "main"'
-  #   - if: '$CI_COMMIT_BRANCH == "develop"'
+  rules:
+    - if: $CI_COMMIT_TAG
+      variables:
+        VERSION: "${CI_COMMIT_TAG}"
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
     - docker login "quay.io" --username "${QUAY_USERNAME}" --password "${QUAY_PASSWORD}"
     - docker build --no-cache --tag "quay.io/ultraio/dkafka:${VERSION}" .
