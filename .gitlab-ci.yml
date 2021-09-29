@@ -16,42 +16,42 @@ stages:
     - docker
   image: golang:1.17
 
-unit_tests:
+unit-tests:
   extends:
     - .golang_based
   stage: test
   script:
     - make test
 
-# race_detector:
+# race-detector:
 #   extends:
 #     - .golang_based
 #   stage: test
 #   script:
 #     - make race
 
-# memory_sanitizer:
+# memory-sanitizer:
 #   extends:
 #     - .golang_based
 #   stage: test
 #   script:
 #     - make msan
 
-code_coverage:
+code-coverage:
   extends:
     - .golang_based
   stage: test
   script:
     - make cov
 
-code_coverage_report:
+code-coverage-report:
   extends:
     - .golang_based
   stage: test
   script:
     - make covhtml
-  only:
-  - master
+  rules:
+  - if: '$CI_COMMIT_BRANCH == "main"'
 
 # lint_code:
 #   extends:
@@ -70,7 +70,7 @@ build:
     paths:
     - dkafka
 
-build-docker:
+build-publish-docker:
   tags:
     - docker
   stage: image
