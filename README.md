@@ -27,18 +27,18 @@ Or you may just want to reduce the message size.
 As the default format of `dkafka` is JSON it can be well compressed. You can use the following options
 to play with the compression:
 ```
-      --kafka-compression-level int8     Compression level parameter for compression type algorithm (default -1). Accepted values depends on the choosen --kafka-compression-type. Please see kafka producer documentation for reference
+      --kafka-compression-level int8     Compression level parameter for compression type algorithm (default -1)
       --kafka-compression-type string    Specify the compression type to use when produce messages (none|gzip|snappy|lz4|zstd) (default "none")
       --kafka-message-max-bytes int      Maximum Kafka protocol request message size.
-                                         Due to different framing overhead between protocol versions the producer is 
-                                         unable to reliably enforce a strict max message limit at produce time, the message size is                                                                                                    
-                                         checked against your raw uncompressed message.
-                                         The broker will also enforce the the topic's max.message.bytes limit upon receiving your 
-                                         message. So make sure your brokers configuration match your procuders (same apply for 
-                                         consumers) 
+                                         Due to differing framing overhead between protocol versions the producer is 
+                                         unable to reliably enforce a strict max message limit at produce time and 
+                                         may exceed the maximum size by one message in protocol ProduceRequests, 
+                                         the broker will enforce the the topic's max.message.bytes limit 
                                          (see Apache Kafka documentation). (default 1000000)
 ```
-Using the compression level and type is not enough. The max message size is verified before compression, so you need to increase the `kafka-message-max-bytes` to the max uncompressed message size you'll send (even if after compression your message is 10 times smaller...)
+Using the compression level and type is not enough if you right the max message size without compression.
+The max message size sounds to be computed before compression. So you need to increase the `kafka-message-max-bytes`
+to the max value before compression event if after your message is 10 times smaller...
 ## Notes on transaction status and meaning of 'executed' in EOSIO
 
 * Reference: https://github.com/dfuse-io/dkafka/blob/main/pb/eosio-codec/codec.pb.go#L61-L68
