@@ -27,7 +27,7 @@ Or you may just want to reduce the message size.
 As the default format of `dkafka` is JSON it can be well compressed. You can use the following options
 to play with the compression:
 ```
-      --kafka-compression-level int8     Compression level parameter for compression type algorithm (default -1)
+      --kafka-compression-level int8     Compression level parameter for compression type algorithm (default -1). Accepted values depends on the choosen --kafka-compression-type. Please see kafka producer documentation for reference
       --kafka-compression-type string    Specify the compression type to use when produce messages (none|gzip|snappy|lz4|zstd) (default "none")
       --kafka-message-max-bytes int      Maximum Kafka protocol request message size.
                                          Due to differing framing overhead between protocol versions the producer is 
