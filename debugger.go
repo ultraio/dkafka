@@ -156,7 +156,7 @@ func (d *Debugger) Read(groupID string, numValues int, startOffset int) error {
 	if startOffset >= 0 {
 		zlog.Debug("setting offset to..", zap.Int("start_offset", startOffset))
 		err = consumer.Assign([]kafka.TopicPartition{
-			kafka.TopicPartition{
+			{
 				Topic:  &d.config.KafkaTopic,
 				Offset: kafka.Offset(startOffset),
 			}})

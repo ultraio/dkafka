@@ -1,10 +1,12 @@
 {
     "cSpell.words": [
+        "bstream",
         "covhtml",
         "dkafka",
         "gopkg",
         "mkdir",
         "msan",
-        "pantomath"
+        "pantomath",
+        "zlog"
     ]
 }

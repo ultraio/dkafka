@@ -33,8 +33,13 @@ kafka-compression-type. Higher values will result in better compression at the
 cost of more CPU usage. Usable range is algorithm-dependent: [0-9] for gzip;
 [0-12] for lz4; only 0 for snappy; -1 = codec-dependent default compression
 level.`)
-	PublishCmd.Flags().Int("kafka-message-max-bytes", 1000000, `Maximum Kafka protocol request message size.
-Due to different framing overhead between protocol versions the producer is unable to reliably enforce a strict max message limit at produce time, the message size is checked against your raw uncompressed message. The broker will also enforce the the topic's max.message.bytes limit upon receiving your message. So make sure your brokers configuration match your procuders (same apply for consumers)
+	PublishCmd.Flags().Int("kafka-message-max-bytes", 1_000_000, `Maximum Kafka protocol request message size.
+Due to different framing overhead between protocol versions the producer is
+unable to reliably enforce a strict max message limit at produce time,
+the message size is checked against your raw uncompressed message.
+The broker will also enforce the the topic's max.message.bytes limit
+upon receiving your message. So make sure your brokers configuration
+match your producers (same apply for consumers)
 (see Apache Kafka documentation).`)
 
 	PublishCmd.Flags().Duration("delay-between-commits", time.Second*10, "no commits to kafka blow this delay, except un shutdown")

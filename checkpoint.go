@@ -134,7 +134,7 @@ func (c *kafkaCheckpointer) Load() (string, error) {
 
 	for i := kafka.Offset(high) - 1; i >= kafka.Offset(low); i-- {
 		err = consumer.Assign([]kafka.TopicPartition{
-			kafka.TopicPartition{
+			{
 				Topic:     &c.topic,
 				Partition: c.partition,
 				Offset:    i,
