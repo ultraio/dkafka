@@ -36,9 +36,7 @@ to play with the compression:
                                          the broker will enforce the the topic's max.message.bytes limit 
                                          (see Apache Kafka documentation). (default 1000000)
 ```
-Using the compression level and type is not enough if you right the max message size without compression.
-The max message size sounds to be computed before compression. So you need to increase the `kafka-message-max-bytes`
-to the max value before compression event if after your message is 10 times smaller...
+Using the compression level and type is not enough. The max message size is verified before compression, so you need to increase the `kafka-message-max-bytes` to the max uncompressed message size you'll send (even if after compression your message is 10 times smaller...)
 ## Notes on transaction status and meaning of 'executed' in EOSIO
 
 * Reference: https://github.com/dfuse-io/dkafka/blob/main/pb/eosio-codec/codec.pb.go#L61-L68
