@@ -348,52 +348,42 @@ func readFileFromTestdataProto(t testing.TB, file string, m proto.Message) {
 	}
 }
 
-func Test_adapter_adapt_proto(t *testing.T) {
-	tests := struct {
-		name string
-		file string
-	}{
-		"correlaction-id",
-		"testdata/block-49608395.pb.json",
+func Test_adapter_correlation_id(t *testing.T) {
+	block := &pbcodec.Block{}
+	readFileFromTestdataProto(t, "testdata/block-49608395.pb.json", block)
+	var localABIFiles = map[string]string{
+		"eosio.nft.ft": "testdata/eosio.nft.ft.abi",
+		"eosio.token":  "testdata/eosio.token.abi",
+	}
+	abiFiles, err := LoadABIFiles(localABIFiles)
+	if err != nil {
+		t.Fatalf("LoadABIFiles() error: %v", err)
+	}
+	abiDecoder := NewABIDecoder(abiFiles, nil)
+	adp := &CdCAdapter{
+		topic:     "test.topic",
+		saveBlock: saveBlockNoop,
+		generator: TableGenerator{
+			tableNames: map[string]void{"accounts": empty},
+			abiCodec:   NewJsonABICodec(abiDecoder, "eosio.token"),
+		},
+		headers: default_headers,
 	}
 
-	tt := tests
-	t.Run(path.Base(tt.name), func(t *testing.T) {
-		block := &pbcodec.Block{}
-		readFileFromTestdataProto(t, tt.file, block)
-		var localABIFiles = map[string]string{
-			"eosio.nft.ft": "testdata/eosio.nft.ft.abi",
-			"eosio.token":  "testdata/eosio.token.abi",
-		}
-		abiFiles, err := LoadABIFiles(localABIFiles)
-		if err != nil {
-			t.Fatalf("LoadABIFiles() error: %v", err)
-		}
-		abiDecoder := NewABIDecoder(abiFiles, nil)
-		adp := &CdCAdapter{
-			topic:     "test.topic",
-			saveBlock: saveBlockNoop,
-			generator: TableGenerator{
-				tableNames: map[string]void{"accounts": empty},
-				abiCodec:   NewJsonABICodec(abiDecoder, "eosio.token"),
-			},
-			headers: default_headers,
-		}
-
-		if msgs, err := adp.Adapt(block, "New"); err != nil {
-			t.Errorf("adapter.adapt() error = %v", err)
-		} else {
-			assert.Equal(t, len(msgs), 2, "should produce 2 messages")
-			for _, msg := range msgs {
-				value := make(map[string]interface{})
-				err := json.Unmarshal(msg.Value, &value)
-				if err != nil {
-					t.Errorf("json.Unmarshal() error: %v", err)
-				}
-				context := value["context"].(map[string]interface{})
-				correlation := context["correlation"].(map[string]interface{})
-				assert.Equal(t, correlation["id"], "ed19191b-3962-4c58-9dee-f41398866ee1", "should provide the correlation id")
+	if msgs, err := adp.Adapt(block, "New"); err != nil {
+		t.Errorf("adapter.adapt() error = %v", err)
+	} else {
+		assert.Equal(t, len(msgs), 2, "should produce 2 messages")
+		for _, msg := range msgs {
+			value := make(map[string]interface{})
+			err := json.Unmarshal(msg.Value, &value)
+			if err != nil {
+				t.Errorf("json.Unmarshal() error: %v", err)
 			}
+			context := value["context"].(map[string]interface{})
+			correlation := context["correlation"].(map[string]interface{})
+			assert.Equal(t, correlation["id"], "ed19191b-3962-4c58-9dee-f41398866ee1", "should provide the correlation id")
 		}
-	})
+	}
+
 }
