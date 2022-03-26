@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"sync"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
+
+const CursorHeaderKey = "dkafka_cursor"
 
 type Sender interface {
 	Send(ctx context.Context, messages []*kafka.Message, cursor string) error
@@ -31,6 +33,78 @@ func (s *DryRunSender) Send(ctx context.Context, messages []*kafka.Message, curs
 
 func (s *DryRunSender) SaveCP(ctx context.Context, cursor string) error {
 	return nil
+}
+
+type FastKafkaSender struct {
+	producer *kafka.Producer
+	headers  []kafka.Header
+	topic    string
+}
+
+func (s *FastKafkaSender) Send(ctx context.Context, messages []*kafka.Message, cursor string) error {
+	zlog.Debug("send messages", zap.Int("nb", len(messages)))
+	for _, msg := range messages {
+		msg.Headers = appendCursor(msg.Headers, cursor)
+		if err := s.producer.Produce(msg, nil); err != nil {
+			return err
+		}
+	}
+	zlog.Debug("messages sent", zap.Int("nb", len(messages)))
+	return nil
+}
+
+func (s *FastKafkaSender) SaveCP(ctx context.Context, cursor string) error {
+	id := uuid.New()
+	ce_id := id[:]
+	headers := append(s.headers,
+		kafka.Header{
+			Key:   "ce_id",
+			Value: ce_id,
+		},
+		kafka.Header{
+			Key:   "ce_type",
+			Value: []byte("DkafkaCheckPoint"),
+		},
+		kafka.Header{
+			Key:   "ce_time",
+			Value: []byte(time.Now().UTC().Format(time.RFC3339)),
+		},
+		newCursorHeader(cursor),
+	)
+
+	msg := kafka.Message{
+		Key:     nil,
+		Headers: headers,
+		Value:   nil,
+		TopicPartition: kafka.TopicPartition{
+			Topic:     &s.topic,
+			Partition: kafka.PartitionAny,
+		},
+	}
+	if err := s.producer.Produce(&msg, nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func appendCursor(headers []kafka.Header, cursor string) []kafka.Header {
+	return append(headers, newCursorHeader(cursor))
+}
+
+func newCursorHeader(cursor string) kafka.Header {
+	return kafka.Header{
+		Key:   CursorHeaderKey,
+		Value: []byte(cursor),
+	}
+}
+
+func NewFastSender(ctx context.Context, producer *kafka.Producer, topic string, headers []kafka.Header) Sender {
+	ks := FastKafkaSender{
+		producer: producer,
+		headers:  headers,
+		topic:    topic,
+	}
+	return &ks
 }
 
 type KafkaSender struct {
@@ -118,65 +192,6 @@ func (s *TransactionalKafkaSender) SaveCP(ctx context.Context, cursor string) er
 	return nil
 }
 
-type sender interface {
-	Send(msg *kafka.Message) error
-	CommitIfAfter(ctx context.Context, cursor string, minimumDelay time.Duration) error
-	Commit(ctx context.Context, cursor string) error
-}
-
-type kafkaSender struct {
-	sync.RWMutex
-	lastCommit      time.Time
-	trxStarted      bool
-	producer        *kafka.Producer
-	cp              checkpointer
-	useTransactions bool
-}
-
-func (s *kafkaSender) Send(msg *kafka.Message) error {
-	s.RLock()
-	defer s.RUnlock()
-	return s.producer.Produce(msg, nil)
-}
-
-func (s *kafkaSender) Close(ctx context.Context) {
-	if s.useTransactions {
-		if err := s.producer.CommitTransaction(ctx); err != nil {
-			zlog.Error("cannot commit transaction on close", zap.Error(err))
-		}
-	}
-	s.producer.Close()
-}
-
-func (s *kafkaSender) CommitIfAfter(ctx context.Context, cursor string, minimumDelay time.Duration) error {
-	if time.Since(s.lastCommit) > minimumDelay {
-		zlog.Debug("commiting cursor")
-		return s.Commit(ctx, cursor)
-	}
-	return nil
-}
-
-func (s *kafkaSender) Commit(ctx context.Context, cursor string) error {
-	s.Lock() // full write lock
-	defer s.Unlock()
-
-	if err := s.cp.Save(cursor); err != nil {
-		return fmt.Errorf("saving cursor: %w", err)
-	}
-	s.lastCommit = time.Now()
-
-	if s.useTransactions {
-		if err := s.producer.CommitTransaction(ctx); err != nil {
-			return fmt.Errorf("committing transaction: %w", err)
-		}
-
-		if err := s.producer.BeginTransaction(); err != nil {
-			return fmt.Errorf("beginning transaction: %w", err)
-		}
-	}
-	return nil
-}
-
 func getKafkaProducer(conf kafka.ConfigMap, name string) (*kafka.Producer, error) {
 	producerConfig := cloneConfig(conf)
 	if name != "" {
@@ -184,28 +199,6 @@ func getKafkaProducer(conf kafka.ConfigMap, name string) (*kafka.Producer, error
 	}
 	return kafka.NewProducer(&producerConfig)
 }
-
-func getKafkaSender(producer *kafka.Producer, cp checkpointer, useTransactions bool) (*kafkaSender, error) {
-	if useTransactions {
-		ctx := context.Background() //FIXME
-		if err := producer.InitTransactions(ctx); err != nil {
-			return nil, fmt.Errorf("running InitTransactions: %w", err)
-		}
-
-		// initial transaction
-		if err := producer.BeginTransaction(); err != nil {
-			return nil, fmt.Errorf("running BeginTransaction: %w", err)
-		}
-	}
-
-	return &kafkaSender{
-		cp:              cp,
-		producer:        producer,
-		useTransactions: useTransactions,
-	}, nil
-}
-
-type dryRunSender struct{}
 
 type fakeMessage struct {
 	Topic     string          `json:"topic"`
@@ -226,21 +219,4 @@ func messageToJSON(msg *kafka.Message) (json.RawMessage, error) {
 		out.Headers = append(out.Headers, h.Key, string(h.Value))
 	}
 	return json.Marshal(out)
-}
-
-func (s *dryRunSender) Send(msg *kafka.Message) error {
-	outjson, err := messageToJSON(msg)
-	if err != nil {
-		return err
-	}
-	fmt.Println(string(outjson))
-	return nil
-}
-
-func (s *dryRunSender) CommitIfAfter(context.Context, string, time.Duration) error {
-	return nil
-}
-
-func (s *dryRunSender) Commit(context.Context, string) error {
-	return nil
 }

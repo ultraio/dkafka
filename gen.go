@@ -77,6 +77,7 @@ func (tg TableGenerator) Apply(gc GenContext) (generations []Generation2, err er
 			Value:  value,
 		})
 	}
+	zlog.Debug("return messages after marshal operation", zap.Any("nb_messages", len(generations)))
 	return generations, nil
 }
 
@@ -124,6 +125,7 @@ func (tg TableGenerator) doApply(gc GenContext) ([]generation, error) {
 		zlog.Debug("generated table message", zap.Any("generation", generation))
 		generations = append(generations, generation)
 	}
+	zlog.Debug("return generated table messages", zap.Int("nb_generations", len(generations)))
 	return generations, nil
 }
 

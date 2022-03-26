@@ -95,8 +95,6 @@ func (m *CdCAdapter) Adapt(blk *pbcodec.Block, step string) ([]*kafka.Message, e
 			}
 		}
 	}
-	if traceEnabled {
-		zlog.Debug("produced kafka messages", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("nb_messages", len(msgs)))
-	}
+	zlog.Debug("produced kafka messages", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("nb_messages", len(msgs)))
 	return msgs, nil
 }

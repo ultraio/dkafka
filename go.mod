@@ -12,6 +12,7 @@ require (
 	github.com/eoscanada/eos-go v0.9.1-0.20210812015252-984fc96878b6
 	github.com/golang/protobuf v1.5.2
 	github.com/google/cel-go v0.6.0
+	github.com/google/uuid v1.3.0
 	github.com/iancoleman/strcase v0.2.0
 	github.com/klauspost/compress v1.11.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
@@ -33,7 +34,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	google.golang.org/grpc v1.44.0
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
-	gotest.tools v2.2.0+incompatible // indirect
+	gotest.tools v2.2.0+incompatible
 
 )
 

@@ -107,7 +107,8 @@ func (d *Debugger) Write(key, val string) error {
 		return fmt.Errorf("getting kafka producer: %w", err)
 	}
 
-	s, err := getKafkaSender(producer, &nilCheckpointer{}, d.config.KafkaTransactionID != "")
+	ctx := context.Background()
+	s, err := NewSender(ctx, producer, &nilCheckpointer{}, false)
 	if err != nil {
 		return err
 	}
@@ -121,14 +122,10 @@ func (d *Debugger) Write(key, val string) error {
 		},
 	}
 	fmt.Printf("sending message: %s:%s to topic %s\n", key, val, d.config.KafkaTopic)
-	if err := s.Send(&msg); err != nil {
+	if err := s.Send(ctx, []*kafka.Message{&msg}, ""); err != nil {
 		return fmt.Errorf("sending message: %w", err)
 	}
-
-	if err := s.Commit(context.Background(), ""); err != nil {
-		return fmt.Errorf("committing message: %w", err)
-	}
-	s.producer.Close()
+	producer.Close()
 	return nil
 }
 
