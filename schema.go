@@ -310,8 +310,9 @@ var avroPrimitiveTypeByBuiltInTypes map[string]string = map[string]string{
 
 func resolveFieldTypeSchema(abi *eos.ABI, fieldType string) (Schema, error) {
 	zlog.Debug("resolve", zap.String("type", fieldType))
-	fixedFieldType := strings.TrimSuffix(fieldType, "$")
-	if elementType := strings.TrimSuffix(fixedFieldType, "[]"); elementType != fixedFieldType {
+	// remove binary extension marker if any
+	fieldType = strings.TrimSuffix(fieldType, "$")
+	if elementType := strings.TrimSuffix(fieldType, "[]"); elementType != fieldType {
 		// todo array
 		zlog.Debug("array of", zap.String("element", elementType))
 		itemType, err := resolveFieldTypeSchema(abi, elementType)
@@ -320,7 +321,7 @@ func resolveFieldTypeSchema(abi *eos.ABI, fieldType string) (Schema, error) {
 		}
 		return NewArray(itemType), nil
 	}
-	if optionalType := strings.TrimSuffix(fixedFieldType, "?"); optionalType != fixedFieldType {
+	if optionalType := strings.TrimSuffix(fieldType, "?"); optionalType != fieldType {
 		zlog.Debug("optional of", zap.String("type", optionalType))
 		oType, err := resolveFieldTypeSchema(abi, optionalType)
 		if err != nil {
@@ -328,9 +329,9 @@ func resolveFieldTypeSchema(abi *eos.ABI, fieldType string) (Schema, error) {
 		}
 		return NewOptional(oType), nil
 	}
-	s, err := resolveType(abi, fixedFieldType)
+	s, err := resolveType(abi, fieldType)
 	if err != nil {
-		return nil, fmt.Errorf("unknown type: %s, error: %v", fixedFieldType, err)
+		return nil, fmt.Errorf("unknown type: %s, error: %v", fieldType, err)
 	}
 	return s, nil
 }

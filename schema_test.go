@@ -61,6 +61,24 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name:    "int32$->int",
+			args:    args{"int32$", nil},
+			want:    "int",
+			wantErr: false,
+		},
+		{
+			name:    "int32?$->['null','int']",
+			args:    args{"int32?$", nil},
+			want:    NewOptional("int"),
+			wantErr: false,
+		},
+		{
+			name:    "int32[]?->['null',[]int]",
+			args:    args{"int32[]?$", nil},
+			want:    NewOptional(NewArray("int")),
+			wantErr: false,
+		},
+		{
 			name:    "int32?->['null','int']",
 			args:    args{"int32?", nil},
 			want:    NewOptional("int"),

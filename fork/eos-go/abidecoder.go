@@ -404,31 +404,17 @@ func (a *ABI) read(binaryDecoder *Decoder, fieldType string) (interface{}, error
 }
 
 func analyzeFieldType(fieldType string) (typeName string, isOptional bool, isArray bool, isBinaryExtension bool) {
-	if strings.HasSuffix(fieldType, "[]$") {
-		return fieldType[0 : len(fieldType)-3], false, true, true
+	if isBinaryExtension = strings.HasSuffix(fieldType, "$"); isBinaryExtension {
+		fieldType = fieldType[0 : len(fieldType)-1]
 	}
-
-	if strings.HasSuffix(fieldType, "?$") {
-		return fieldType[0 : len(fieldType)-2], true, false, false
+	if isOptional = strings.HasSuffix(fieldType, "?"); isOptional {
+		fieldType = fieldType[0 : len(fieldType)-1]
 	}
-
-	if strings.HasSuffix(fieldType, "$") {
-		return fieldType[0 : len(fieldType)-1], false, false, true
+	if isArray = strings.HasSuffix(fieldType, "[]"); isArray {
+		fieldType = fieldType[0 : len(fieldType)-2]
 	}
-
-	if strings.HasSuffix(fieldType, "?") {
-		return fieldType[0 : len(fieldType)-1], true, false, false
-	}
-
-	if strings.HasSuffix(fieldType, "$") {
-		return fieldType[0 : len(fieldType)-1], false, false, true
-	}
-
-	if strings.HasSuffix(fieldType, "[]") {
-		return fieldType[0 : len(fieldType)-2], false, true, false
-	}
-
-	return fieldType, false, false, false
+	typeName = fieldType
+	return
 }
 
 const standardTimePointFormat = "2006-01-02T15:04:05.999"

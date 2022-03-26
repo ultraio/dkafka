@@ -1196,7 +1196,11 @@ func TestABIDecoder_analyseFieldType(t *testing.T) {
 		{"field.type.1", "field.type.1", false, false, false},
 		{"field.type.1?", "field.type.1", true, false, false},
 		{"field.type.1[]", "field.type.1", false, true, false},
+		{"field.type.2[]?", "field.type.2", true, true, false},
 		{"field.type.1$", "field.type.1", false, false, true},
+		{"field.type.1?$", "field.type.1", true, false, true},
+		{"field.type.1[]$", "field.type.1", false, true, true},
+		{"field.type.3[]?$", "field.type.3", true, true, true},
 	}
 
 	for i, test := range testCases {

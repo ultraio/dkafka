@@ -232,6 +232,9 @@ Examples:
 }
 ```
 
+## Resources
+
+- https://developers.eos.io/manuals/eosio.cdt/latest/best-practices/abi/understanding-abi-files
 
 ## TODO
 - [x] benchmark avro codec
@@ -239,6 +242,7 @@ Examples:
 - [ ] implement correlation id
 - [ ] add ABI.nativeTime bool to skip time to string conversion in abidecoder `read` method as it is done for `ABI.fitNodeos` property with logical type
 - [ ] fix the issue with some types mapping in `schema.go`
+- [ ] add support of variants https://developers.eos.io/manuals/eosio.cdt/latest/tutorials/abi-variants
 - [x] user ce_type instead of source for the `ce_id`
 - [x] schema registry integration
 - [x] avro codec
