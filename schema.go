@@ -44,17 +44,19 @@ type NamedSchemaGenOptions struct {
 	AbiSpec   AbiSpec
 }
 
-func getNamespace(namespace string, abi AbiSpec) string {
+func getNamespace(namespace string, abi AbiSpec) (string, error) {
 	if namespace == "" {
 		namespace = strcase.ToDelimited(abi.Account, '.')
 	}
-	return namespace
+	return checkNamespace(namespace)
 }
 
 func GenerateActionSchema(options NamedSchemaGenOptions) (MessageSchema, error) {
 	actionCamelCase, ceType := actionCeType(options.Name)
-
-	namespace := getNamespace(options.Namespace, options.AbiSpec)
+	namespace, err := getNamespace(options.Namespace, options.AbiSpec)
+	if err != nil {
+		return MessageSchema{}, err
+	}
 	actionInfoRecordName := fmt.Sprintf("%sActionInfo", actionCamelCase)
 	actionParamsRecordName := fmt.Sprintf("%sActionParams", actionCamelCase)
 
@@ -94,7 +96,10 @@ func dbOpRecordName(tableCamelCaseName string) string {
 
 func GenerateTableSchema(options NamedSchemaGenOptions) (MessageSchema, error) {
 	tableCamelCase, ceType := tableCeType(options.Name)
-	namespace := getNamespace(options.Namespace, options.AbiSpec)
+	namespace, err := getNamespace(options.Namespace, options.AbiSpec)
+	if err != nil {
+		return MessageSchema{}, err
+	}
 	dbOpInfoRecordName := fmt.Sprintf("%sTableOpInfo", tableCamelCase)
 	dbOpRecordName := dbOpRecordName(tableCamelCase)
 
@@ -128,7 +133,10 @@ func GenerateSchema(options AvroSchemaGenOptions) (MessageSchema, error) {
 		ceType = fmt.Sprintf("%sNotification", baseName)
 	}
 	ceType = strcase.ToCamel(ceType) // to be sure if it's provided by the user
-	namespace := options.Namespace
+	namespace, err := getNamespace(options.Namespace, options.AbiSpec)
+	if err != nil {
+		return MessageSchema{}, err
+	}
 	actionDetailsRecordName := fmt.Sprintf("%sActionInfo", baseName)
 	actionParamsRecordName := fmt.Sprintf("%sActionParams", baseName)
 	dbOpRecordName := fmt.Sprintf("%sDBOp", baseName)

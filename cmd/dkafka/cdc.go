@@ -306,7 +306,7 @@ func doGenAvroSchema(name string, opts GenOptions, f func(dkafka.NamedSchemaGenO
 }
 
 func saveSchema(schema dkafka.MessageSchema, prefix string, outputDir string) error {
-	fileName := strcase.ToSnake(fmt.Sprintf("%s%s.avsc", prefix, schema.Name))
+	fileName := strcase.ToSnake(fmt.Sprintf("%s%s", prefix, schema.Name))
 	fileName = fmt.Sprintf("%s.avsc", fileName)
 	filePath := filepath.Join(outputDir, fileName)
 	zlog.Info("save schema", zap.String("path", filePath))
