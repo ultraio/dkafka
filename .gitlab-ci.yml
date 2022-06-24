@@ -78,6 +78,7 @@ build-publish-docker:
   stage: image
   variables:
     VERSION: "${CI_COMMIT_SHORT_SHA}"
+    DOCKER_HOST: "tcp://localhost:2375"
   image: docker:git
   services:
     - docker:19.03.12-dind
