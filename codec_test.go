@@ -122,6 +122,14 @@ const TokenATableOpInfo = `
 			"default": null
 		},
 		{
+			"name": "index",
+			"type": [
+				"null",
+				"int"
+			],
+			"default": null
+		},
+		{
 			"name": "code",
 			"type": [
 				"null",
@@ -303,6 +311,7 @@ func TestCodec_MarshalUnmarshal(t *testing.T) {
 			map[string]interface{}{
 				"operation":    map[string]interface{}{"int": int32(1)},
 				"action_index": map[string]interface{}{"long": int64(0)},
+				"index":        map[string]interface{}{"int": int32(0)},
 				"code":         nil,
 				"scope":        nil,
 				"table_name":   map[string]interface{}{"string": "token.a"},

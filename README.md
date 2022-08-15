@@ -114,6 +114,7 @@ Using the compression level and type is not enough. The max message size is veri
       {
         "operation": 1,
         "action_index": 1,
+        "index": 1,
         "code": "battlefield1",
         "scope": "battlefield1",
         "table_name": "variant",

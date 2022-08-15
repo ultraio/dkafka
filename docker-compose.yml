@@ -59,7 +59,7 @@ services:
     restart: always
     environment:
       KAFKA_BROKERS: broker:29092
-      KAFKA_SCHEMAREGISTRY_ENABLED: true
+      KAFKA_SCHEMAREGISTRY_ENABLED: 'true'
       KAFKA_SCHEMAREGISTRY_URLS: "http://schema-registry:8081"
     ports:
       - "8080:8080"

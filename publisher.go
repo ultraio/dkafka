@@ -88,6 +88,7 @@ func newDBOpBasic(dbOp *pbcodec.DBOp) map[string]interface{} {
 	asMap := map[string]interface{}{
 		"operation":    int32(dbOp.Operation),
 		"action_index": dbOp.ActionIndex,
+		"index":        dbOp.Index,
 	}
 	addOptionalString(&asMap, "code", dbOp.Code)
 	addOptionalString(&asMap, "scope", dbOp.Scope)
@@ -118,6 +119,7 @@ func newDBOpBasicSchema() ActionInfoBasicSchema {
 		[]FieldSchema{
 			NewOptionalField("operation", "int"),
 			NewOptionalField("action_index", "long"),
+			NewOptionalField("index", "int"),
 			NewOptionalField("code", "string"),
 			NewOptionalField("scope", "string"),
 			NewOptionalField("table_name", "string"),
