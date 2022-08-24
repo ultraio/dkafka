@@ -128,7 +128,7 @@ func (tg TableGenerator) doApply(gc GenContext) ([]generation, error) {
 		value := newTableNotification(
 			notificationContextMap(gc),
 			actionInfoBasicMap(gc),
-			decodedDBOp.asMap(dbOpRecordName(tableCamelCase)),
+			decodedDBOp.asMap(dbOpRecordName(tableCamelCase), dbOpIndex),
 		)
 		generation := generation{
 			CeId:       ceId,
@@ -223,7 +223,7 @@ func (ag ActionGenerator2) doApply(gc GenContext) ([]generation, error) {
 	dbOps := gc.transaction.DBOpsForAction(gc.actionTrace.ExecutionIndex)
 	dbOpsGen := make([]map[string]interface{}, len(dbOps))
 	for dbOpIndex, dbOp := range dbOps {
-		dbOpsGen[dbOpIndex] = newDBOpBasic(dbOp)
+		dbOpsGen[dbOpIndex] = newDBOpBasic(dbOp, dbOpIndex)
 	}
 	value := newActionNotification(
 		notificationContextMap(gc),

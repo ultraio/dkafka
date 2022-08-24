@@ -304,14 +304,14 @@ func TestCodec_MarshalUnmarshal(t *testing.T) {
 			NewKafkaAvroCodec("mock://test", tSchema, tSchema.Codec()),
 			args{
 				nil,
-				dbOp.asMap("dkafka.test.TokenATableOp"),
+				dbOp.asMap("dkafka.test.TokenATableOp", 1),
 			},
 			false,
 			false,
 			map[string]interface{}{
 				"operation":    map[string]interface{}{"int": int32(1)},
 				"action_index": map[string]interface{}{"long": int64(0)},
-				"index":        map[string]interface{}{"int": int32(0)},
+				"index":        map[string]interface{}{"int": int32(1)},
 				"code":         nil,
 				"scope":        nil,
 				"table_name":   map[string]interface{}{"string": "token.a"},

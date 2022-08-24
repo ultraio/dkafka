@@ -84,11 +84,11 @@ func newActionInfoDetailsSchema(name string, jsonData RecordSchema, dbOpsRecord 
 	)
 }
 
-func newDBOpBasic(dbOp *pbcodec.DBOp) map[string]interface{} {
+func newDBOpBasic(dbOp *pbcodec.DBOp, dbOpIndex int) map[string]interface{} {
 	asMap := map[string]interface{}{
 		"operation":    int32(dbOp.Operation),
 		"action_index": dbOp.ActionIndex,
-		"index":        dbOp.Index,
+		"index":        dbOpIndex,
 	}
 	addOptionalString(&asMap, "code", dbOp.Code)
 	addOptionalString(&asMap, "scope", dbOp.Scope)

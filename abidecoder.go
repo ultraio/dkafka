@@ -221,8 +221,8 @@ type decodedDBOp struct {
 	OldJSON map[string]interface{} `json:"old_json,omitempty"`
 }
 
-func (dbOp *decodedDBOp) asMap(dbOpRecordName string) map[string]interface{} {
-	asMap := newDBOpBasic(dbOp.DBOp)
+func (dbOp *decodedDBOp) asMap(dbOpRecordName string, dbOpIndex int) map[string]interface{} {
+	asMap := newDBOpBasic(dbOp.DBOp, dbOpIndex)
 	addOptional(&asMap, "old_json", dbOp.OldJSON)
 	addOptional(&asMap, "new_json", dbOp.NewJSON)
 	// addOptionalRecord(&asMap, "old_json", dbOpRecordName, dbOp.OldJSON)
