@@ -119,7 +119,7 @@ func newDBOpBasicSchema() ActionInfoBasicSchema {
 		[]FieldSchema{
 			NewOptionalField("operation", "int"),
 			NewOptionalField("action_index", "long"),
-			NewOptionalField("index", "int"),
+			NewIntField("index"),
 			NewOptionalField("code", "string"),
 			NewOptionalField("scope", "string"),
 			NewOptionalField("table_name", "string"),

@@ -141,3 +141,10 @@ func NewTimestampMillisType() Schema {
 		"logicalType": "timestamp-millis",
 	}
 }
+
+func NewIntField(name string) FieldSchema {
+	return FieldSchema{
+		Name: name,
+		Type: "int",
+	}
+}
