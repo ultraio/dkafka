@@ -121,7 +121,7 @@ func (a *App) Run() (err error) {
 		saveBlock = saveBlockProto
 	}
 
-	var abiFiles map[string]*eos.ABI
+	var abiFiles map[string]*ABI
 	if len(a.config.LocalABIFiles) != 0 {
 		abiFiles, err = LoadABIFiles(a.config.LocalABIFiles)
 		if err != nil {
@@ -590,11 +590,11 @@ type MessageSchemaGenerator struct {
 	Account   string
 }
 
-func (msg MessageSchemaGenerator) getTableSchema(tableName string, abi *eos.ABI) (MessageSchema, error) {
+func (msg MessageSchemaGenerator) getTableSchema(tableName string, abi *ABI) (MessageSchema, error) {
 	return GenerateTableSchema(NamedSchemaGenOptions{
 		Name:      tableName,
 		Namespace: msg.Namespace,
-		Version:   msg.Version,
+		Version:   schemaVersion(msg.Version, abi.AbiBlockNum),
 		AbiSpec: AbiSpec{
 			Account: msg.Account,
 			Abi:     abi,
@@ -602,11 +602,19 @@ func (msg MessageSchemaGenerator) getTableSchema(tableName string, abi *eos.ABI)
 	})
 }
 
-func (msg MessageSchemaGenerator) getActionSchema(actionName string, abi *eos.ABI) (MessageSchema, error) {
+func schemaVersion(version string, abiBlockNumber uint32) string {
+	if version == "" {
+		return fmt.Sprintf("0.%d.0", abiBlockNumber)
+	} else {
+		return version
+	}
+}
+
+func (msg MessageSchemaGenerator) getActionSchema(actionName string, abi *ABI) (MessageSchema, error) {
 	return GenerateActionSchema(NamedSchemaGenOptions{
 		Name:      actionName,
 		Namespace: msg.Namespace,
-		Version:   msg.Version,
+		Version:   schemaVersion(msg.Version, abi.AbiBlockNum),
 		AbiSpec: AbiSpec{
 			Account: msg.Account,
 			Abi:     abi,

@@ -100,9 +100,9 @@ start streaming from this block number (if negative, relative to HEAD)`)
 	CdCCmd.PersistentFlags().StringP("namespace", "n", "", "namespace of the schema(s). Default: account name")
 	CdCCmd.PersistentFlags().StringP("version", "V", "", "Optional but strongly recommended version of the schema(s) in a semver form: 1.2.3.")
 	CdCCmd.PersistentFlags().StringSlice("local-abi-files", []string{}, `repeatable, ABI file definition in this format:
-'{account}:{path/to/filename}' (ex: 'eosio.token:/tmp/eosio_token.abi').
+'{account}:{path/to/filename}[:{block-number}]' (ex: 'eosio.token:/tmp/eosio_token.abi[:3]').
 ABIs are used to decode DB ops. Provided ABIs have highest priority and
-will never be fetched or updated`)
+will never be fetched or updated. Block number, being the default value: 0, will be used for versioning in the ABI schema.`)
 	CdCCmd.PersistentFlags().String("abicodec-grpc-addr", "", "if set, will connect to this endpoint to fetch contract ABIs")
 
 	CdCCmd.AddCommand(CdCActionsCmd)

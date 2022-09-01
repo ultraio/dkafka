@@ -10,7 +10,7 @@ import (
 func Test_resolveFieldTypeSchema(t *testing.T) {
 	type args struct {
 		fieldType string
-		abi       *eos.ABI
+		abi       *ABI
 	}
 	tests := []struct {
 		name    string
@@ -116,13 +116,13 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		},
 		{
 			name:    "unknown->error",
-			args:    args{"unknown", &eos.ABI{}},
+			args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
 			want:    nil,
 			wantErr: true,
 		},
 		{
 			name: "struct->record",
-			args: args{"my_struct", &eos.ABI{
+			args: args{"my_struct", &ABI{&eos.ABI{
 				Types: []eos.ABIType{{
 					NewTypeName: "int64_alias",
 					Type:        "int64",
@@ -141,7 +141,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 						},
 					},
 				}},
-			}},
+			}, 42}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "MyStruct",
@@ -160,7 +160,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		},
 		{
 			name: "struct-inheritance",
-			args: args{"my_struct", &eos.ABI{
+			args: args{"my_struct", &ABI{&eos.ABI{
 				Types: []eos.ABIType{{
 					NewTypeName: "int64_alias",
 					Type:        "int64",
@@ -194,7 +194,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 							},
 						},
 					}},
-			}},
+			}, 42}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "MyStruct",
@@ -261,7 +261,7 @@ var actionABI eos.ABI = eos.ABI{
 
 func TestActionToRecord(t *testing.T) {
 	type args struct {
-		abi  *eos.ABI
+		abi  *ABI
 		name eos.ActionName
 	}
 	tests := []struct {
@@ -273,7 +273,7 @@ func TestActionToRecord(t *testing.T) {
 		{
 			"known_action",
 			args{
-				&actionABI,
+				&ABI{&actionABI, 42},
 				"my_action",
 			},
 			RecordSchema{
@@ -295,7 +295,7 @@ func TestActionToRecord(t *testing.T) {
 		{
 			"unknown_action",
 			args{
-				&actionABI,
+				&ABI{&actionABI, 42},
 				"unknown_action",
 			},
 			RecordSchema{},
@@ -344,7 +344,7 @@ var tableABI eos.ABI = eos.ABI{
 
 func TestTableToRecord(t *testing.T) {
 	type args struct {
-		abi  *eos.ABI
+		abi  *ABI
 		name eos.TableName
 	}
 	tests := []struct {
@@ -356,7 +356,7 @@ func TestTableToRecord(t *testing.T) {
 		{
 			"known table",
 			args{
-				&tableABI,
+				&ABI{&tableABI, 42},
 				"my.table",
 			},
 			RecordSchema{
@@ -378,7 +378,7 @@ func TestTableToRecord(t *testing.T) {
 		{
 			"unknown table",
 			args{
-				&actionABI,
+				&ABI{&actionABI, 42},
 				"unknown.table",
 			},
 			RecordSchema{},

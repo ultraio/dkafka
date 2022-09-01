@@ -1,0 +1,707 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT ",
+    "version": "eosio::abi/1.1",
+    "types": [
+        {
+            "new_type_name": "asset_vector",
+            "type": "asset[]"
+        },
+        {
+            "new_type_name": "issue_token_config_vector",
+            "type": "issue_token_config[]"
+        },
+        {
+            "new_type_name": "name_vector",
+            "type": "name[]"
+        },
+        {
+            "new_type_name": "resale_share_vector",
+            "type": "resale_share[]"
+        },
+        {
+            "new_type_name": "string_vector",
+            "type": "string[]"
+        },
+        {
+            "new_type_name": "time_since_mint",
+            "type": "uint32"
+        },
+        {
+            "new_type_name": "uint64_t_vector",
+            "type": "uint64[]"
+        }
+    ],
+    "structs": [
+        {
+            "name": "burn",
+            "base": "",
+            "fields": [
+                {
+                    "name": "burn",
+                    "type": "burn_wrap"
+                }
+            ]
+        },
+        {
+            "name": "burn_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_ids",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "buy",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buy",
+                    "type": "buy_wrap"
+                }
+            ]
+        },
+        {
+            "name": "buy_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buyer",
+                    "type": "name?"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "max_price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "promoter_id",
+                    "type": "name?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "cancelresell",
+            "base": "",
+            "fields": [
+                {
+                    "name": "cancelresell",
+                    "type": "cancelresell_wrap"
+                }
+            ]
+        },
+        {
+            "name": "cancelresell_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "create",
+            "base": "",
+            "fields": [
+                {
+                    "name": "create",
+                    "type": "create_wrap"
+                }
+            ]
+        },
+        {
+            "name": "create_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "memo",
+                    "type": "string?"
+                },
+                {
+                    "name": "version",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "asset_manager",
+                    "type": "name?"
+                },
+                {
+                    "name": "asset_creator",
+                    "type": "name?"
+                },
+                {
+                    "name": "conversion_rate_oracle_contract",
+                    "type": "name?"
+                },
+                {
+                    "name": "chosen_rate",
+                    "type": "asset_vector?"
+                },
+                {
+                    "name": "minimum_resell_price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "resale_shares",
+                    "type": "resale_share_vector?"
+                },
+                {
+                    "name": "mintable_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "mintable_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "trading_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "trading_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "recall_window_start",
+                    "type": "time_since_mint?"
+                },
+                {
+                    "name": "recall_window_end",
+                    "type": "time_since_mint?"
+                },
+                {
+                    "name": "max_mintable_tokens",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "lockup_time",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name_vector?"
+                },
+                {
+                    "name": "stat",
+                    "type": "uint8?"
+                },
+                {
+                    "name": "meta_uris",
+                    "type": "string_vector?"
+                },
+                {
+                    "name": "meta_hash",
+                    "type": "checksum256?"
+                }
+            ]
+        },
+        {
+            "name": "global_resale_share",
+            "base": "",
+            "fields": [
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "basis_point",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "globalshare",
+            "base": "",
+            "fields": [
+                {
+                    "name": "share",
+                    "type": "uint16"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                }
+            ]
+        },
+        {
+            "name": "issue",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issue",
+                    "type": "issue_wrap"
+                }
+            ]
+        },
+        {
+            "name": "issue_token_config",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint32"
+                },
+                {
+                    "name": "custom_data",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "issue_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "to",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_configs",
+                    "type": "issue_token_config_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "next_token_factory_number",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "next_token_number",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "recall",
+            "base": "",
+            "fields": [
+                {
+                    "name": "recall",
+                    "type": "recall_wrap"
+                }
+            ]
+        },
+        {
+            "name": "recall_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_ids",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "resale",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "resale_share",
+            "base": "",
+            "fields": [
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "basis_point",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "resell",
+            "base": "",
+            "fields": [
+                {
+                    "name": "resell",
+                    "type": "resell_wrap"
+                }
+            ]
+        },
+        {
+            "name": "resell_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "seller",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "token",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "mint_date",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "serial_number",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "token_factory",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "asset_manager",
+                    "type": "name"
+                },
+                {
+                    "name": "asset_creator",
+                    "type": "name"
+                },
+                {
+                    "name": "conversion_rate_oracle_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "chosen_rate",
+                    "type": "asset[]"
+                },
+                {
+                    "name": "minimum_resell_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "resale_shares",
+                    "type": "resale_share[]"
+                },
+                {
+                    "name": "mintable_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "mintable_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "trading_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "trading_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "recall_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "recall_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "lockup_time",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name[]"
+                },
+                {
+                    "name": "stat",
+                    "type": "uint8"
+                },
+                {
+                    "name": "meta_uris",
+                    "type": "string[]"
+                },
+                {
+                    "name": "meta_hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "max_mintable_tokens",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "minted_tokens_no",
+                    "type": "uint32"
+                },
+                {
+                    "name": "existing_tokens_no",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "transfer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "transfer",
+                    "type": "transfer_wrap"
+                }
+            ]
+        },
+        {
+            "name": "transfer_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name?"
+                },
+                {
+                    "name": "to",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_ids",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "update",
+            "base": "",
+            "fields": [
+                {
+                    "name": "update",
+                    "type": "update_wrap"
+                }
+            ]
+        },
+        {
+            "name": "update_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name_vector?"
+                },
+                {
+                    "name": "stat",
+                    "type": "uint8?"
+                },
+                {
+                    "name": "meta_uris",
+                    "type": "string_vector?"
+                },
+                {
+                    "name": "meta_hash",
+                    "type": "checksum256?"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "burn",
+            "type": "burn",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Burn Tokens\nsummary: 'Erase the provided list of tokens from existence.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{owner}} will burn the following tokens {{ token_ids }} from existence. Reason: {{ memo }}."
+        },
+        {
+            "name": "buy",
+            "type": "buy",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Buy Token\nsummary: 'Buy a single token listed for a sale'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{buyer}} will buy the token {{ token_id }} for a listed price and if specified a promoter {{promoter_id}} will participate in the sale share distribution. Reason: {{ memo }}."
+        },
+        {
+            "name": "cancelresell",
+            "type": "cancelresell",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Cancel Token Resell\nsummary: 'Cancel an existing token resell opertaion'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nresell operation of the token {{token_id}} will be cancelled and it will no longer be listed for a sale. Reason: {{ memo }}."
+        },
+        {
+            "name": "create",
+            "type": "create",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create Token Factory\nsummary: 'Create a new token factory.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_creator}} will create new token factory which will be managed by {{asset_manager}}. Reason: {{ memo }}."
+        },
+        {
+            "name": "globalshare",
+            "type": "globalshare",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set global resale share\nsummary: 'Set or update global NFT token resale share'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\neach NFT token resale will additionally send a share of {{share}} basis points to the existing global share account or {{receiver}} (if specified)"
+        },
+        {
+            "name": "issue",
+            "type": "issue",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Issue/Mint Tokens\nsummary: 'Mints a new token'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{to}} will receive the following tokens {{ token_configs }}. Memo: {{ memo }}."
+        },
+        {
+            "name": "recall",
+            "type": "recall",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Recall Tokens\nsummary: 'Recall tokens from user to token factory manager.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_manager}} will recall following tokens {{ token_ids }} from users. Reason: {{ memo }}."
+        },
+        {
+            "name": "resell",
+            "type": "resell",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Resell Token\nsummary: 'List a single token for a sale'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{seller}} will list the token {{ token_id }} for a price of {{price}} and a promoter basis point of {{promoter_basis_point}} percent. Reason: {{ memo }}."
+        },
+        {
+            "name": "transfer",
+            "type": "transfer",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Transfer Tokens\nsummary: 'Transfer multiple tokens between accounts'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{from}} will transfer the following tokens {{ token_ids }} to {{to}} account. Reason: {{ memo }}."
+        },
+        {
+            "name": "update",
+            "type": "update",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Update Token Factory\nsummary: 'Update an existing token factory.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_manager}} will update certain configs for factory. Reason: {{ memo }}."
+        }
+    ],
+    "tables": [
+        {
+            "name": "factory.a",
+            "type": "token_factory",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "factory.b",
+            "type": "token_factory",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global.share",
+            "type": "global_resale_share",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.factory",
+            "type": "next_token_factory_number",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.token",
+            "type": "next_token_number",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "resale.a",
+            "type": "resale",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "token.a",
+            "type": "token",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": []
+}

@@ -17,7 +17,7 @@ const dkafkaNamespace = "io.dkafka"
 
 type AbiSpec struct {
 	Account string
-	Abi     *eos.ABI
+	Abi     *ABI
 }
 
 type AvroSchemaGenOptions struct {
@@ -128,7 +128,7 @@ func GenerateTableSchema(options NamedSchemaGenOptions) (MessageSchema, error) {
 	return schema, nil
 }
 
-func ActionToRecord(abi *eos.ABI, name eos.ActionName) (RecordSchema, error) {
+func ActionToRecord(abi *ABI, name eos.ActionName) (RecordSchema, error) {
 	visited := make(map[string]string)
 	initBuiltInTypesForActions()
 	actionDef := abi.ActionForName(name)
@@ -139,7 +139,7 @@ func ActionToRecord(abi *eos.ABI, name eos.ActionName) (RecordSchema, error) {
 	return structToRecord(abi, actionDef.Type, visited)
 }
 
-func TableToRecord(abi *eos.ABI, name eos.TableName) (RecordSchema, error) {
+func TableToRecord(abi *ABI, name eos.TableName) (RecordSchema, error) {
 	visited := make(map[string]string)
 	initBuiltInTypesForTables()
 	tableDef := abi.TableForName(name)
@@ -150,7 +150,7 @@ func TableToRecord(abi *eos.ABI, name eos.TableName) (RecordSchema, error) {
 	return structToRecord(abi, tableDef.Type, visited)
 }
 
-func structToRecord(abi *eos.ABI, structName string, visited map[string]string) (RecordSchema, error) {
+func structToRecord(abi *ABI, structName string, visited map[string]string) (RecordSchema, error) {
 	s := abi.StructForName(structName)
 	if s == nil {
 		return RecordSchema{}, fmt.Errorf("struct not found: %s", structName)
@@ -178,7 +178,7 @@ func structToRecord(abi *eos.ABI, structName string, visited map[string]string) 
 	), nil
 }
 
-func abiFieldsToRecordFields(abi *eos.ABI, fieldDefs []eos.FieldDef, visited map[string]string) ([]FieldSchema, error) {
+func abiFieldsToRecordFields(abi *ABI, fieldDefs []eos.FieldDef, visited map[string]string) ([]FieldSchema, error) {
 	fields := make([]FieldSchema, len(fieldDefs))
 	for i, fieldDef := range fieldDefs {
 		field, err := abiFieldToRecordField(abi, fieldDef, visited)
@@ -190,7 +190,7 @@ func abiFieldsToRecordFields(abi *eos.ABI, fieldDefs []eos.FieldDef, visited map
 	return fields, nil
 }
 
-func abiFieldToRecordField(abi *eos.ABI, fieldDef eos.FieldDef, visited map[string]string) (FieldSchema, error) {
+func abiFieldToRecordField(abi *ABI, fieldDef eos.FieldDef, visited map[string]string) (FieldSchema, error) {
 	zlog.Debug("convert field", zap.String("name", fieldDef.Name), zap.String("type", fieldDef.Type))
 	schema, err := resolveFieldTypeSchema(abi, fieldDef.Type, visited)
 	if err != nil {
@@ -370,7 +370,7 @@ func initBuiltInTypesForActions() {
 	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{}
 }
 
-func resolveFieldTypeSchema(abi *eos.ABI, fieldType string, visited map[string]string) (Schema, error) {
+func resolveFieldTypeSchema(abi *ABI, fieldType string, visited map[string]string) (Schema, error) {
 	zlog.Debug("resolve", zap.String("type", fieldType))
 	// remove binary extension marker if any
 	fieldType = strings.TrimSuffix(fieldType, "$")
@@ -398,7 +398,7 @@ func resolveFieldTypeSchema(abi *eos.ABI, fieldType string, visited map[string]s
 	return s, nil
 }
 
-func resolveType(abi *eos.ABI, name string, visited map[string]string) (Schema, error) {
+func resolveType(abi *ABI, name string, visited map[string]string) (Schema, error) {
 	zlog.Debug("find type", zap.String("name", name))
 	if primitive, found := avroPrimitiveTypeByBuiltInTypes[name]; found {
 		return primitive, nil

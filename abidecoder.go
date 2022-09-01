@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	pbabicodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/abicodec/v1"
@@ -14,6 +15,11 @@ import (
 	"github.com/riferrei/srclient"
 	"go.uber.org/zap"
 )
+
+type ABI struct {
+	*eos.ABI
+	AbiBlockNum uint32
+}
 
 type ABICodec interface {
 	IsNOOP() bool
@@ -49,7 +55,7 @@ func NewJsonABICodec(
 
 // MessageSchemaSupplier is a function that return the specific message schema
 // of a given entity (i.e. table or action)
-type MessageSchemaSupplier = func(string, *eos.ABI) (MessageSchema, error)
+type MessageSchemaSupplier = func(string, *ABI) (MessageSchema, error)
 
 type KafkaAvroABICodec struct {
 	*ABIDecoder
@@ -148,9 +154,9 @@ func NewKafkaAvroABICodec(
 
 // ABIDecoder legacy abi codec does not support schema registry
 type ABIDecoder struct {
-	overrides   map[string]*eos.ABI
+	overrides   map[string]*ABI
 	abiCodecCli pbabicodec.DecoderClient
-	abisCache   map[string]*abiItem
+	abisCache   map[string]*ABI
 	onReload    func()
 }
 
@@ -182,8 +188,8 @@ func ParseABIFileSpec(spec string) (account string, abiPath string, err error) {
 }
 
 // LoadABIFiles will load ABIs for different accounts from JSON files
-func LoadABIFiles(abiFiles map[string]string) (map[string]*eos.ABI, error) {
-	out := make(map[string]*eos.ABI)
+func LoadABIFiles(abiFiles map[string]string) (map[string]*ABI, error) {
+	out := make(map[string]*ABI)
 	for contract, abiFile := range abiFiles {
 		abi, err := LoadABIFile(abiFile)
 		if err != nil {
@@ -194,23 +200,36 @@ func LoadABIFiles(abiFiles map[string]string) (map[string]*eos.ABI, error) {
 	return out, nil
 }
 
-func LoadABIFile(abiFile string) (abi *eos.ABI, err error) {
-	f, err := os.Open(abiFile)
+func LoadABIFile(abiFile string) (*ABI, error) {
+	kv := strings.SplitN(abiFile, ":", 2) //[abiFilePath] - [abiFilePath, abiNumber]
+	var abiPath = abiFile
+	var abiBlockNum = uint64(0)
+	if len(kv) == 2 {
+		abiPath = kv[0]
+		var err error
+		abiBlockNum, err = strconv.ParseUint(kv[1], 10, 32)
+		if err != nil {
+			return nil, err
+		}
+	}
+	f, err := os.Open(abiPath)
 	if err == nil {
 		defer f.Close()
-		abi, err = eos.NewABI(f)
+		eosAbi, err := eos.NewABI(f)
+		abi := &ABI{eosAbi, uint32(abiBlockNum)}
+		return abi, err
 	}
-	return
+	return nil, err
 }
 
 func NewABIDecoder(
-	overrides map[string]*eos.ABI,
+	overrides map[string]*ABI,
 	abiCodecCli pbabicodec.DecoderClient,
 ) *ABIDecoder {
 	return &ABIDecoder{
 		overrides:   overrides,
 		abiCodecCli: abiCodecCli,
-		abisCache:   make(map[string]*abiItem),
+		abisCache:   make(map[string]*ABI),
 		onReload:    func() {},
 	}
 }
@@ -242,7 +261,7 @@ func addOptional(m *map[string]interface{}, key string, value map[string]interfa
 // 	}
 // }
 
-func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*eos.ABI, error) {
+func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*ABI, error) {
 	if a.overrides != nil {
 		if abi, ok := a.overrides[contract]; ok {
 			return abi, nil
@@ -255,12 +274,13 @@ func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*
 
 	if !forceRefresh {
 		if abiObj, ok := a.abisCache[contract]; ok {
-			if abiObj.blockNum < blockNum {
-				return abiObj.abi, nil
+			if abiObj.AbiBlockNum < blockNum {
+				return abiObj, nil
 			}
 		}
 	}
 	a.onReload()
+	//FIXME: Use global context
 	resp, err := a.abiCodecCli.GetAbi(context.Background(), &pbabicodec.GetAbiRequest{
 		Account:    contract,
 		AtBlockNum: blockNum,
@@ -269,18 +289,16 @@ func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*
 		return nil, fmt.Errorf("unable to get abi for contract %q: %w", contract, err)
 	}
 
-	var abi *eos.ABI
-	err = json.Unmarshal([]byte(resp.JsonPayload), &abi)
+	var eosAbi *eos.ABI
+	err = json.Unmarshal([]byte(resp.JsonPayload), &eosAbi)
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode abi for contract %q: %w", contract, err)
 	}
+	var abi = ABI{eosAbi, resp.AbiBlockNum}
 
 	// store abi in cache for late uses
-	a.abisCache[contract] = &abiItem{
-		abi:      abi,
-		blockNum: resp.AbiBlockNum,
-	}
-	return abi, nil
+	a.abisCache[contract] = &abi
+	return &abi, nil
 }
 
 func (a *ABIDecoder) decodeDBOp(op *decodedDBOp, blockNum uint32, forceRefresh bool) error {
