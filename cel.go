@@ -43,8 +43,13 @@ func NewActivation(stepName string, transaction *pbcodec.TransactionTrace, trace
 		"transaction_id":    transaction.Id,
 		"transaction_index": transaction.Index,
 		"step":              stepName,
-		"global_seq":        trace.Receipt.GlobalSequence,
-		"execution_index":   trace.ExecutionIndex,
+		"global_seq": func() interface{} {
+			if trace.Receipt != nil {
+				return trace.Receipt.GlobalSequence
+			}
+			return 0
+		},
+		"execution_index": trace.ExecutionIndex,
 		"receiver": func() interface{} {
 			if trace.Receipt != nil {
 				return trace.Receipt.Receiver
@@ -102,8 +107,13 @@ func NewTableActivation(stepName string, transaction *pbcodec.TransactionTrace, 
 		"transaction_id":    transaction.Id,
 		"transaction_index": transaction.Index,
 		"step":              stepName,
-		"global_seq":        trace.Receipt.GlobalSequence,
-		"execution_index":   trace.ExecutionIndex,
+		"global_seq": func() interface{} {
+			if trace.Receipt != nil {
+				return trace.Receipt.GlobalSequence
+			}
+			return 0
+		},
+		"execution_index": trace.ExecutionIndex,
 		"receiver": func() interface{} {
 			if trace.Receipt != nil {
 				return trace.Receipt.Receiver
