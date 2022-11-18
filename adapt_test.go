@@ -10,6 +10,7 @@ import (
 	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/riferrei/srclient"
+	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
 	"gotest.tools/assert"
 )
 
@@ -18,7 +19,7 @@ func TestCdCAdapter_AdaptJSON(t *testing.T) {
 		generator Generator2
 	}
 	type args struct {
-		rawStep string
+		rawStep pbbstream.ForkStep
 	}
 	tests := []struct {
 		name    string
@@ -36,7 +37,7 @@ func TestCdCAdapter_AdaptJSON(t *testing.T) {
 			fields: fields{
 				generator: newTableGen4Test(t, "factory.a"),
 			},
-			args:    args{"New"},
+			args:    args{pbbstream.ForkStep_STEP_NEW},
 			want:    nil,
 			wantErr: false,
 		},
@@ -188,7 +189,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			}
 			blockStep := BlockStep{
 				blk:    block,
-				step:   "New",
+				step:   pbbstream.ForkStep_STEP_NEW,
 				cursor: "123",
 			}
 			messages, err := a.Adapt(blockStep)

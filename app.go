@@ -431,11 +431,11 @@ func iterate(ctx context.Context, cancel context.CancelFunc, adapter Adapter, s 
 			if err := ptypes.UnmarshalAny(msg.Block, blk); err != nil {
 				return fmt.Errorf("decoding any of type %q: %w", msg.Block.TypeUrl, err)
 			}
-			step := sanitizeStep(msg.Step.String())
+			// step := sanitizeStep(msg.Step.String())
 			blocksReceived.Inc()
 			blkStep := BlockStep{
 				blk:    blk,
-				step:   step,
+				step:   msg.Step,
 				cursor: msg.Cursor,
 			}
 			in <- blkStep

@@ -4,13 +4,13 @@
         "ce_source",
         "dkafka-test",
         "ce_id",
-        "StosRfUlJLsXNv8gVS3hBpNBx0KykFWYiSETjk/cloeudNg4u/owJ4MCIOxoiqIWuLTflB479cdLJSzgPi09fQ==",
+        "Re8M2gsHU9rTrPn4rV3jyL/DKdenePj37KA74BZMFIYShQo5Xl/OdHQ8lyqnjWYCopxiNaZZ8oQzr9nBTU8B4w==",
         "ce_type",
         "TestType",
         "ce_time",
         "2021-11-17T10:16:19Z",
         "ce_blkstep",
-        "New"
+        "NEW"
     ],
     "partition": 0,
     "offset": 0,
@@ -21,7 +21,7 @@
         "block_id": "01cafc203bf4bf807266fe5ac12c4b9ef72bd6482367a6c95bff70161dbeb462",
         "status": "EXECUTED",
         "executed": true,
-        "block_step": "New",
+        "block_step": "NEW",
         "trx_id": "a2a53dce154c2ccdca52a981318775938de02f7efef88926ae1d7fd992988530",
         "act_info": {
             "account": "eosio.nft.ft",

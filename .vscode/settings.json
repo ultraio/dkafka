@@ -15,6 +15,7 @@
         "eosio",
         "goavro",
         "gopkg",
+        "gotest",
         "GRPC",
         "jsonpb",
         "memoizable",

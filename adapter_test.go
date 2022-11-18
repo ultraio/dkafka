@@ -13,6 +13,7 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 	"github.com/riferrei/srclient"
+	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
 	"gotest.tools/assert"
 )
 
@@ -123,7 +124,7 @@ func Test_adapter_adapt(t *testing.T) {
 			}
 			blockStep := BlockStep{
 				blk:    block,
-				step:   "New",
+				step:   pbbstream.ForkStep_STEP_NEW,
 				cursor: "123",
 			}
 			if msg, err := adp.Adapt(blockStep); (err != nil) != tt.wantErr {
@@ -336,7 +337,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 		}
 		blockStep := BlockStep{
 			blk:    block,
-			step:   "New",
+			step:   pbbstream.ForkStep_STEP_NEW,
 			cursor: "123",
 		}
 		b.Run(tt.name, func(b *testing.B) {
@@ -382,7 +383,7 @@ func Test_adapter_correlation_id(t *testing.T) {
 	}
 	blockStep := BlockStep{
 		blk:    block,
-		step:   "New",
+		step:   pbbstream.ForkStep_STEP_NEW,
 		cursor: "123",
 	}
 	if msgs, err := adp.Adapt(blockStep); err != nil {

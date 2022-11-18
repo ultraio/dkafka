@@ -5,6 +5,7 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
+	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
 	"go.uber.org/zap"
 )
 
@@ -14,7 +15,7 @@ type Adapter interface {
 
 type BlockStep struct {
 	blk    *pbcodec.Block
-	step   string
+	step   pbbstream.ForkStep
 	cursor string
 }
 
@@ -47,7 +48,7 @@ type CdCAdapter struct {
 
 func (m *CdCAdapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 	blk := blkStep.blk
-	step := blkStep.step
+	step := sanitizeStep(blkStep.step.String())
 
 	m.saveBlock(blk)
 	if blk.Number%100 == 0 {

@@ -111,9 +111,8 @@ func newAdapter(
 
 func (m *adapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 	blk := blkStep.blk
-	rawStep := blkStep.step
 	m.saveBlock(blk)
-	step := sanitizeStep(rawStep)
+	step := sanitizeStep(blkStep.step.String())
 
 	if blk.Number%100 == 0 {
 		zlog.Info("incoming block 1/100", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
@@ -127,7 +126,9 @@ func (m *adapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 	blkTimeStr := blkTime.Format(time.RFC3339)
 	blkTimeBytes := []byte(blkTimeStr)
 
-	for _, trx := range blk.TransactionTraces() {
+	trxs := blk.TransactionTraces()
+
+	for _, trx := range trxs {
 		transactionTracesReceived.Inc()
 		status := sanitizeStatus(trx.Receipt.Status.String())
 		// manage correlation
@@ -203,7 +204,7 @@ func (m *adapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 				headers := append(m.headers,
 					kafka.Header{
 						Key:   "ce_id",
-						Value: hashString(fmt.Sprintf("%s%s%d%s%s%s", blk.Id, trx.Id, act.ExecutionIndex, generation.CeType, rawStep, generation.Key)),
+						Value: hashString(fmt.Sprintf("%s%s%d%s%s%s", blk.Id, trx.Id, act.ExecutionIndex, generation.CeType, step, generation.Key)),
 					},
 					kafka.Header{
 						Key:   "ce_type",
