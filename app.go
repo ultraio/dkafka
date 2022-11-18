@@ -522,6 +522,7 @@ func createCdcKeyExpressions(cdcExpression string, env cel.EnvOption) (cdcProgra
 }
 
 func createCdCFilter(account string, executed bool) string {
+	// "query": "action:setabi account:eosio data.account:eosio.nft.ft",
 	filter := fmt.Sprintf("account==\"%s\" && receiver==\"%s\"", account, account)
 	if executed {
 		filter = fmt.Sprintf("executed && %s", filter)
