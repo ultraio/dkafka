@@ -7,6 +7,7 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
 	"github.com/google/cel-go/cel"
+	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
 	"go.uber.org/zap"
 )
 
@@ -24,6 +25,7 @@ type GenContext struct {
 	actionTrace *pbcodec.ActionTrace
 	correlation *Correlation
 	cursor      string
+	step        pbbstream.ForkStep
 }
 
 type Generator2 interface {
@@ -47,6 +49,22 @@ type generation struct {
 	Value      interface{} `json:"value,omitempty"`
 }
 
+type IndexedEntry[T any] struct {
+	Index int
+	Entry T
+}
+
+func NewIndexedEntrySlice[T any](slice []T) []*IndexedEntry[T] {
+	indexedEntrySlice := make([]*IndexedEntry[T], len(slice))
+	for i, entry := range slice {
+		e := new(IndexedEntry[T])
+		e.Entry = entry
+		e.Index = i
+		indexedEntrySlice[i] = e
+	}
+	return indexedEntrySlice
+}
+
 type DecodeDBOp func(in *pbcodec.DBOp, blockNum uint32) (decodedDBOps *decodedDBOp, err error)
 
 type ExtractKey func(*pbcodec.DBOp) string
@@ -61,6 +79,10 @@ func extractScope(dbOp *pbcodec.DBOp) string {
 
 func extractPrimaryKey(dbOp *pbcodec.DBOp) string {
 	return dbOp.PrimaryKey
+}
+
+func indexDbOps(gc GenContext) []*IndexedEntry[*pbcodec.DBOp] {
+	return orderSliceOnBlockStep(NewIndexedEntrySlice(gc.transaction.DBOpsForAction(gc.actionTrace.ExecutionIndex)), gc.step)
 }
 
 type TableGenerator struct {
@@ -100,9 +122,11 @@ func (tg TableGenerator) Apply(gc GenContext) (generations []Generation2, err er
 }
 
 func (tg TableGenerator) doApply(gc GenContext) ([]generation, error) {
-	dbOps := gc.transaction.DBOpsForAction(gc.actionTrace.ExecutionIndex)
+	indexedDbOps := indexDbOps(gc)
 	generations := []generation{}
-	for dbOpIndex, dbOp := range dbOps {
+	for _, indexedDbOp := range indexedDbOps {
+		dbOp := indexedDbOp.Entry
+		dbOpIndex := indexedDbOp.Index
 		if dbOp.Operation == pbcodec.DBOp_OPERATION_UNKNOWN {
 			continue
 		}
@@ -220,10 +244,10 @@ func (ag ActionGenerator2) doApply(gc GenContext) ([]generation, error) {
 			return nil, err
 		}
 	}
-	dbOps := gc.transaction.DBOpsForAction(gc.actionTrace.ExecutionIndex)
-	dbOpsGen := make([]map[string]interface{}, len(dbOps))
-	for dbOpIndex, dbOp := range dbOps {
-		dbOpsGen[dbOpIndex] = newDBOpBasic(dbOp, dbOpIndex)
+	indexedDbOps := indexDbOps(gc)
+	dbOpsGen := make([]map[string]interface{}, len(indexedDbOps))
+	for _, dbOp := range indexedDbOps {
+		dbOpsGen[dbOp.Index] = newDBOpBasic(dbOp.Entry, dbOp.Index)
 	}
 	value := newActionNotification(
 		notificationContextMap(gc),

@@ -24,12 +24,12 @@ func saveBlockNoop(*pbcodec.Block) {
 	// does nothing
 }
 
-// func marchalJSON(m proto.Message) ([]byte, error) {
+// func marshalJSON(m proto.Message) ([]byte, error) {
 // 	return json.Marshal(m)
 // }
 
 // func saveBlockJSON(block *pbcodec.Block) {
-// 	saveBlock(block, marchalJSON, "json")
+// 	saveBlock(block, marshalJSON, "json")
 // }
 
 func saveBlockJSONPB(block proto.Message) ([]byte, error) {
