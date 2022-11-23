@@ -68,7 +68,9 @@ The schema type (CamelCase) is for:
 func init() {
 	RootCmd.AddCommand(CdCCmd)
 	// cursor migration flags
-	CdCCmd.PersistentFlags().String("kafka-cursor-topic", "_dkafka_cursors", "kafka topic where cursor were saved by a previous version of dkafka. This option can be used when you want to migrate from a previous version of dkafka that was using the cursor topic to save checkpoints")
+	CdCCmd.PersistentFlags().String("kafka-cursor-topic", "_dkafka_cursors", `kafka topic where cursor were saved by a previous version of dkafka.
+This option can be used when you want to migrate from a previous version 
+of dkafka that was using the cursor topic to save checkpoints`)
 	CdCCmd.Flags().Uint32("kafka-cursor-partition", 0, "kafka partition where cursor will be loaded and saved")
 	CdCCmd.Flags().String("kafka-cursor-consumer-group-id", "dkafkaconsumer", "Consumer group ID for reading cursor")
 	//---
@@ -96,7 +98,8 @@ start streaming from this block number (if negative, relative to HEAD)`)
 	CdCCmd.PersistentFlags().Duration("delay-between-commits", time.Second*10, "no commits to kafka blow this delay, except un shutdown")
 	CdCCmd.PersistentFlags().String("event-source", "dkafka", "custom value for produced cloudevent source")
 
-	CdCCmd.PersistentFlags().Bool("executed", false, "Specify publish messages based only on executed actions => modify the state of the blockchain. This remove the error messages")
+	CdCCmd.PersistentFlags().Bool("executed", false, `Specify publish messages based only on executed actions => modify the state of the blockchain.
+This remove the error messages`)
 	CdCCmd.PersistentFlags().Bool("irreversible", false, "Specify publish messages based only on irreversible actions")
 
 	CdCCmd.PersistentFlags().Var(codecTypes, "codec", codecTypes.Help("Specify the codec to use to encode the messages."))

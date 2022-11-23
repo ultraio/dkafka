@@ -3,6 +3,7 @@
         "abicodec",
         "avsc",
         "bstream",
+        "cloudevent",
         "covhtml",
         "DBOP",
         "dbops",
