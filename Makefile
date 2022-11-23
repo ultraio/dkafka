@@ -44,7 +44,7 @@ MESSAGE_MAX_SIZE ?= 10000000
 # create
 # START_BLOCK ?= 37562000
 # issue
-START_BLOCK ?= 59721000
+START_BLOCK ?= $(CDC_TABLES_START_BLOCK)
 
 # START_BLOCK ?= 30080000
 STOP_BLOCK ?= 3994800
@@ -99,7 +99,7 @@ bench-save: ## Save last benchmark as the new reference
 up: ## Launch docker compose
 	@docker-compose up -d
 
-stream: build up ## stream expression based localy
+stream: ## stream expression based localy
 	$(BINARY_PATH) publish \
 		--dfuse-firehose-grpc-addr=localhost:9000 \
 		--abicodec-grpc-addr=localhost:9001 \
@@ -114,7 +114,20 @@ stream: build up ## stream expression based localy
 		--start-block-num=$(START_BLOCK) \
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE)
 
-cdc-tables: build up ## CDC stream on tables
+cdc-tables-mig: ## CDC stream on tables
+	$(BINARY_PATH) cdc tables \
+		--dfuse-firehose-grpc-addr=localhost:9000 \
+		--abicodec-grpc-addr=localhost:9001 \
+		--kafka-cursor-topic="cursor" \
+		--kafka-topic="io.dkafka.test" \
+		--kafka-compression-type=$(COMPRESSION_TYPE) \
+		--kafka-compression-level=$(COMPRESSION_LEVEL) \
+		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
+		--start-block-num=$(CDC_TABLES_START_BLOCK) \
+		--codec=$(CODEC) \
+		--table-name=$(CDC_TABLES_TABLE_NAMES) $(CDC_TABLES_ACCOUNT)
+
+cdc-tables: ## CDC stream on tables
 	$(BINARY_PATH) cdc tables \
 		--dfuse-firehose-grpc-addr=localhost:9000 \
 		--abicodec-grpc-addr=localhost:9001 \
@@ -138,7 +151,7 @@ cdc-actions: build up ## CDC stream on tables
 		--codec=$(CODEC) \
 		--actions-expr=$(CDC_ACTIONS_EXPRESSION) $(CDC_ACTIONS_ACCOUNT)
 
-stream-act: build up ## stream actions based localy
+stream-act: ## stream actions based localy
 	$(BINARY_PATH) publish \
 		--dfuse-firehose-grpc-addr=localhost:9000 \
 		--abicodec-grpc-addr=localhost:9001 \

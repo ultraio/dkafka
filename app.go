@@ -232,6 +232,15 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 	if err != nil {
 		return appCtx, fmt.Errorf("fail to load cursor on topic: %s, due to: %w", a.config.KafkaTopic, err)
 	}
+	// UOD-1290 load cursor from legacy cursor topic for dkafka migration
+	if cursor == "" && a.config.KafkaCursorTopic != "" {
+		zlog.Info("no cursor in message topic try to load it from legacy cursor topic...", zap.String("topic_cursor", a.config.KafkaCursorTopic))
+		cp := newKafkaCheckpointer(createKafkaConfig(a.config), a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID, producer)
+		if cursor, err = LoadCursorFromCursorTopic(a.config, cp); err != nil {
+			return appCtx, fmt.Errorf("fail to load cursor for legacy topic: %s, due to: %w", a.config.KafkaCursorTopic, err)
+		}
+	}
+
 	switch cdcType := a.config.CdCType; cdcType {
 	case TABLES_CDC_TYPE:
 		msg := MessageSchemaGenerator{
@@ -313,6 +322,32 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 	return appCtx, nil
 }
 
+func LoadCursorFromCursorTopic(config *Config, cp *kafkaCheckpointer) (string, error) {
+	cursor, err := cp.Load()
+	switch err {
+	case ErrNoCursor:
+		zlog.Info("no cursor found in cursor topic", zap.String("cursor_topic", config.KafkaCursorTopic))
+		return "", nil
+	case nil:
+		c, err := forkable.CursorFromOpaque(cursor)
+		if err != nil {
+			zlog.Error("cannot decode cursor", zap.String("cursor", cursor), zap.Error(err))
+			return "", err
+		}
+		zlog.Info("running in live mode, found cursor from cursor topic",
+			zap.String("cursor", cursor),
+			zap.Stringer("plain_cursor", c),
+			zap.Stringer("cursor_block", c.Block),
+			zap.Stringer("cursor_head_block", c.HeadBlock),
+			zap.Stringer("cursor_LIB", c.LIB),
+			zap.String("cursor_topic", config.KafkaCursorTopic),
+		)
+	default:
+		return cursor, fmt.Errorf("error loading cursor: %w", err)
+	}
+	return cursor, nil
+}
+
 func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, headers []kafka.Header, abiDecoder *ABIDecoder, saveBlock SaveBlock) (appCtx, error) {
 	var adapter Adapter
 	var filter string = a.config.IncludeFilterExpr
@@ -367,30 +402,14 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 		zlog.Info("running in batch mode, ignoring cursors")
 		cp = &nilCheckpointer{}
 	} else {
-		cp = newKafkaCheckpointer(createKafkaConfig(a.config), a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID, producer)
-
-		cursor, err = cp.Load()
-		switch err {
-		case ErrNoCursor:
-			zlog.Info("running in live mode, no cursor found: starting from beginning", zap.Int64("start_block_num", a.config.StartBlockNum))
-		case nil:
-			c, err := forkable.CursorFromOpaque(cursor)
-			if err != nil {
-				zlog.Error("cannot decode cursor", zap.String("cursor", cursor), zap.Error(err))
-				return appCtx, err
-			}
-			zlog.Info("running in live mode, found cursor",
-				zap.String("cursor", cursor),
-				zap.Stringer("plain_cursor", c),
-				zap.Stringer("cursor_block", c.Block),
-				zap.Stringer("cursor_head_block", c.HeadBlock),
-				zap.Stringer("cursor_LIB", c.LIB),
-			)
-		default:
+		kafkaCp := newKafkaCheckpointer(createKafkaConfig(a.config), a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID, producer)
+		cp = kafkaCp
+		cursor, err = LoadCursorFromCursorTopic(a.config, kafkaCp)
+		if err != nil {
 			return appCtx, fmt.Errorf("error loading cursor: %w", err)
 		}
+		zlog.Info("running in stream mode", zap.String("cursor", cursor), zap.Int64("start_block_num", a.config.StartBlockNum))
 	}
-
 	// s, err = getKafkaSender(producer, cp, a.config.KafkaTransactionID != "")
 	sender, err = NewSender(ctx, producer, cp, a.config.KafkaTransactionID != "")
 	if err != nil {
