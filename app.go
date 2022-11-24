@@ -254,9 +254,8 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			return appCtx, err
 		}
 		filter = createCdCFilter(a.config.Account, a.config.Executed)
-		tableNamesConfig := a.config.TableNames
 		var finder TableKeyExtractorFinder
-		if finder, err = buildTableKeyExtractorFinder(tableNamesConfig); err != nil {
+		if finder, err = buildTableKeyExtractorFinder(a.config.TableNames); err != nil {
 			return appCtx, err
 		}
 		generator = TableGenerator{
