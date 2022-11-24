@@ -1,6 +1,7 @@
 package dkafka
 
 import (
+	"context"
 	"encoding/json"
 	"reflect"
 	"testing"
@@ -24,7 +25,7 @@ func Test_exprToCelProgram(t *testing.T) {
 	if err != nil {
 		t.Fatalf("LoadABIFiles() error: %v", err)
 	}
-	abiDecoder := NewABIDecoder(abiFiles, nil)
+	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 
 	transactionTrace := block.TransactionTraces()[0]
 	act := transactionTrace.ActionTraces[0]
@@ -202,7 +203,7 @@ func Benchmark_exprToCelProgram_activation(b *testing.B) {
 	if err != nil {
 		b.Fatalf("LoadABIFiles() error: %v", err)
 	}
-	abiDecoder := NewABIDecoder(abiFiles, nil)
+	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 
 	transactionTrace := block.TransactionTraces()[0]
 	act := transactionTrace.ActionTraces[0]

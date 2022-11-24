@@ -1,6 +1,7 @@
 package dkafka
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"path"
@@ -258,7 +259,7 @@ func Test_ActionGenerator_Apply(t *testing.T) {
 			if err != nil {
 				t.Fatalf("LoadABIFiles() error: %v", err)
 			}
-			abiDecoder := NewABIDecoder(abiFiles, nil)
+			abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 			actionsConfig := actionsConfFromJSON(t, tt.config)
 			generator, err := NewActionsGenerator(actionsConfig)
 			if err != nil {

@@ -1,5 +1,21 @@
 package dkafka
 
+type IndexedEntry[T any] struct {
+	Index int
+	Entry T
+}
+
+func NewIndexedEntrySlice[T any](slice []T) []*IndexedEntry[T] {
+	indexedEntrySlice := make([]*IndexedEntry[T], len(slice))
+	for i, entry := range slice {
+		e := new(IndexedEntry[T])
+		e.Entry = entry
+		e.Index = i
+		indexedEntrySlice[i] = e
+	}
+	return indexedEntrySlice
+}
+
 func Reverse[T any](input []T) []T {
 	inputLen := len(input)
 	output := make([]T, inputLen)
@@ -19,9 +35,3 @@ func ReverseInPlace[T any](input []T) []T {
 	}
 	return input
 }
-
-// func ReverseInPlace[T](input []T) {
-//     for i, j := 0, len(input)-1; i < j; i, j = i+1, j-1 {
-//         input[i], input[j] = input[j], input[i]
-//     }
-// }

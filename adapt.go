@@ -44,6 +44,7 @@ type CdCAdapter struct {
 	saveBlock SaveBlock
 	generator Generator2
 	headers   []kafka.Header
+	abiCodec  ABICodec
 }
 
 // orderSliceOnBlockStep reverse the slice order is the block step is UNDO
@@ -61,10 +62,10 @@ func (m *CdCAdapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 
 	m.saveBlock(blk)
 	if blk.Number%100 == 0 {
-		zlog.Info("incoming block 1/100", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
+		zlog.Info("incoming block 1/100", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
 	}
 	if blk.Number%10 == 0 {
-		zlog.Debug("incoming block 1/10", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
+		zlog.Debug("incoming block 1/10", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
 	}
 	msgs := make([]*kafka.Message, 0)
 	trxs := blk.TransactionTraces()
@@ -77,9 +78,14 @@ func (m *CdCAdapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 			return nil, err
 		}
 		acts := trx.ActionTraces
-		zlog.Debug("adapt transaction", zap.Uint32("blk_num", blk.Number), zap.Int("trx_index", int(trx.Index)), zap.Int("nb_acts", len(acts)))
+		zlog.Debug("adapt transaction", zap.Uint32("block_num", blk.Number), zap.Int("trx_index", int(trx.Index)), zap.Int("nb_acts", len(acts)))
 		for _, act := range orderSliceOnBlockStep(acts, blkStep.step) {
 			if !act.FilteringMatched {
+				continue
+			}
+			if act.Action.Name == "setabi" {
+				zlog.Info("new abi published defer clear ABI cache at end of this block parsing", zap.Uint32("block_num", blk.Number), zap.Int("trx_index", int(trx.Index)), zap.String("trx_id", trx.Id))
+				defer m.abiCodec.Reset()
 				continue
 			}
 			actionTracesReceived.Inc()
@@ -136,6 +142,6 @@ func (m *CdCAdapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 			}
 		}
 	}
-	zlog.Debug("produced kafka messages", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("nb_messages", len(msgs)))
+	zlog.Debug("produced kafka messages", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("nb_messages", len(msgs)))
 	return msgs, nil
 }

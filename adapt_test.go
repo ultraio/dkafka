@@ -1,6 +1,7 @@
 package dkafka
 
 import (
+	"context"
 	"encoding/json"
 	"path"
 	"strings"
@@ -95,7 +96,7 @@ func newTableGen4Test(t testing.TB, tableName string) TableGenerator {
 	if err != nil {
 		t.Fatalf("LoadABIFiles() error: %v", err)
 	}
-	abiDecoder := NewABIDecoder(abiFiles, nil)
+	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 
 	return TableGenerator{
 		tableNames: map[string]ExtractKey{tableName: extractFullKey},
@@ -167,7 +168,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			if err != nil {
 				t.Fatalf("LoadABIFiles() error: %v", err)
 			}
-			abiDecoder := NewABIDecoder(abiFiles, nil)
+			abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 			msg := MessageSchemaGenerator{
 				Namespace: "test.dkafka",
 				Version:   "1.2.3",

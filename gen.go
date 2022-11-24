@@ -49,22 +49,6 @@ type generation struct {
 	Value      interface{} `json:"value,omitempty"`
 }
 
-type IndexedEntry[T any] struct {
-	Index int
-	Entry T
-}
-
-func NewIndexedEntrySlice[T any](slice []T) []*IndexedEntry[T] {
-	indexedEntrySlice := make([]*IndexedEntry[T], len(slice))
-	for i, entry := range slice {
-		e := new(IndexedEntry[T])
-		e.Entry = entry
-		e.Index = i
-		indexedEntrySlice[i] = e
-	}
-	return indexedEntrySlice
-}
-
 type DecodeDBOp func(in *pbcodec.DBOp, blockNum uint32) (decodedDBOps *decodedDBOp, err error)
 
 type ExtractKey func(*pbcodec.DBOp) string

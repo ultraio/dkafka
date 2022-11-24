@@ -1,6 +1,7 @@
 package dkafka
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -88,7 +89,7 @@ func Test_adapter_adapt(t *testing.T) {
 			if err != nil {
 				t.Fatalf("LoadABIFiles() error: %v", err)
 			}
-			abiDecoder := NewABIDecoder(abiFiles, nil)
+			abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 			eventTypeProg, err := exprToCelProgram("'TestType'")
 			if err != nil {
 				t.Fatalf("exprToCelProgram() error: %v", err)
@@ -236,7 +237,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 		if err != nil {
 			b.Fatalf("LoadABIFiles() error: %v", err)
 		}
-		abiDecoder := NewABIDecoder(abiFiles, nil)
+		abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 		eventTypeProg, err := exprToCelProgram("'TestType'")
 		if err != nil {
 			b.Fatalf("exprToCelProgram() error: %v", err)
@@ -371,7 +372,7 @@ func Test_adapter_correlation_id(t *testing.T) {
 	if err != nil {
 		t.Fatalf("LoadABIFiles() error: %v", err)
 	}
-	abiDecoder := NewABIDecoder(abiFiles, nil)
+	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 	adp := &CdCAdapter{
 		topic:     "test.topic",
 		saveBlock: saveBlockNoop,

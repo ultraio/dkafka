@@ -138,16 +138,6 @@ func (a *App) Run() (err error) {
 
 		abiCodecClient = pbabicodec.NewDecoderClient(abiCodecConn)
 	}
-
-	zlog.Info("setting up ABIDecoder")
-	abiDecoder := NewABIDecoder(abiFiles, abiCodecClient)
-
-	if abiDecoder.IsNOOP() && a.config.FailOnUndecodableDBOP {
-		return fmt.Errorf("invalid config: no abicodec GRPC address and no local ABI file has been set, but fail-on-undecodable-db-op is enabled")
-	}
-
-	// setup the transformer, that will transform incoming blocks
-
 	sourceHeader := kafka.Header{
 		Key:   "ce_source",
 		Value: []byte(a.config.EventSource),
@@ -177,6 +167,13 @@ func (a *App) Run() (err error) {
 		if err != nil {
 			return fmt.Errorf("getting kafka producer: %w", err)
 		}
+	}
+
+	zlog.Info("setting up ABIDecoder")
+	abiDecoder := NewABIDecoder(abiFiles, abiCodecClient, ctx)
+
+	if abiDecoder.IsNOOP() && a.config.FailOnUndecodableDBOP {
+		return fmt.Errorf("invalid config: no abicodec GRPC address and no local ABI file has been set, but fail-on-undecodable-db-op is enabled")
 	}
 
 	var appCtx appCtx
@@ -225,6 +222,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 	var filter string
 	var cursor string
 	var abiCodec ABICodec
+	var generator Generator2
 	eos.LegacyJSON4Asset = false
 	eos.NativeType = true
 	appCtx := appCtx{}
@@ -274,15 +272,9 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			}
 			tableNames[kv[0]] = ek
 		}
-		generator := TableGenerator{
+		generator = TableGenerator{
 			tableNames: tableNames,
 			abiCodec:   abiCodec,
-		}
-		adapter = &CdCAdapter{
-			topic:     a.config.KafkaTopic,
-			saveBlock: saveBlock,
-			headers:   headers,
-			generator: generator,
 		}
 	case ACTIONS_CDC_TYPE:
 		filter = createCdCFilter(a.config.Account, a.config.Executed)
@@ -302,18 +294,19 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		if err != nil {
 			return appCtx, err
 		}
-		generator := ActionGenerator2{
+		generator = ActionGenerator2{
 			keyExtractors: actionKeyExpressions,
 			abiCodec:      abiCodec,
 		}
-		adapter = &CdCAdapter{
-			topic:     a.config.KafkaTopic,
-			saveBlock: saveBlock,
-			headers:   headers,
-			generator: generator,
-		}
 	default:
 		return appCtx, fmt.Errorf("unsupported CDC type %s", cdcType)
+	}
+	adapter = &CdCAdapter{
+		topic:     a.config.KafkaTopic,
+		saveBlock: saveBlock,
+		headers:   headers,
+		generator: generator,
+		abiCodec:  abiCodec,
 	}
 	appCtx.adapter = adapter
 	appCtx.cursor = cursor
@@ -522,8 +515,7 @@ func createCdcKeyExpressions(cdcExpression string, env cel.EnvOption) (cdcProgra
 }
 
 func createCdCFilter(account string, executed bool) string {
-	// "query": "action:setabi account:eosio data.account:eosio.nft.ft",
-	filter := fmt.Sprintf("account==\"%s\" && receiver==\"%s\"", account, account)
+	filter := fmt.Sprintf("(account==\"%s\" && receiver==\"%s\") || (action==\"setabi\" && account==\"eosio\" && data.account==\"%s\")", account, account, account)
 	if executed {
 		filter = fmt.Sprintf("executed && %s", filter)
 	}

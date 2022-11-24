@@ -26,6 +26,7 @@ type ABICodec interface {
 	DecodeDBOp(in *pbcodec.DBOp, blockNum uint32) (*decodedDBOp, error)
 	GetCodec(name string, blockNum uint32) (Codec, error)
 	Refresh(blockNum uint32) error
+	Reset()
 }
 
 type JsonABICodec struct {
@@ -40,6 +41,10 @@ func (c *JsonABICodec) GetCodec(name string, blockNum uint32) (Codec, error) {
 
 func (c *JsonABICodec) Refresh(blockNum uint32) error {
 	return nil
+}
+
+func (c *JsonABICodec) Reset() {
+	// nothing to do
 }
 
 func NewJsonABICodec(
@@ -147,8 +152,13 @@ func (c *KafkaAvroABICodec) Refresh(blockNum uint32) error {
 	return err
 }
 
+func (c *KafkaAvroABICodec) Reset() {
+	c.onReload()
+	c.abisCache = make(map[string]*ABI)
+}
+
 func (c *KafkaAvroABICodec) onReload() {
-	zlog.Info("clear schema cache on reload")
+	zlog.Info("clear schema cache on reload static schema")
 	c.codecCache = c.initStaticSchema(make(map[string]Codec))
 }
 
@@ -178,6 +188,7 @@ func NewKafkaAvroABICodec(
 		schemaRegistryURL,
 	}
 	decoder.onReload = codec.onReload
+	zlog.Info("NewKafkaAvroABICodec() => call onReload()", zap.String("account", account))
 	codec.onReload()
 	return codec
 }
@@ -188,6 +199,7 @@ type ABIDecoder struct {
 	abiCodecCli pbabicodec.DecoderClient
 	abisCache   map[string]*ABI
 	onReload    func()
+	context     context.Context
 }
 
 func (a *ABIDecoder) IsNOOP() bool {
@@ -255,12 +267,14 @@ func LoadABIFile(abiFile string) (*ABI, error) {
 func NewABIDecoder(
 	overrides map[string]*ABI,
 	abiCodecCli pbabicodec.DecoderClient,
+	context context.Context,
 ) *ABIDecoder {
 	return &ABIDecoder{
 		overrides:   overrides,
 		abiCodecCli: abiCodecCli,
 		abisCache:   make(map[string]*ABI),
 		onReload:    func() {},
+		context:     context,
 	}
 }
 
@@ -309,9 +323,9 @@ func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*
 			}
 		}
 	}
+	zlog.Info("ABIDecoder.abi(...) => call onReload()", zap.String("contract", contract), zap.Uint32("block_num", blockNum), zap.Bool("force_refresh", forceRefresh))
 	a.onReload()
-	//FIXME: Use global context
-	resp, err := a.abiCodecCli.GetAbi(context.Background(), &pbabicodec.GetAbiRequest{
+	resp, err := a.abiCodecCli.GetAbi(a.context, &pbabicodec.GetAbiRequest{
 		Account:    contract,
 		AtBlockNum: blockNum,
 	})
@@ -325,7 +339,7 @@ func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*
 		return nil, fmt.Errorf("unable to decode abi for contract %q: %w", contract, err)
 	}
 	var abi = ABI{eosAbi, resp.AbiBlockNum}
-
+	zlog.Info("new ABI loaded", zap.String("contract", contract), zap.Uint32("block_num", blockNum), zap.Uint32("abi_block_num", abi.AbiBlockNum))
 	// store abi in cache for late uses
 	a.abisCache[contract] = &abi
 	return &abi, nil

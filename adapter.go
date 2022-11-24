@@ -115,10 +115,10 @@ func (m *adapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 	step := sanitizeStep(blkStep.step.String())
 
 	if blk.Number%100 == 0 {
-		zlog.Info("incoming block 1/100", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
+		zlog.Info("incoming block 1/100", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
 	}
 	if blk.Number%10 == 0 {
-		zlog.Debug("incoming block 1/10", zap.Uint32("blk_number", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
+		zlog.Debug("incoming block 1/10", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
 	}
 	msgs := make([]*kafka.Message, 0, 1)
 	blkTime := blk.MustTime().UTC()
@@ -161,7 +161,7 @@ func (m *adapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 				if m.failOnUndecodableDBOP {
 					return nil, err
 				}
-				zlog.Warn("cannot decode dbops", zap.Uint32("block_number", blk.Number), zap.Error(err))
+				zlog.Warn("cannot decode dbops", zap.Uint32("block_num", blk.Number), zap.Error(err))
 			}
 
 			// generation
