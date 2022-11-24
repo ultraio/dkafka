@@ -70,3 +70,96 @@ func Test_getCorrelation(t *testing.T) {
 		})
 	}
 }
+
+func Test_buildTableKeyExtractorFinder(t *testing.T) {
+	dbOp := &pbcodec.DBOp{
+		Scope:      "vince",
+		PrimaryKey: "42",
+	}
+	type finderCheck struct {
+		tableName string
+		dbOp      *pbcodec.DBOp
+		wantKey   string
+	}
+	tests := []struct {
+		name    string
+		args    []string
+		want    []finderCheck
+		wantErr bool
+	}{
+		{
+			name:    "too many elements",
+			args:    []string{"vincent:ana:mark"},
+			wantErr: true,
+		},
+		{
+			name:    "bad key mapping option",
+			args:    []string{"account:?"},
+			wantErr: true,
+		},
+		{
+			name: "primary key extractor",
+			args: []string{"account:k"},
+			want: []finderCheck{{"account", dbOp, "42"}},
+		},
+		{
+			name: "full key extractor",
+			args: []string{"account:s+k"},
+			want: []finderCheck{{"account", dbOp, "vince:42"}},
+		},
+		{
+			name: "scope key extractor",
+			args: []string{"account:s"},
+			want: []finderCheck{{"account", dbOp, "vince"}},
+		},
+		{
+			name: "default key extractor (primaryKey)",
+			args: []string{"account"},
+			want: []finderCheck{{"account", dbOp, "vince:42"}},
+		},
+		{
+			name: "multi tables",
+			args: []string{"account:k", "token:s+k"},
+			want: []finderCheck{{"account", dbOp, "42"}, {"token", dbOp, "vince:42"}},
+		},
+		{
+			name: "wildcard table filter with default key mapping",
+			args: []string{"*"},
+			want: []finderCheck{{"account", dbOp, "vince:42"}, {"token", dbOp, "vince:42"}},
+		},
+		{
+			name: "wildcard table filter with specific primary key mapping",
+			args: []string{"*:k"},
+			want: []finderCheck{{"account", dbOp, "42"}, {"token", dbOp, "42"}},
+		},
+		{
+			name: "wildcard table filter with specific full key mapping",
+			args: []string{"*:s+k"},
+			want: []finderCheck{{"account", dbOp, "vince:42"}, {"token", dbOp, "vince:42"}},
+		},
+		{
+			name: "mix of wildcard table filter and specific name table filter",
+			args: []string{"*:s+k", "account:k"},
+			want: []finderCheck{{"account", dbOp, "42"}, {"token", dbOp, "vince:42"}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotFinder, err := buildTableKeyExtractorFinder(tt.args)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("buildTableKeyExtractorFinder(tablesConfig) error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			for _, finderCheck := range tt.want {
+				keyExtractorFunc, found := gotFinder(finderCheck.tableName)
+				if !found {
+					t.Errorf("TableKeyExtractorFinder(tableName) not found for table= %s", finderCheck.tableName)
+				}
+				if key := keyExtractorFunc(finderCheck.dbOp); key != finderCheck.wantKey {
+					t.Errorf("(table=%s) ExtractKey(dbOp)= %s, want %s", finderCheck.tableName, key, finderCheck.wantKey)
+				}
+			}
+		})
+	}
+}

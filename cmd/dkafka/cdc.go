@@ -119,9 +119,14 @@ will never be fetched or updated. Block number, being the default value: 0, will
 	CdCCmd.AddCommand(CdCTablesCmd)
 	CdCTablesCmd.Flags().StringSlice("table-name", []string{}, `table name(s) on which the message must be produced.
 The name can include the key extractor pattern as follow:
-<table-name>[:{k|s|s+k}]. Where k is for DBOp.PrimaryKey 
+{<table-name>|*}[:{k|s|s+k}]. Where k is for DBOp.PrimaryKey 
 and s is for DBOp.Scope.If not specified the ':k' extractor
-is used`)
+is used. '*' can be used as a table name to specify any tables. 
+You can mix '*' with specific table name(s) if you want to 
+apply another key mapping than the one for the wildcard on
+a subset of tables. You can also specify key mapping with 
+the wildcard.
+Example: --table-name=factory.a:k,token.a:k,*:s+k`)
 
 	CdCCmd.AddCommand(CdCSchemasCmd)
 	CdCSchemasCmd.Flags().StringP("output-dir", "o", "./", `Optional output directory for the avro schema. The file name pattern is

@@ -272,12 +272,13 @@ func Benchmark_adapter_adapt(b *testing.B) {
 				nil,
 			)
 		case CDC_TABLE_ADAPTER:
+			finder, _ := buildTableKeyExtractorFinder([]string{"factory.a:k"})
 			adp = &CdCAdapter{
 				topic:     "test.topic",
 				saveBlock: saveBlockNoop,
 				generator: TableGenerator{
-					tableNames: map[string]ExtractKey{"factory.a": extractPrimaryKey},
-					abiCodec:   NewJsonABICodec(abiDecoder, "eosio.nft.ft"),
+					getExtractKey: finder,
+					abiCodec:      NewJsonABICodec(abiDecoder, "eosio.nft.ft"),
 				},
 				headers: default_headers,
 			}
@@ -304,12 +305,13 @@ func Benchmark_adapter_adapt(b *testing.B) {
 			}
 			abiCodec := NewKafkaAvroABICodec(abiDecoder, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), msg.Account, "mock://bench-adapter")
 			abiCodec.GetCodec("factory.a", 0)
+			finder, _ := buildTableKeyExtractorFinder([]string{"factory.a:k"})
 			adp = &CdCAdapter{
 				topic:     "test.topic",
 				saveBlock: saveBlockNoop,
 				generator: TableGenerator{
-					tableNames: map[string]ExtractKey{"factory.a": extractPrimaryKey},
-					abiCodec:   abiCodec,
+					getExtractKey: finder,
+					abiCodec:      abiCodec,
 				},
 				headers: default_headers,
 			}
@@ -373,12 +375,13 @@ func Test_adapter_correlation_id(t *testing.T) {
 		t.Fatalf("LoadABIFiles() error: %v", err)
 	}
 	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
+	finder, _ := buildTableKeyExtractorFinder([]string{"accounts:s+k"})
 	adp := &CdCAdapter{
 		topic:     "test.topic",
 		saveBlock: saveBlockNoop,
 		generator: TableGenerator{
-			tableNames: map[string]ExtractKey{"accounts": extractFullKey},
-			abiCodec:   NewJsonABICodec(abiDecoder, "eosio.token"),
+			getExtractKey: finder,
+			abiCodec:      NewJsonABICodec(abiDecoder, "eosio.token"),
 		},
 		headers: default_headers,
 	}

@@ -69,9 +69,11 @@ func indexDbOps(gc GenContext) []*IndexedEntry[*pbcodec.DBOp] {
 	return orderSliceOnBlockStep(NewIndexedEntrySlice(gc.transaction.DBOpsForAction(gc.actionTrace.ExecutionIndex)), gc.step)
 }
 
+type TableKeyExtractorFinder func(string) (ExtractKey, bool)
+
 type TableGenerator struct {
-	tableNames map[string]ExtractKey
-	abiCodec   ABICodec
+	getExtractKey TableKeyExtractorFinder
+	abiCodec      ABICodec
 }
 
 type void struct{}
@@ -115,7 +117,7 @@ func (tg TableGenerator) doApply(gc GenContext) ([]generation, error) {
 			continue
 		}
 		// extractor, found := tg.tableNames[dbOp.TableName]
-		extractKey, found := tg.tableNames[dbOp.TableName]
+		extractKey, found := tg.getExtractKey(dbOp.TableName)
 		if !found {
 			continue
 		}

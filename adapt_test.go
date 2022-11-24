@@ -3,6 +3,7 @@ package dkafka
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"path"
 	"strings"
 	"testing"
@@ -97,10 +98,10 @@ func newTableGen4Test(t testing.TB, tableName string) TableGenerator {
 		t.Fatalf("LoadABIFiles() error: %v", err)
 	}
 	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
-
+	finder, _ := buildTableKeyExtractorFinder([]string{fmt.Sprintf("%s:s+k", tableName)})
 	return TableGenerator{
-		tableNames: map[string]ExtractKey{tableName: extractFullKey},
-		abiCodec:   NewJsonABICodec(abiDecoder, "eosio.nft.ft"),
+		getExtractKey: finder,
+		abiCodec:      NewJsonABICodec(abiDecoder, "eosio.nft.ft"),
 	}
 }
 
@@ -178,9 +179,10 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			// schema, _ := msg.getTableSchema("accounts", abi)
 			// jsonSchema, err := json.Marshal(schema)
 			// fmt.Println(string(jsonSchema))
+			finder, _ := buildTableKeyExtractorFinder([]string{fmt.Sprintf("%s:s+k", tt.table)})
 			g := TableGenerator{
-				tableNames: map[string]ExtractKey{tt.table: extractFullKey},
-				abiCodec:   NewKafkaAvroABICodec(abiDecoder, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter"),
+				getExtractKey: finder,
+				abiCodec:      NewKafkaAvroABICodec(abiDecoder, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter"),
 			}
 			a := &CdCAdapter{
 				topic:     "test.topic",

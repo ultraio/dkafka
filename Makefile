@@ -30,7 +30,7 @@ STREAM_ACT_START_BLOCK ?= 49608000
 # CDC_TABLES_ACCOUNT ?= 'eosio.token'
 # CDC_TABLES_TABLE_NAMES ?= 'accounts:s+k'
 CDC_TABLES_ACCOUNT ?= 'eosio.nft.ft'
-CDC_TABLES_TABLE_NAMES ?= 'factory.a,factory.b,resale.a,token.a'
+CDC_TABLES_TABLE_NAMES ?= '*:s+k'
 CDC_TABLES_START_BLOCK ?= 89495000
 ## CDC ACTIONS
 CDC_ACTIONS_EXPRESSION ?= '{"create":"transaction_id", "issue":"data.issue.to"}'

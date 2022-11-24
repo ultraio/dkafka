@@ -254,27 +254,14 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			return appCtx, err
 		}
 		filter = createCdCFilter(a.config.Account, a.config.Executed)
-		tableNames := make(map[string]ExtractKey)
-		for _, name := range a.config.TableNames {
-			kv := strings.SplitN(name, ":", 2)
-			var ek ExtractKey = extractPrimaryKey
-			if len(kv) == 2 {
-				switch kv[1] {
-				case "k":
-					ek = extractPrimaryKey
-				case "s+k":
-					ek = extractFullKey
-				case "s":
-					ek = extractScope
-				default:
-					return appCtx, fmt.Errorf("unsupported table key extractor pattern: %s, on support <name>[:{k|s|s+k}]", name)
-				}
-			}
-			tableNames[kv[0]] = ek
+		tableNamesConfig := a.config.TableNames
+		var finder TableKeyExtractorFinder
+		if finder, err = buildTableKeyExtractorFinder(tableNamesConfig); err != nil {
+			return appCtx, err
 		}
 		generator = TableGenerator{
-			tableNames: tableNames,
-			abiCodec:   abiCodec,
+			getExtractKey: finder,
+			abiCodec:      abiCodec,
 		}
 	case ACTIONS_CDC_TYPE:
 		filter = createCdCFilter(a.config.Account, a.config.Executed)
@@ -313,6 +300,56 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 	appCtx.filter = filter
 	appCtx.sender = NewFastSender(ctx, producer, a.config.KafkaTopic, headers, abiCodec)
 	return appCtx, nil
+}
+
+func buildTableKeyExtractorFinder(tableNamesConfig []string) (finder TableKeyExtractorFinder, err error) {
+	tableNames := make(map[string]ExtractKey)
+	for _, name := range tableNamesConfig {
+		kv := strings.SplitN(name, ":", -1)
+		if len(kv) > 2 {
+			err = fmt.Errorf("unsupported table key extractor pattern: %s, on support {<name>|*}[:{k|s|s+k}]", name)
+			return
+		}
+		var ek ExtractKey = extractFullKey
+		if len(kv) == 2 {
+			switch kv[1] {
+			case "k":
+				ek = extractPrimaryKey
+			case "s+k":
+				ek = extractFullKey
+			case "s":
+				ek = extractScope
+			default:
+				err = fmt.Errorf("unsupported table key extractor pattern: %s, on support {<name>|*}[:{k|s|s+k}]", name)
+				return
+			}
+		}
+		tableNames[kv[0]] = ek
+	}
+	if extractKey, wildcardFound := tableNames["*"]; wildcardFound {
+
+		if len(tableNames) == 1 {
+			finder = func(tableName string) (ExtractKey, bool) {
+				return extractKey, true
+			}
+		} else {
+			finder = func(tableName string) (extract ExtractKey, found bool) {
+				extract, found = tableNames[tableName]
+				if !found {
+					extract = extractKey
+					found = true
+				}
+				return
+			}
+		}
+	} else {
+		finder = func(tableName string) (extract ExtractKey, found bool) {
+			extract, found = tableNames[tableName]
+			return
+		}
+	}
+
+	return
 }
 
 func LoadCursorFromCursorTopic(config *Config, cp *kafkaCheckpointer) (string, error) {
