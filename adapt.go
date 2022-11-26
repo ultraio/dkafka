@@ -14,9 +14,10 @@ type Adapter interface {
 }
 
 type BlockStep struct {
-	blk    *pbcodec.Block
-	step   pbbstream.ForkStep
-	cursor string
+	blk            *pbcodec.Block
+	step           pbbstream.ForkStep
+	cursor         string
+	previousCursor string
 }
 
 func (bs BlockStep) time() time.Time {
@@ -37,6 +38,10 @@ func (bs BlockStep) timeHeader() kafka.Header {
 
 func (bs BlockStep) opaqueCursor() string {
 	return bs.cursor
+}
+
+func (bs BlockStep) previousOpaqueCursor() string {
+	return bs.previousCursor
 }
 
 type CdCAdapter struct {

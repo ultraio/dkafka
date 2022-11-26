@@ -12,11 +12,13 @@ import (
 )
 
 const CursorHeaderKey = "dkafka_cursor"
+const PreviousCursorHeaderKey = "dkafka_prev_cursor"
 
 type location interface {
 	opaqueCursor() string
 	time() time.Time
 	timeHeader() kafka.Header
+	previousOpaqueCursor() string
 }
 
 type Sender interface {
@@ -51,7 +53,7 @@ type FastKafkaSender struct {
 func (s *FastKafkaSender) Send(ctx context.Context, messages []*kafka.Message, location location) error {
 	zlog.Debug("send messages", zap.Int("nb", len(messages)))
 	for _, msg := range messages {
-		msg.Headers = appendCursor(msg.Headers, location.opaqueCursor())
+		msg.Headers = appendLocation(msg.Headers, location)
 		if err := s.producer.Produce(msg, nil); err != nil {
 			return err
 		}
@@ -99,6 +101,7 @@ func (s *FastKafkaSender) SaveCP(ctx context.Context, location location) error {
 		},
 		location.timeHeader(),
 		newCursorHeader(cursor),
+		newPreviousCursorHeader(location.previousOpaqueCursor()),
 	)
 
 	msg := kafka.Message{
@@ -117,13 +120,21 @@ func (s *FastKafkaSender) SaveCP(ctx context.Context, location location) error {
 	return nil
 }
 
-func appendCursor(headers []kafka.Header, cursor string) []kafka.Header {
-	return append(headers, newCursorHeader(cursor))
+func appendLocation(headers []kafka.Header, location location) []kafka.Header {
+	return append(headers, newCursorHeader(location.opaqueCursor()),
+		newPreviousCursorHeader(location.previousOpaqueCursor()))
 }
 
 func newCursorHeader(cursor string) kafka.Header {
 	return kafka.Header{
 		Key:   CursorHeaderKey,
+		Value: []byte(cursor),
+	}
+}
+
+func newPreviousCursorHeader(cursor string) kafka.Header {
+	return kafka.Header{
+		Key:   PreviousCursorHeaderKey,
 		Value: []byte(cursor),
 	}
 }

@@ -207,7 +207,7 @@ func (a *App) Run() (err error) {
 	if err != nil {
 		return fmt.Errorf("requesting blocks from dfuse firehose: %w", err)
 	}
-	return iterate(ctx, cancel, appCtx.adapter, appCtx.sender, a.config.CommitMinDelay, executor)
+	return iterate(ctx, cancel, appCtx, a.config.CommitMinDelay, executor)
 }
 
 type appCtx struct {
@@ -452,13 +452,13 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 	return appCtx, nil
 }
 
-func iterate(ctx context.Context, cancel context.CancelFunc, adapter Adapter, s Sender, tickDuration time.Duration, stream pbbstream.BlockStreamV2_BlocksClient) error {
+func iterate(ctx context.Context, cancel context.CancelFunc, appCtx appCtx, tickDuration time.Duration, stream pbbstream.BlockStreamV2_BlocksClient) error {
 	// loop: receive block,  transform block, send message...
 	zlog.Info("Start looping over blocks...")
 	in := make(chan BlockStep, 10)
 	out := make(chan error, 1)
 	ticker := time.NewTicker(tickDuration)
-	go blockHandler(ctx, adapter, s, in, ticker.C, out)
+	go blockHandler(ctx, appCtx, in, ticker.C, out)
 	for {
 		select {
 		case err := <-out:
@@ -491,9 +491,11 @@ func iterate(ctx context.Context, cancel context.CancelFunc, adapter Adapter, s 
 	}
 }
 
-func blockHandler(ctx context.Context, adapter Adapter, s Sender, in <-chan BlockStep, ticks <-chan time.Time, out chan<- error) {
-	var lastBlkStep BlockStep
+func blockHandler(ctx context.Context, appCtx appCtx, in <-chan BlockStep, ticks <-chan time.Time, out chan<- error) {
+	var lastBlkStep BlockStep = BlockStep{cursor: appCtx.cursor}
 	hasFail := false
+	var adapter Adapter = appCtx.adapter
+	var s Sender = appCtx.sender
 	for {
 		select {
 		case blkStep := <-in:
@@ -501,6 +503,7 @@ func blockHandler(ctx context.Context, adapter Adapter, s Sender, in <-chan Bloc
 				zlog.Debug("skip incoming block message after failure")
 				continue
 			}
+			blkStep.previousCursor = lastBlkStep.cursor
 			kafkaMsgs, err := adapter.Adapt(blkStep)
 			if err != nil {
 				hasFail = true
