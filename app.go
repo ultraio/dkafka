@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"time"
 
@@ -138,9 +139,21 @@ func (a *App) Run() (err error) {
 
 		abiCodecClient = pbabicodec.NewDecoderClient(abiCodecConn)
 	}
+	source := a.config.EventSource
+	if len(source) == 0 {
+		if hostname, err := os.Hostname(); err == nil {
+			source = hostname
+		} else {
+			zlog.Warn("cannot get host name", zap.Error(err))
+			// use generic name
+			source = "dkafka"
+		}
+	}
+
+	zlog.Info("event source", zap.String("ce_source", source))
 	sourceHeader := kafka.Header{
 		Key:   "ce_source",
-		Value: []byte(a.config.EventSource),
+		Value: []byte(source),
 	}
 	specHeader := kafka.Header{
 		Key:   "ce_specversion",
@@ -178,7 +191,7 @@ func (a *App) Run() (err error) {
 
 	var appCtx appCtx
 	if a.config.CdCType != "" {
-		appCtx, err = a.NewCDCCtx(ctx, producer, headers, abiDecoder, saveBlock)
+		appCtx, err = a.NewCDCCtx(ctx, producer, headers, source, abiDecoder, saveBlock)
 	} else {
 		appCtx, err = a.NewLegacyCtx(ctx, producer, headers, abiDecoder, saveBlock)
 	}
@@ -217,7 +230,7 @@ type appCtx struct {
 	cursor  string
 }
 
-func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers []kafka.Header, abiDecoder *ABIDecoder, saveBlock SaveBlock) (appCtx, error) {
+func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers []kafka.Header, source string, abiDecoder *ABIDecoder, saveBlock SaveBlock) (appCtx, error) {
 	var adapter Adapter
 	var filter string
 	var cursor string
@@ -245,6 +258,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			Namespace: a.config.SchemaNamespace,
 			Version:   a.config.SchemaVersion,
 			Account:   a.config.Account,
+			Source:    source,
 		}
 		abiCodec, err = newABICodec(
 			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
@@ -272,6 +286,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			Namespace: a.config.SchemaNamespace,
 			Version:   a.config.SchemaVersion,
 			Account:   a.config.Account,
+			Source:    source,
 		}
 		abiCodec, err = newABICodec(
 			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,

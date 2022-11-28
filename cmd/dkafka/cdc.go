@@ -95,7 +95,7 @@ start streaming from this block number (if negative, relative to HEAD)`)
 	CdCCmd.PersistentFlags().Bool("capture", false, "Activate the capture mode where blocks are saved on the file system in pb.json format.")
 
 	CdCCmd.PersistentFlags().Duration("delay-between-commits", time.Second*10, "no commits to kafka blow this delay, except un shutdown")
-	CdCCmd.PersistentFlags().String("event-source", "dkafka", "custom value for produced cloudevent source")
+	CdCCmd.PersistentFlags().String("event-source", "", "custom value for produced cloudevent source. If not specified then the host name will be used.")
 
 	CdCCmd.PersistentFlags().Bool("executed", false, `Specify publish messages based only on executed actions => modify the state of the blockchain.
 This remove the error messages`)
