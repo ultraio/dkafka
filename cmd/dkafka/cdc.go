@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -311,6 +310,7 @@ func doGenAvroSchema(name string, opts GenOptions, f func(dkafka.NamedSchemaGenO
 		Namespace: opts.namespace,
 		Version:   opts.version,
 		AbiSpec:   opts.abiSpec,
+		Domain:    opts.abiSpec.Account,
 	})
 	if err != nil {
 		return fmt.Errorf("generation error: %v", err)
@@ -332,7 +332,7 @@ func saveSchema(schema dkafka.MessageSchema, prefix string, outputDir string) er
 	if err != nil {
 		return fmt.Errorf("cannot convert schema to json error: %v", err)
 	}
-	ioutil.WriteFile(filePath, jsonString, 0664)
+	os.WriteFile(filePath, jsonString, 0664)
 	if err != nil {
 		return fmt.Errorf("cannot write schema to '%s', error: %v", filePath, err)
 	}

@@ -639,18 +639,11 @@ type MessageSchemaGenerator struct {
 	Namespace string
 	Version   string
 	Account   string
+	Source    string
 }
 
 func (msg MessageSchemaGenerator) getTableSchema(tableName string, abi *ABI) (MessageSchema, error) {
-	return GenerateTableSchema(NamedSchemaGenOptions{
-		Name:      tableName,
-		Namespace: msg.Namespace,
-		Version:   schemaVersion(msg.Version, abi.AbiBlockNum),
-		AbiSpec: AbiSpec{
-			Account: msg.Account,
-			Abi:     abi,
-		},
-	})
+	return GenerateTableSchema(msg.newNamedSchemaGenOptions(tableName, abi))
 }
 
 func schemaVersion(version string, abiBlockNumber uint32) string {
@@ -662,13 +655,19 @@ func schemaVersion(version string, abiBlockNumber uint32) string {
 }
 
 func (msg MessageSchemaGenerator) getActionSchema(actionName string, abi *ABI) (MessageSchema, error) {
-	return GenerateActionSchema(NamedSchemaGenOptions{
-		Name:      actionName,
+	return GenerateActionSchema(msg.newNamedSchemaGenOptions(actionName, abi))
+}
+
+func (msg MessageSchemaGenerator) newNamedSchemaGenOptions(name string, abi *ABI) NamedSchemaGenOptions {
+	return NamedSchemaGenOptions{
+		Name:      name,
 		Namespace: msg.Namespace,
 		Version:   schemaVersion(msg.Version, abi.AbiBlockNum),
 		AbiSpec: AbiSpec{
 			Account: msg.Account,
 			Abi:     abi,
 		},
-	})
+		Source: msg.Source,
+		Domain: msg.Account,
+	}
 }

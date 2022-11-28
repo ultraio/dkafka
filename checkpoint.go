@@ -81,13 +81,28 @@ var CheckpointSchema = RecordSchema{
 	},
 }
 
+type dkafkaMetaSupplier struct {
+}
+
+func (dms dkafkaMetaSupplier) GetVersion() string {
+	return "1.0.0"
+}
+func (dms dkafkaMetaSupplier) GetSource() string {
+	return "dkafka-cli"
+}
+func (dms dkafkaMetaSupplier) GetDomain() string {
+	return "dkafka"
+}
+func (dms dkafkaMetaSupplier) GetCompatibility() string {
+	return "FORWARD"
+}
+func (dms dkafkaMetaSupplier) GetType() string {
+	return "notification"
+}
+
 var CheckpointMessageSchema = MessageSchema{
 	CheckpointSchema,
-	MetaSchema{
-		Compatibility: "FORWARD",
-		Type:          "notification",
-		Version:       "1.0.0",
-	},
+	newMeta(dkafkaMetaSupplier{}),
 }
 
 func newCheckpointMap(cursor *forkable.Cursor, time time.Time) map[string]interface{} {

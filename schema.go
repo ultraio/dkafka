@@ -36,18 +36,29 @@ type ActionSchemaGenOptions struct {
 	AbiSpec   AbiSpec
 }
 
-type TableSchemaGenOptions struct {
-	Table     string
-	Namespace string
-	Version   string
-	AbiSpec   AbiSpec
-}
-
 type NamedSchemaGenOptions struct {
 	Name      string
 	Namespace string
 	Version   string
 	AbiSpec   AbiSpec
+	Source    string
+	Domain    string
+}
+
+func (o NamedSchemaGenOptions) GetVersion() string {
+	return o.Version
+}
+func (o NamedSchemaGenOptions) GetSource() string {
+	return o.Source
+}
+func (o NamedSchemaGenOptions) GetDomain() string {
+	return o.Domain
+}
+func (o NamedSchemaGenOptions) GetCompatibility() string {
+	return "FORWARD"
+}
+func (o NamedSchemaGenOptions) GetType() string {
+	return "notification"
 }
 
 func getNamespace(namespace string, abi AbiSpec) (string, error) {
@@ -79,7 +90,7 @@ func GenerateActionSchema(options NamedSchemaGenOptions) (MessageSchema, error) 
 		return MessageSchema{}, err
 	}
 	actionParamsSchema.Name = actionParamsRecordName
-	schema := newActionNotificationSchema(ceType, namespace, options.Version, newActionInfoSchema(actionInfoRecordName, actionParamsSchema))
+	schema := newActionNotificationSchema(ceType, namespace, options, newActionInfoSchema(actionInfoRecordName, actionParamsSchema))
 
 	return schema, nil
 }
@@ -123,7 +134,7 @@ func GenerateTableSchema(options NamedSchemaGenOptions) (MessageSchema, error) {
 	}
 	dbOpSchema.Name = dbOpRecordName
 	dbOpInfoSchema := newDBOpInfoRecord(dbOpInfoRecordName, dbOpSchema)
-	schema := newTableNotificationSchema(ceType, namespace, options.Version, dbOpInfoSchema)
+	schema := newTableNotificationSchema(ceType, namespace, options, dbOpInfoSchema)
 
 	return schema, nil
 }

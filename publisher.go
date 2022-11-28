@@ -44,46 +44,6 @@ type Correlation struct {
 	Id    string `json:"id"`
 }
 
-func newActionInfoDetailsSchema(name string, jsonData RecordSchema, dbOpsRecord RecordSchema) RecordSchema {
-	return newRecordS(
-		name,
-		[]FieldSchema{
-			{
-				Name: "payer",
-				Type: "string",
-			},
-			{
-				Name: "account",
-				Type: "string",
-			},
-			{
-				Name: "receiver",
-				Type: "string",
-			},
-			{
-				Name: "action",
-				Type: "string",
-			},
-			{
-				Name: "global_seq",
-				Type: "long",
-			},
-			{
-				Name: "authorizations",
-				Type: NewArray("string"),
-			},
-			{
-				Name: "db_ops",
-				Type: NewArray(dbOpsRecord),
-			},
-			{
-				Name: "json_data",
-				Type: jsonData,
-			},
-		},
-	)
-}
-
 func newDBOpBasic(dbOp *pbcodec.DBOp, dbOpIndex int) map[string]interface{} {
 	asMap := map[string]interface{}{
 		"operation":    int32(dbOp.Operation),
@@ -208,52 +168,6 @@ type ActionInfoDetails struct {
 	JSONData       *json.RawMessage `json:"json_data"`
 }
 
-func newEventSchema(name string, namespace string, version string, actionInfoSchema RecordSchema) MessageSchema {
-	record := newRecordFQN(
-		namespace,
-		name,
-		[]FieldSchema{
-			{
-				Name: "block_num",
-				Type: "long",
-			},
-			{
-				Name: "block_id",
-				Type: "string",
-			},
-			{
-				Name: "status",
-				Type: "string",
-			},
-			{
-				Name: "executed",
-				Type: "boolean",
-			},
-			{
-				Name: "block_step",
-				Type: "string",
-			},
-			NewOptionalField("correlation", newCorrelationRecord()),
-			{
-				Name: "trx_id",
-				Type: "string",
-			},
-			{
-				Name: "act_info",
-				Type: actionInfoSchema,
-			},
-		},
-	)
-	return MessageSchema{
-		record,
-		MetaSchema{
-			Compatibility: "FORWARD",
-			Type:          "notification",
-			Version:       version,
-		},
-	}
-}
-
 type event struct {
 	BlockNum      uint32            `json:"block_num"`
 	BlockID       string            `json:"block_id"`
@@ -347,7 +261,7 @@ func newTableNotification(context map[string]interface{}, action map[string]inte
 	}
 }
 
-func newTableNotificationSchema(name string, namespace string, version string, dbOpRecord RecordSchema) MessageSchema {
+func newTableNotificationSchema(name string, namespace string, ms MetaSupplier, dbOpRecord RecordSchema) MessageSchema {
 	record := newRecordFQN(
 		namespace,
 		name,
@@ -368,11 +282,7 @@ func newTableNotificationSchema(name string, namespace string, version string, d
 	)
 	return MessageSchema{
 		record,
-		MetaSchema{
-			Compatibility: "FORWARD",
-			Type:          "notification",
-			Version:       version,
-		},
+		newMeta(ms),
 	}
 }
 
@@ -383,7 +293,7 @@ func newActionNotification(context map[string]interface{}, actionInfo map[string
 	}
 }
 
-func newActionNotificationSchema(name string, namespace string, version string, actionInfoSchema ActionInfoSchema) MessageSchema {
+func newActionNotificationSchema(name string, namespace string, ms MetaSupplier, actionInfoSchema ActionInfoSchema) MessageSchema {
 	record := newRecordFQN(
 		namespace,
 		name,
@@ -400,11 +310,7 @@ func newActionNotificationSchema(name string, namespace string, version string, 
 	)
 	return MessageSchema{
 		record,
-		MetaSchema{
-			Compatibility: "FORWARD",
-			Type:          "notification",
-			Version:       version,
-		},
+		newMeta(ms),
 	}
 }
 

@@ -40,10 +40,20 @@ func checkNamespace(np string) (string, error) {
 // A JSON array, representing a union of embedded types.
 type Schema = interface{}
 
+type MetaSupplier interface {
+	GetVersion() string
+	GetSource() string
+	GetDomain() string
+	GetCompatibility() string
+	GetType() string
+}
+
 type MetaSchema struct {
 	Compatibility string `json:"compatibility"`
 	Type          string `json:"type"`
 	Version       string `json:"version,omitempty"`
+	Source        string `json:"source,omitempty"`
+	Domain        string `json:"domain,omitempty"`
 }
 
 type MessageSchema struct {
@@ -90,6 +100,16 @@ func newRecordFQN(np string, name string, fields []FieldSchema) RecordSchema {
 		Name:      strcase.ToCamel(name),
 		Namespace: np,
 		Fields:    fields,
+	}
+}
+
+func newMeta(supplier MetaSupplier) MetaSchema {
+	return MetaSchema{
+		Compatibility: "FORWARD",
+		Type:          "notification",
+		Version:       supplier.GetVersion(),
+		Source:        supplier.GetSource(),
+		Domain:        supplier.GetDomain(),
 	}
 }
 

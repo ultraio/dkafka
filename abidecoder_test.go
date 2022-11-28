@@ -20,9 +20,17 @@ func TestKafkaAvroABICodec_GetCodec(t *testing.T) {
 		name     string
 		blockNum uint32
 	}
+
+	type meta struct {
+		version string
+		source  string
+		domain  string
+	}
+
 	tests := []struct {
 		name        string
 		args        args
+		want        meta
 		wantVersion string
 		wantErr     bool
 	}{
@@ -32,8 +40,12 @@ func TestKafkaAvroABICodec_GetCodec(t *testing.T) {
 				name:     dkafkaCheckpoint,
 				blockNum: 0,
 			},
-			wantVersion: "1.0.0",
-			wantErr:     false,
+			want: meta{
+				version: "1.0.0",
+				source:  "dkafka-cli",
+				domain:  "dkafka",
+			},
+			wantErr: false,
 		},
 		{
 			name: "dynamic",
@@ -41,8 +53,12 @@ func TestKafkaAvroABICodec_GetCodec(t *testing.T) {
 				name:     "factory.a",
 				blockNum: 2,
 			},
-			wantVersion: "0.1.0",
-			wantErr:     false,
+			want: meta{
+				version: "0.1.0",
+				source:  "test",
+				domain:  "eosio.nft.ft",
+			},
+			wantErr: false,
 		},
 	}
 	var localABIFiles = map[string]string{
@@ -59,6 +75,7 @@ func TestKafkaAvroABICodec_GetCodec(t *testing.T) {
 				Namespace: "test",
 				Version:   "",
 				Account:   "eosio.nft.ft",
+				Source:    "test",
 			}
 
 			c := NewKafkaAvroABICodec(
@@ -85,8 +102,14 @@ func TestKafkaAvroABICodec_GetCodec(t *testing.T) {
 					if schema["meta"] == nil {
 						t.Errorf("Meta field not found")
 					} else {
-						if version := schema["meta"].(map[string]interface{})["version"]; version != tt.wantVersion {
-							t.Errorf("Wrong version number = %v, expecting %v", version, tt.wantVersion)
+						if version := schema["meta"].(map[string]interface{})["version"]; version != tt.want.version {
+							t.Errorf("Wrong version number = %v, expecting %v", version, tt.want.version)
+						}
+						if source := schema["meta"].(map[string]interface{})["source"]; source != tt.want.source {
+							t.Errorf("Wrong source = %v, expecting %v", source, tt.want.source)
+						}
+						if domain := schema["meta"].(map[string]interface{})["domain"]; domain != tt.want.domain {
+							t.Errorf("Wrong domain = %v, expecting %v", domain, tt.want.domain)
 						}
 					}
 				}
