@@ -11,6 +11,7 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/streamingfast/bstream"
 	"github.com/streamingfast/bstream/forkable"
+	"go.uber.org/zap"
 )
 
 const dkafkaCheckpoint = "DKafkaCheckpoint"
@@ -203,6 +204,7 @@ func (c *kafkaCheckpointer) Save(cursor string) error {
 }
 
 func (c *kafkaCheckpointer) Load() (string, error) {
+	zlog.Info("try to load cursor from cursor topic", zap.String("cursor_topic", c.topic))
 	consumer, err := kafka.NewConsumer(&c.consumerConfig)
 	if err != nil {
 		return "", fmt.Errorf("creating consumer: %w", err)

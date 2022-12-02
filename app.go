@@ -250,6 +250,8 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		if cursor, err = LoadCursorFromCursorTopic(a.config, cp); err != nil {
 			return appCtx, fmt.Errorf("fail to load cursor for legacy topic: %s, due to: %w", a.config.KafkaCursorTopic, err)
 		}
+	} else {
+		zlog.Info("no cursor topic specified skip loading position from it")
 	}
 
 	switch cdcType := a.config.CdCType; cdcType {
