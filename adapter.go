@@ -227,8 +227,6 @@ func (m *adapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 						Topic:     &m.topic,
 						Partition: kafka.PartitionAny,
 					},
-					Timestamp:     blkTime,
-					TimestampType: kafka.TimestampCreateTime,
 				}
 				msgs = append(msgs, msg)
 			}

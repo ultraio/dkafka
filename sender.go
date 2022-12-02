@@ -105,10 +105,9 @@ func (s *FastKafkaSender) SaveCP(ctx context.Context, location location) error {
 	)
 
 	msg := kafka.Message{
-		Key:       nil,
-		Headers:   headers,
-		Value:     value,
-		Timestamp: location.time(),
+		Key:     nil,
+		Headers: headers,
+		Value:   value,
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &s.topic,
 			Partition: kafka.PartitionAny,
