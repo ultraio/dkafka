@@ -283,7 +283,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 				headers: default_headers,
 			}
 		case CDC_ACTION_ADAPTER:
-			actionKeyExpressions, err := createCdcKeyExpressions(`{"create":"transaction_id"}`, ActionDeclarations)
+			actionKeyExpressions, err := createCdcKeyExpressions(`{"create":"transaction_id"}`)
 			if err != nil {
 				b.Fatalf("createCdcKeyExpressions() error: %v", err)
 				return
@@ -316,7 +316,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 				headers: default_headers,
 			}
 		case CDC_ACTION_ADAPTER_AVRO:
-			actionKeyExpressions, err := createCdcKeyExpressions(`{"create":"transaction_id"}`, ActionDeclarations)
+			actionKeyExpressions, err := createCdcKeyExpressions(`{"create":"transaction_id"}`)
 			if err != nil {
 				b.Fatalf("createCdcKeyExpressions() error: %v", err)
 				return

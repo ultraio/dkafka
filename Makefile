@@ -33,7 +33,7 @@ CDC_TABLES_ACCOUNT ?= 'eosio.nft.ft'
 CDC_TABLES_TABLE_NAMES ?= '*:s+k'
 CDC_TABLES_START_BLOCK ?= 89495000
 ## CDC ACTIONS
-CDC_ACTIONS_EXPRESSION ?= '{"create":"transaction_id", "issue":"data.issue.to"}'
+CDC_ACTIONS_EXPRESSION ?= '{"issue":"data.issue.to", "*": "first_auth_actor"}'
 CDC_ACTIONS_START_BLOCK ?= 70837000
 CDC_ACTIONS_ACCOUNT ?= 'eosio.nft.ft'
 ##

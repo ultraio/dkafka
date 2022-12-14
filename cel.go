@@ -186,6 +186,7 @@ var ActionDeclarations = cel.Declarations(
 
 	decls.NewVar("data", decls.NewMapType(decls.String, decls.Any)),
 	decls.NewVar("auth", decls.NewListType(decls.String)),
+	decls.NewVar("first_auth_actor", decls.NewListType(decls.String)),
 )
 
 func NewActionActivation(stepName string, transaction *pbcodec.TransactionTrace, trace *pbcodec.ActionTrace) (interpreter.Activation, error) {
@@ -221,6 +222,9 @@ func NewActionActivation(stepName string, transaction *pbcodec.TransactionTrace,
 			}
 
 			return jsonStringToMap(jsonData)
+		},
+		"first_auth_actor": func() interface{} {
+			return trace.Action.Authorization[0].Actor
 		},
 	}
 	return interpreter.NewActivation(activationMap)

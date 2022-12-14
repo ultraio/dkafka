@@ -280,7 +280,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		}
 	case ACTIONS_CDC_TYPE:
 		filter = createCdCFilter(a.config.Account, a.config.Executed)
-		actionKeyExpressions, err := createCdcKeyExpressions(a.config.ActionExpressions, ActionDeclarations)
+		actionKeyExpressions, err := createCdcKeyExpressions(a.config.ActionExpressions)
 		if err != nil {
 			return appCtx, err
 		}
@@ -365,6 +365,46 @@ func buildTableKeyExtractorFinder(tableNamesConfig []string) (finder TableKeyExt
 		}
 	}
 
+	return
+}
+
+func createCdcKeyExpressions(cdcExpression string) (finder ActionKeyExtractorFinder, err error) {
+	var cdcProgramByKeys map[string]cel.Program
+	cdcExpressionMap := make(map[string]string)
+	var rawJSON = json.RawMessage(cdcExpression)
+	if err = json.Unmarshal(rawJSON, &cdcExpressionMap); err != nil {
+		return
+	}
+	cdcProgramByKeys = make(map[string]cel.Program)
+	for k, v := range cdcExpressionMap {
+		var prog cel.Program
+		prog, err = exprToCelProgramWithEnv(v, ActionDeclarations)
+		if err != nil {
+			return
+		}
+		cdcProgramByKeys[k] = prog
+	}
+	if wildcardProgram, wildcardFound := cdcProgramByKeys["*"]; wildcardFound {
+		if len(cdcProgramByKeys) == 1 {
+			finder = func(actionName string) (cel.Program, bool) {
+				return wildcardProgram, true
+			}
+		} else {
+			finder = func(actionName string) (prog cel.Program, found bool) {
+				prog, found = cdcProgramByKeys[actionName]
+				if !found {
+					prog = wildcardProgram
+					found = true
+				}
+				return
+			}
+		}
+	} else {
+		finder = func(actionName string) (prog cel.Program, found bool) {
+			prog, found = cdcProgramByKeys[actionName]
+			return
+		}
+	}
 	return
 }
 
@@ -549,25 +589,6 @@ func blockHandler(ctx context.Context, appCtx appCtx, in <-chan BlockStep, ticks
 			}
 		}
 	}
-}
-
-func createCdcKeyExpressions(cdcExpression string, env cel.EnvOption) (cdcProgramByKeys map[string]cel.Program, err error) {
-	cdcExpressionMap := make(map[string]string)
-	var rawJSON = json.RawMessage(cdcExpression)
-	err = json.Unmarshal(rawJSON, &cdcExpressionMap)
-	if err != nil {
-		return
-	}
-	cdcProgramByKeys = make(map[string]cel.Program)
-	for k, v := range cdcExpressionMap {
-		var prog cel.Program
-		prog, err = exprToCelProgramWithEnv(v, env)
-		if err != nil {
-			return
-		}
-		cdcProgramByKeys[k] = prog
-	}
-	return
 }
 
 func createCdCFilter(account string, executed bool) string {

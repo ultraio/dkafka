@@ -163,3 +163,61 @@ func Test_buildTableKeyExtractorFinder(t *testing.T) {
 		})
 	}
 }
+
+func Test_createCdcKeyExpressions(t *testing.T) {
+	tests := []struct {
+		name          string
+		cdcExpression string
+		knownActions  []string
+		unknownAction string
+		wantErr       bool
+	}{
+		{
+			name:          "invalid-expression",
+			cdcExpression: "test",
+			wantErr:       true,
+		},
+		{
+			name:          "single",
+			cdcExpression: "{\"create\": \"transaction_id\"}",
+			knownActions:  []string{"create"},
+			unknownAction: "issue",
+		},
+		{
+			name:          "multi",
+			cdcExpression: "{\"create\": \"transaction_id\", \"buy\": \"transaction_id\"}",
+			knownActions:  []string{"create", "buy"},
+			unknownAction: "issue",
+		},
+		{
+			name:          "only-wildcard",
+			cdcExpression: "{\"*\": \"first_auth_actor\"}",
+			knownActions:  []string{"create", "buy"},
+		},
+		{
+			name:          "action-and-wildcard",
+			cdcExpression: "{\"create\": \"transaction_id\", \"*\": \"first_auth_actor\"}",
+			knownActions:  []string{"create", "buy", "any"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotFinder, err := createCdcKeyExpressions(tt.cdcExpression)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("createCdcKeyExpressions() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			} else if !tt.wantErr {
+				for _, knownAction := range tt.knownActions {
+					if _, found := gotFinder(knownAction); !found {
+						t.Errorf("createCdcKeyExpressions(...)(%s) not found", knownAction)
+						return
+					}
+				}
+				if _, found := gotFinder(tt.unknownAction); tt.unknownAction != "" && found {
+					t.Errorf("createCdcKeyExpressions(...)(%s) found while should be unknown", tt.unknownAction)
+					return
+				}
+			}
+		})
+	}
+}

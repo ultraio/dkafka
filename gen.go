@@ -71,6 +71,8 @@ func indexDbOps(gc GenContext) []*IndexedEntry[*pbcodec.DBOp] {
 
 type TableKeyExtractorFinder func(string) (ExtractKey, bool)
 
+type ActionKeyExtractorFinder func(string) (cel.Program, bool)
+
 type TableGenerator struct {
 	getExtractKey TableKeyExtractorFinder
 	abiCodec      ABICodec
@@ -156,7 +158,7 @@ func (tg TableGenerator) doApply(gc GenContext) ([]generation, error) {
 }
 
 type ActionGenerator2 struct {
-	keyExtractors map[string]cel.Program
+	keyExtractors ActionKeyExtractorFinder
 	abiCodec      ABICodec
 }
 
@@ -199,7 +201,7 @@ func (ag ActionGenerator2) Apply(gc GenContext) ([]Generation2, error) {
 
 func (ag ActionGenerator2) doApply(gc GenContext) ([]generation, error) {
 	actionName := gc.actionTrace.Action.Name
-	extractor, found := ag.keyExtractors[actionName]
+	extractor, found := ag.keyExtractors(actionName)
 	if !found {
 		return nil, nil
 	}

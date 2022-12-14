@@ -80,6 +80,7 @@ Using the compression level and type is not enough. The max message size is veri
   * `scheduled`: (filter property only) bool, if true, the action was scheduled (delayed or deferred)
   * `trx_action_count`: (filter property only) number of actions within that transaction
   * `db_ops`: list of database operations executed by this action
+  * `first_auth_actor`: a shortcut to the first actor name whose has signed the transaction
 
 * examples:
   * to generate two events per action, one with 'account' as the key, one with the 'receiver' as the key (duplicates are removed automatically)
