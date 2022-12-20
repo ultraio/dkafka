@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/eoscanada/eos-go"
 	"github.com/riferrei/srclient"
 )
 
@@ -243,5 +244,50 @@ func TestKafkaAvroABICodec_Reset(t *testing.T) {
 
 	if len(c.abisCache) > 0 {
 		t.Errorf("Reset() must clear the abisCache: %v", c.abisCache)
+	}
+}
+
+func TestDecodeABI(t *testing.T) {
+	type args struct {
+		trxID       string
+		account     string
+		hexDataPath string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantAbi string
+		wantErr bool
+	}{
+		{
+			name: "eosio.nft.ft",
+			args: args{
+				trxID:       "test",
+				account:     "test",
+				hexDataPath: "testdata/abi.hex",
+			},
+			wantAbi: "testdata/abi.json",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			hexData := string(readFileFromTestdata(t, tt.args.hexDataPath))
+			abiJson := readFileFromTestdata(t, tt.wantAbi)
+			expectedAbi := &eos.ABI{}
+			json.Unmarshal(abiJson, expectedAbi)
+			gotAbi, err := DecodeABI(tt.args.trxID, tt.args.account, hexData)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("DecodeABI() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if gotAbi == nil {
+				t.Errorf("DecodeABI() = %v, want %v", gotAbi, expectedAbi)
+			}
+
+			// if !reflect.DeepEqual(gotAbi, expectedAbi) {
+			// 	t.Errorf("DecodeABI() = %v, want %v", gotAbi, expectedAbi)
+			// }
+		})
 	}
 }

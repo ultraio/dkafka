@@ -2,6 +2,7 @@ package dkafka
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -416,3 +417,32 @@ func (a *ABIDecoder) DecodeDBOps(in []*pbcodec.DBOp, blockNum uint32) (decodedDB
 // 	abi      *eos.ABI
 // 	blockNum uint32
 // }
+
+func DecodeABIAtBlock(trxID string, actionTrace *pbcodec.ActionTrace) (*eos.ABI, error) {
+	account := actionTrace.GetData("account").String()
+	hexABI := actionTrace.GetData("abi")
+	if !hexABI.Exists() {
+		zlog.Warn("'setabi' action data payload not present", zap.String("account", account), zap.String("transaction_id", trxID))
+		return nil, fmt.Errorf("setabi' action data payload not present. account: %s, transaction_id: %s ", account, trxID)
+	}
+	hexData := hexABI.String()
+	return DecodeABI(trxID, account, hexData)
+}
+
+func DecodeABI(trxID string, account string, hexData string) (abi *eos.ABI, err error) {
+	if hexData == "" {
+		zlog.Warn("empty ABI in 'setabi' action", zap.String("account", account), zap.String("transaction_id", trxID))
+		return
+	}
+	abiData, err := hex.DecodeString(hexData)
+	if err != nil {
+		zlog.Error("failed to hex decode abi string", zap.String("account", account), zap.String("transaction_id", trxID), zap.Error(err))
+		return // do not return the error. Worker will retry otherwise
+	}
+	err = eos.UnmarshalBinary(abiData, &abi)
+	if err != nil {
+		zlog.Error("failed to hex decode abi string", zap.String("account", account), zap.String("transaction_id", trxID), zap.Error(err))
+		return // do not return the error. Worker will retry otherwise
+	}
+	return
+}
