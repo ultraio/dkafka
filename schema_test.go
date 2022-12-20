@@ -61,9 +61,9 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "int32$->int",
+			name:    "int32$->['null', 'int']",
 			args:    args{"int32$", nil},
-			want:    "int",
+			want:    NewOptional("int"),
 			wantErr: false,
 		},
 		{

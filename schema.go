@@ -384,7 +384,12 @@ func initBuiltInTypesForActions() {
 func resolveFieldTypeSchema(abi *ABI, fieldType string, visited map[string]string) (Schema, error) {
 	zlog.Debug("resolve", zap.String("type", fieldType))
 	// remove binary extension marker if any
-	fieldType = strings.TrimSuffix(fieldType, "$")
+	var isBinaryExtension bool
+	if elementType := strings.TrimSuffix(fieldType, "$"); elementType != fieldType {
+		zlog.Debug("binary extension of", zap.String("element", elementType))
+		fieldType = elementType
+		isBinaryExtension = true
+	}
 	if elementType := strings.TrimSuffix(fieldType, "[]"); elementType != fieldType {
 		// todo array
 		zlog.Debug("array of", zap.String("element", elementType))
@@ -394,7 +399,7 @@ func resolveFieldTypeSchema(abi *ABI, fieldType string, visited map[string]strin
 		}
 		return NewArray(itemType), nil
 	}
-	if optionalType := strings.TrimSuffix(fieldType, "?"); optionalType != fieldType {
+	if optionalType := strings.TrimSuffix(fieldType, "?"); optionalType != fieldType || isBinaryExtension {
 		zlog.Debug("optional of", zap.String("type", optionalType))
 		oType, err := resolveFieldTypeSchema(abi, optionalType, visited)
 		if err != nil {
