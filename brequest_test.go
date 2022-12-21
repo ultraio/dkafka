@@ -157,6 +157,28 @@ func Test_position_gt(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "this and that cursor empty",
+			this: position{},
+			that: position{},
+			want: false,
+		},
+		{
+			name: "this cursor empty and not that",
+			this: position{},
+			that: position{
+				cursor: cursor1,
+			},
+			want: false,
+		},
+		{
+			name: "this cursor not empty but that",
+			this: position{
+				cursor: cursor1,
+			},
+			that: position{},
+			want: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

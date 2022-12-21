@@ -175,7 +175,7 @@ func (c *kafkaCheckpointer) Load() (string, error) {
 		return "", fmt.Errorf("getting low/high: %w", err)
 	}
 
-	for i := kafka.Offset(high) - 1; i >= kafka.Offset(low); i-- {
+	for i := kafka.Offset(high) - 1; (i >= kafka.Offset(low)) && ((kafka.Offset(high) - i) > 50); i-- {
 		err = consumer.Assign([]kafka.TopicPartition{
 			{
 				Topic:     &c.topic,

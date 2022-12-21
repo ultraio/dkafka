@@ -421,6 +421,7 @@ func LoadCursorFromCursorTopic(config *Config, cp checkpointer) (string, error) 
 }
 
 func (a *App) loadCursor() (cursor string, err error) {
+	zlog.Info("try to find previous position from message topic", zap.String("topic", a.config.KafkaTopic))
 	cursor, err = LoadCursor(createKafkaConfig(a.config), a.config.KafkaTopic)
 	if err != nil {
 		return "", fmt.Errorf("fail to load cursor on topic: %s, due to: %w", a.config.KafkaTopic, err)

@@ -27,6 +27,12 @@ func (p position) gt(that position) bool {
 	if p.previousCursor != nil && that.previousCursor != nil {
 		return that.previousCursor.Block.Num() < p.previousCursor.Block.Num()
 	}
+	if p.cursor == nil {
+		return false
+	}
+	if that.cursor == nil {
+		return true
+	}
 	return that.cursor.Block.Num() < p.cursor.Block.Num()
 }
 
@@ -97,6 +103,7 @@ func LoadCursor(config kafka.ConfigMap, topic string) (string, error) {
 	var latest position = position{}
 	for _, partition := range parts {
 		position, err := getHeadCursorFromPartition(consumer, topic, partition)
+		zlog.Info("compare cursor position to find the latest one", zap.String("topic", topic), zap.Int32("partition", partition.ID), zap.Any("current_position", position), zap.Any("latest_position", latest))
 		if err != nil {
 			return "", err
 		}
@@ -118,7 +125,7 @@ func getHeadCursorFromPartition(consumer *kafka.Consumer, topic string, partitio
 	}
 
 	for i := kafka.Offset(high) - 1; i >= kafka.Offset(low); i-- {
-		zlog.Debug("retrieve cursor header from kafka message", zap.String("topic", topic), zap.Int32("partition", partition.ID), zap.Int64("offset", int64(i)))
+		zlog.Info("retrieve cursor header from kafka message", zap.String("topic", topic), zap.Int32("partition", partition.ID), zap.Int64("offset", int64(i)))
 		err = consumer.Assign([]kafka.TopicPartition{
 			{
 				Topic:     &topic,
@@ -127,6 +134,7 @@ func getHeadCursorFromPartition(consumer *kafka.Consumer, topic string, partitio
 			}})
 
 		if err != nil {
+			zlog.Debug("fail to retrieve cursor header from kafka message", zap.String("topic", topic), zap.Int32("partition", partition.ID), zap.Int64("offset", int64(i)), zap.Error(err))
 			return
 		}
 
@@ -141,7 +149,7 @@ func getHeadCursorFromPartition(consumer *kafka.Consumer, topic string, partitio
 				// should not happen but if the producer in this topic are not only dkafka instances...
 				// or if the message where produce by a very old version of dkafka
 				// which was not using cursor headers
-				zlog.Debug("no cursor found in headers")
+				zlog.Info("no cursor found in headers", zap.String("topic", topic), zap.Int32("partition", partition.ID), zap.Int64("offset", int64(i)))
 				continue
 			}
 			zlog.Debug("read opaque cursor")
@@ -151,7 +159,7 @@ func getHeadCursorFromPartition(consumer *kafka.Consumer, topic string, partitio
 			position.previousCursor, _ = forkable.CursorFromOpaque(position.previousOpaqueCursor)
 			return
 		default:
-			zlog.Debug("un-handled kafka.Event type", zap.Any("event", event))
+			zlog.Info("un-handled kafka.Event type", zap.Any("event", event))
 		}
 	}
 	return
