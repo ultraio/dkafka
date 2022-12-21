@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 	"time"
 
@@ -117,21 +116,10 @@ func newCheckpointMap(cursor *forkable.Cursor, time time.Time) map[string]interf
 var ErrNoCursor = errors.New("no cursor exists")
 
 type checkpointer interface {
-	Save(cursor string) error
 	Load() (cursor string, err error)
 }
 
-type nilCheckpointer struct{}
-
-func (n *nilCheckpointer) Save(string) error {
-	return nil
-}
-
-func (n *nilCheckpointer) Load() (string, error) {
-	return "", ErrNoCursor
-}
-
-func newKafkaCheckpointer(conf kafka.ConfigMap, cursorTopic string, cursorPartition int32, dataTopic string, consumerGroupID string, producer *kafka.Producer) *kafkaCheckpointer {
+func newKafkaCheckpointer(conf kafka.ConfigMap, cursorTopic string, cursorPartition int32, dataTopic string, consumerGroupID string) checkpointer {
 	consumerConfig := cloneConfig(conf)
 	id := strings.Replace(fmt.Sprintf("dk-%s-%s-%d", dataTopic, cursorTopic, cursorPartition), "_", "", -1)
 
@@ -143,68 +131,22 @@ func newKafkaCheckpointer(conf kafka.ConfigMap, cursorTopic string, cursorPartit
 		topic:          cursorTopic,
 		partition:      cursorPartition,
 		key:            []byte(id),
-		producer:       producer,
 	}
 }
 
 type kafkaCheckpointer struct {
 	key            []byte
-	producer       *kafka.Producer
 	consumerConfig kafka.ConfigMap
 	topic          string
 	partition      int32
 }
 
-// in case we need it
-//func newFileCheckpointer(filename string) *localFileCheckpointer {
-//	return &localFileCheckpointer{
-//		filename: filename,
-//	}
-//}
-//
-//type localFileCheckpointer struct {
-//	filename string
-//}
-//
-//func (c *localFileCheckpointer) Save(cursor string) error {
-//	dat := []byte(cursor)
-//	return ioutil.WriteFile(c.filename, dat, 0644)
-//}
-//
-//func (c *localFileCheckpointer) Load() (string, error) {
-//	dat, err := ioutil.ReadFile(c.filename)
-//	if os.IsNotExist(err) {
-//		return "", NoCursorErr
-//	}
-//	return string(dat), err
-//}
-
 type cs struct {
 	Cursor string `json:"cursor"`
 }
 
-func (c *kafkaCheckpointer) Save(cursor string) error {
-	if cursor == "" {
-		zlog.Warn("try to save empty checkpoint")
-		return nil
-	}
-	v, err := json.Marshal(cs{Cursor: cursor})
-	if err != nil {
-		return err
-	}
-	msg := &kafka.Message{
-		Key: c.key,
-		TopicPartition: kafka.TopicPartition{
-			Topic:     &c.topic,
-			Partition: c.partition,
-		},
-		Value: v,
-	}
-	return c.producer.Produce(msg, nil)
-}
-
 func (c *kafkaCheckpointer) Load() (string, error) {
-	zlog.Info("try to load cursor from cursor topic", zap.String("cursor_topic", c.topic))
+	zlog.Info("try to load cursor from cursor topic", zap.String("cursor_topic", c.topic), zap.Int32("cursor_partition", c.partition))
 	consumer, err := kafka.NewConsumer(&c.consumerConfig)
 	if err != nil {
 		return "", fmt.Errorf("creating consumer: %w", err)
@@ -212,7 +154,7 @@ func (c *kafkaCheckpointer) Load() (string, error) {
 
 	defer func() {
 		if err := consumer.Close(); err != nil {
-			log.Printf("error closing consumer: %s", err)
+			zlog.Error("error closing consumer", zap.Error(err))
 		}
 	}()
 
@@ -224,7 +166,8 @@ func (c *kafkaCheckpointer) Load() (string, error) {
 	}
 	parts := md.Topics[c.topic].Partitions
 	if len(parts)-1 < int(c.partition) {
-		return "", fmt.Errorf("requested cursor partition does not exist in cursor topic")
+		zlog.Info("requested topic or partition does not exist for cursor topic", zap.String("cursor_topic", c.topic), zap.Int32("cursor_partition", c.partition))
+		return "", ErrNoCursor
 	}
 
 	low, high, err := consumer.QueryWatermarkOffsets(c.topic, c.partition, 500)

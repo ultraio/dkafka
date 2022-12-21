@@ -55,7 +55,7 @@ func (s *FastKafkaSender) Send(ctx context.Context, messages []*kafka.Message, l
 	for _, msg := range messages {
 		msg.Headers = appendLocation(msg.Headers, location)
 		if err := s.producer.Produce(msg, nil); err != nil {
-			return err
+			return fmt.Errorf("sender fail to Produce message to topic: '%s', with error: %w", s.topic, err)
 		}
 	}
 	zlog.Debug("messages sent", zap.Int("nb", len(messages)))
@@ -148,96 +148,8 @@ func NewFastSender(ctx context.Context, producer *kafka.Producer, topic string, 
 	return &ks
 }
 
-type KafkaSender struct {
-	producer *kafka.Producer
-	cp       checkpointer
-}
-
-func (s *KafkaSender) Send(ctx context.Context, messages []*kafka.Message, location location) error {
-	for _, msg := range messages {
-		if err := s.producer.Produce(msg, nil); err != nil {
-			return err
-		}
-	}
-	if err := s.cp.Save(location.opaqueCursor()); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (s *KafkaSender) SaveCP(ctx context.Context, location location) error {
-	return s.cp.Save(location.opaqueCursor())
-}
-
-type TransactionalKafkaSender struct {
-	delegate KafkaSender
-}
-
-func NewSender(ctx context.Context, producer *kafka.Producer, cp checkpointer, useTransactions bool) (Sender, error) {
-	ks := KafkaSender{
-		producer: producer,
-		cp:       cp,
-	}
-	if useTransactions {
-		if err := producer.InitTransactions(ctx); err != nil {
-			return nil, fmt.Errorf("producer.InitTransactions() error: %w", err)
-		}
-		return &TransactionalKafkaSender{
-			delegate: ks,
-		}, nil
-	}
-	return &ks, nil
-}
-
-func (s *TransactionalKafkaSender) Send(ctx context.Context, messages []*kafka.Message, location location) error {
-	if err := s.delegate.producer.BeginTransaction(); err != nil {
-		return fmt.Errorf("producer.BeginTransaction() error: %w", err)
-	}
-	if err := s.delegate.Send(ctx, messages, location); err != nil {
-		if e := s.delegate.producer.AbortTransaction(ctx); e != nil {
-			zlog.Error("fail to call producer.AbortTransaction() on Send() failure", zap.NamedError("send_error", err), zap.Error(e))
-		}
-		return fmt.Errorf("Send() error: %w", err)
-	}
-	if err := s.delegate.SaveCP(ctx, location); err != nil {
-		if e := s.delegate.producer.AbortTransaction(ctx); e != nil {
-			zlog.Error("fail to call producer.AbortTransaction() on SaveCP() failure", zap.NamedError("save_cp_error", err), zap.Error(e))
-		}
-		return fmt.Errorf("SaveCP() error: %w", err)
-	}
-	if err := s.delegate.producer.CommitTransaction(ctx); err != nil {
-		if e := s.delegate.producer.AbortTransaction(ctx); e != nil {
-			zlog.Error("fail to call producer.AbortTransaction() on producer.CommitTransaction() failure", zap.NamedError("commit_error", err), zap.Error(e))
-		}
-		return fmt.Errorf("producer.CommitTransaction() error: %w", err)
-	}
-	return nil
-}
-
-func (s *TransactionalKafkaSender) SaveCP(ctx context.Context, location location) error {
-	if err := s.delegate.producer.BeginTransaction(); err != nil {
-		return fmt.Errorf("producer.BeginTransaction() error: %w", err)
-	}
-	if err := s.delegate.SaveCP(ctx, location); err != nil {
-		if e := s.delegate.producer.AbortTransaction(ctx); e != nil {
-			zlog.Error("fail to call producer.AbortTransaction() on SaveCP() failure", zap.NamedError("save_cp_error", err), zap.Error(e))
-		}
-		return fmt.Errorf("SaveCP() error: %w", err)
-	}
-	if err := s.delegate.producer.CommitTransaction(ctx); err != nil {
-		if e := s.delegate.producer.AbortTransaction(ctx); e != nil {
-			zlog.Error("fail to call producer.AbortTransaction() on producer.CommitTransaction() failure", zap.NamedError("commit_error", err), zap.Error(e))
-		}
-		return fmt.Errorf("producer.CommitTransaction() error: %w", err)
-	}
-	return nil
-}
-
-func getKafkaProducer(conf kafka.ConfigMap, name string) (*kafka.Producer, error) {
+func getKafkaProducer(conf kafka.ConfigMap) (*kafka.Producer, error) {
 	producerConfig := cloneConfig(conf)
-	if name != "" {
-		producerConfig["transactional.id"] = name
-	}
 	return kafka.NewProducer(&producerConfig)
 }
 

@@ -172,13 +172,9 @@ func (a *App) Run() (err error) {
 
 	var producer *kafka.Producer
 	if !a.config.DryRun {
-		trxID := a.config.KafkaTransactionID
-		if a.config.CdCType != "" {
-			trxID = ""
-		}
-		producer, err = getKafkaProducer(createKafkaConfigForMessageProducer(a.config), trxID)
+		producer, err = getKafkaProducer(createKafkaConfigForMessageProducer(a.config))
 		if err != nil {
-			return fmt.Errorf("getting kafka producer: %w", err)
+			return fmt.Errorf("cannot get kafka producer: %w", err)
 		}
 	}
 
@@ -236,22 +232,12 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 	var cursor string
 	var abiCodec ABICodec
 	var generator Generator2
+	var err error
 	eos.LegacyJSON4Asset = false
 	eos.NativeType = true
 	appCtx := appCtx{}
-	cursor, err := LoadCursor(createKafkaConfig(a.config), a.config.KafkaTopic)
-	if err != nil {
-		return appCtx, fmt.Errorf("fail to load cursor on topic: %s, due to: %w", a.config.KafkaTopic, err)
-	}
-	// UOD-1290 load cursor from legacy cursor topic for dkafka migration
-	if cursor == "" && a.config.KafkaCursorTopic != "" {
-		zlog.Info("no cursor in message topic try to load it from legacy cursor topic...", zap.String("topic_cursor", a.config.KafkaCursorTopic))
-		cp := newKafkaCheckpointer(createKafkaConfig(a.config), a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID, producer)
-		if cursor, err = LoadCursorFromCursorTopic(a.config, cp); err != nil {
-			return appCtx, fmt.Errorf("fail to load cursor for legacy topic: %s, due to: %w", a.config.KafkaCursorTopic, err)
-		}
-	} else {
-		zlog.Info("no cursor topic specified skip loading position from it")
+	if cursor, err = a.loadCursor(); err != nil {
+		return appCtx, fmt.Errorf("failed to load cursor at startup time for cdc on %s with error: %w", a.config.CdCType, err)
 	}
 
 	switch cdcType := a.config.CdCType; cdcType {
@@ -408,7 +394,7 @@ func createCdcKeyExpressions(cdcExpression string) (finder ActionKeyExtractorFin
 	return
 }
 
-func LoadCursorFromCursorTopic(config *Config, cp *kafkaCheckpointer) (string, error) {
+func LoadCursorFromCursorTopic(config *Config, cp checkpointer) (string, error) {
 	cursor, err := cp.Load()
 	switch err {
 	case ErrNoCursor:
@@ -434,6 +420,24 @@ func LoadCursorFromCursorTopic(config *Config, cp *kafkaCheckpointer) (string, e
 	return cursor, nil
 }
 
+func (a *App) loadCursor() (cursor string, err error) {
+	cursor, err = LoadCursor(createKafkaConfig(a.config), a.config.KafkaTopic)
+	if err != nil {
+		return "", fmt.Errorf("fail to load cursor on topic: %s, due to: %w", a.config.KafkaTopic, err)
+	}
+	// UOD-1290 load cursor from legacy cursor topic for dkafka migration
+	if cursor == "" && a.config.KafkaCursorTopic != "" {
+		zlog.Info("no cursor in message topic try to load it from legacy cursor topic...", zap.String("topic_cursor", a.config.KafkaCursorTopic))
+		cp := newKafkaCheckpointer(createKafkaConfig(a.config), a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID)
+		if cursor, err = LoadCursorFromCursorTopic(a.config, cp); err != nil {
+			return "", fmt.Errorf("fail to load cursor for legacy topic: %s, due to: %w", a.config.KafkaCursorTopic, err)
+		}
+	} else {
+		zlog.Info("no cursor topic specified skip loading position from it")
+	}
+	return
+}
+
 func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, headers []kafka.Header, abiDecoder *ABIDecoder, saveBlock SaveBlock) (appCtx, error) {
 	var adapter Adapter
 	var filter string = a.config.IncludeFilterExpr
@@ -443,6 +447,11 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 	eos.LegacyJSON4Asset = true
 	eos.NativeType = false
 	appCtx := appCtx{}
+
+	if cursor, err = a.loadCursor(); err != nil {
+		return appCtx, fmt.Errorf("failed to load cursor at startup time for json publish message with error: %w", err)
+	}
+
 	headers = append(headers,
 		kafka.Header{
 			Key:   "content-type",
@@ -483,21 +492,13 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 			headers,
 		)
 	}
-	var cp checkpointer
-	if a.config.BatchMode || a.config.DryRun {
-		zlog.Info("running in batch mode, ignoring cursors")
-		cp = &nilCheckpointer{}
-	} else {
-		kafkaCp := newKafkaCheckpointer(createKafkaConfig(a.config), a.config.KafkaCursorTopic, a.config.KafkaCursorPartition, a.config.KafkaTopic, a.config.KafkaCursorConsumerGroupID, producer)
-		cp = kafkaCp
-		cursor, err = LoadCursorFromCursorTopic(a.config, kafkaCp)
-		if err != nil {
-			return appCtx, fmt.Errorf("error loading cursor: %w", err)
-		}
-		zlog.Info("running in stream mode", zap.String("cursor", cursor), zap.Int64("start_block_num", a.config.StartBlockNum))
-	}
-	// s, err = getKafkaSender(producer, cp, a.config.KafkaTransactionID != "")
-	sender, err = NewSender(ctx, producer, cp, a.config.KafkaTransactionID != "")
+	abiCodec, err := newABICodec(
+		JsonCodec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
+		func(s string, a *ABI) (MessageSchema, error) {
+			return MessageSchema{}, fmt.Errorf("json message publisher does not support schema generation. Requested schema: %s", s)
+		},
+	)
+	sender = NewFastSender(ctx, producer, a.config.KafkaTopic, headers, abiCodec)
 	if err != nil {
 		return appCtx, err
 	}
@@ -669,7 +670,7 @@ func newABICodec(codec string, account string, schemaRegistryURL string, abiDeco
 		schemaRegistryClient := srclient.CreateSchemaRegistryClient(schemaRegistryURL)
 		return NewKafkaAvroABICodec(abiDecoder, getSchema, schemaRegistryClient, account, schemaRegistryURL), nil
 	default:
-		return nil, fmt.Errorf("unsupported codec type: %s", codec)
+		return nil, fmt.Errorf("unsupported codec type: '%s'", codec)
 	}
 }
 
