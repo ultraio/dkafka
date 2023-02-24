@@ -100,6 +100,7 @@ start streaming from this block number (if negative, relative to HEAD)`)
 	CdCCmd.PersistentFlags().Bool("executed", false, `Specify publish messages based only on executed actions => modify the state of the blockchain.
 This remove the error messages`)
 	CdCCmd.PersistentFlags().Bool("irreversible", false, "Specify publish messages based only on irreversible actions")
+	CdCCmd.PersistentFlags().Bool("force", false, "Will force the usage of the blocknumber provided instead of the saved cursor.")
 
 	CdCCmd.PersistentFlags().Var(codecTypes, "codec", codecTypes.Help("Specify the codec to use to encode the messages."))
 	CdCCmd.PersistentFlags().String("schema-registry-url", "http://localhost:8081", "Schema registry url whose schemas are pushed to")
@@ -219,6 +220,7 @@ func executeCdC(cmd *cobra.Command, args []string,
 		StopBlockNum:  viper.GetUint64("cdc-cmd-stop-block-num"),
 		StateFile:     viper.GetString("cdc-cmd-state-file"),
 		Capture:       viper.GetBool("cdc-cmd-capture"),
+		Force:         viper.GetBool("cdc-cmd-force"),
 
 		EventSource: viper.GetString("cdc-cmd-event-source"),
 

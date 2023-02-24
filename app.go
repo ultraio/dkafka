@@ -43,6 +43,7 @@ type Config struct {
 	StartBlockNum int64
 	StopBlockNum  uint64
 	StateFile     string
+	Force         bool
 
 	KafkaEndpoints         string
 	KafkaSSLEnable         bool
@@ -169,13 +170,46 @@ func (a *App) Run() (err error) {
 	a.OnTerminating(func(_ error) {
 		cancel()
 	})
-
+	out := make(chan error, 1)
+	defer close(out)
 	var producer *kafka.Producer
 	if !a.config.DryRun {
 		producer, err = getKafkaProducer(createKafkaConfigForMessageProducer(a.config))
 		if err != nil {
 			return fmt.Errorf("cannot get kafka producer: %w", err)
 		}
+		go func() {
+			for e := range producer.Events() {
+				switch ev := e.(type) {
+				case *kafka.Message:
+					// The message delivery report, indicating success or
+					// permanent failure after retries have been exhausted.
+					// Application level retries won't help since the client
+					// is already configured to do that.
+					m := ev
+					if m.TopicPartition.Error != nil {
+						err := m.TopicPartition.Error
+						zlog.Error("Delivery failed", zap.Stringp("topic", m.TopicPartition.Topic), zap.Int32("partition", m.TopicPartition.Partition), zap.Int64("offset", int64(m.TopicPartition.Offset)), zap.Error(err))
+						out <- err
+					} else {
+						zlog.Debug("Delivered message", zap.Stringp("topic", m.TopicPartition.Topic), zap.Int32("partition", m.TopicPartition.Partition), zap.Int64("offset", int64(m.TopicPartition.Offset)))
+					}
+				case kafka.Error:
+					// Generic client instance-level errors, such as
+					// broker connection failures, authentication issues, etc.
+					//
+					// These errors should generally be considered informational
+					// as the underlying client will automatically try to
+					// recover from any errors encountered, the application
+					// does not need to take action on them.
+					zlog.Error("Kafka client fail", zap.Error(ev))
+					out <- ev
+				default:
+					zlog.Debug("Ignored producer event", zap.Stringer("event", ev.(fmt.Stringer)))
+				}
+			}
+		}()
+		defer producer.Close()
 	}
 
 	zlog.Info("setting up ABIDecoder")
@@ -216,7 +250,7 @@ func (a *App) Run() (err error) {
 	if err != nil {
 		return fmt.Errorf("requesting blocks from dfuse firehose: %w", err)
 	}
-	return iterate(ctx, cancel, appCtx, a.config.CommitMinDelay, executor)
+	return iterate(ctx, cancel, appCtx, a.config.CommitMinDelay, executor, out)
 }
 
 type appCtx struct {
@@ -421,6 +455,10 @@ func LoadCursorFromCursorTopic(config *Config, cp checkpointer) (string, error) 
 }
 
 func (a *App) loadCursor() (cursor string, err error) {
+	if a.config.Force {
+		zlog.Info("Force option activated skip loading cursor", zap.String("topic", a.config.KafkaTopic))
+		return
+	}
 	zlog.Info("try to find previous position from message topic", zap.String("topic", a.config.KafkaTopic))
 	cursor, err = LoadCursor(createKafkaConfig(a.config), a.config.KafkaTopic)
 	if err != nil {
@@ -511,11 +549,10 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 	return appCtx, nil
 }
 
-func iterate(ctx context.Context, cancel context.CancelFunc, appCtx appCtx, tickDuration time.Duration, stream pbbstream.BlockStreamV2_BlocksClient) error {
+func iterate(ctx context.Context, cancel context.CancelFunc, appCtx appCtx, tickDuration time.Duration, stream pbbstream.BlockStreamV2_BlocksClient, out chan error) error {
 	// loop: receive block,  transform block, send message...
 	zlog.Info("Start looping over blocks...")
 	in := make(chan BlockStep, 10)
-	out := make(chan error, 1)
 	ticker := time.NewTicker(tickDuration)
 	go blockHandler(ctx, appCtx, in, ticker.C, out)
 	for {
