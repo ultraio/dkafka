@@ -94,6 +94,7 @@ type KafkaAvroCodec struct {
 }
 
 func (c KafkaAvroCodec) Marshal(buf []byte, value interface{}) (bytes []byte, err error) {
+	zlog.Debug("marshal value to avro", zap.Uint32("schema_id", c.schema.id))
 	schemaHeaderBytes := make([]byte, 5)
 	// append magic byte 0
 	// append schema id in int32 bigendian

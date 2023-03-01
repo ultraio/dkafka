@@ -15,27 +15,32 @@ import (
 	"go.uber.org/zap"
 )
 
-type AbiBootstrapper struct {
+type AbiRepository interface {
+	GetAbi(contract string, blockNum uint32) (*ABI, error)
+	IsNOOP() bool
+}
+
+type DfuseAbiRepository struct {
 	overrides   map[string]*ABI
 	abiCodecCli pbabicodec.DecoderClient
 	context     context.Context
 }
 
-func (a *AbiBootstrapper) GetAbi(contract string, blockNum uint32) (*ABI, error) {
+func (a *DfuseAbiRepository) GetAbi(contract string, blockNum uint32) (*ABI, error) {
 	if a.overrides != nil {
 		if abi, ok := a.overrides[contract]; ok {
 			return abi, nil
 		}
 	}
 	if a.abiCodecCli == nil {
-		return nil, fmt.Errorf("unable to get abi for contract %q, no client no overrides", contract)
+		return nil, fmt.Errorf("unable to get abi for contract %q, no client, no overrides you need at least one of them", contract)
 	}
 	resp, err := a.abiCodecCli.GetAbi(a.context, &pbabicodec.GetAbiRequest{
 		Account:    contract,
 		AtBlockNum: blockNum,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("unable to get abi for contract %q: %w", contract, err)
+		return nil, fmt.Errorf("fail to call dfuse abi server for contract %q: %w", contract, err)
 	}
 
 	var eosAbi *eos.ABI
@@ -48,7 +53,7 @@ func (a *AbiBootstrapper) GetAbi(contract string, blockNum uint32) (*ABI, error)
 	return &abi, nil
 }
 
-func (b *AbiBootstrapper) IsNOOP() bool {
+func (b *DfuseAbiRepository) IsNOOP() bool {
 	return b.overrides == nil && b.abiCodecCli == nil
 }
 
@@ -60,7 +65,7 @@ type AbiItem struct {
 }
 
 type StreamedAbiCodec struct {
-	bootstrapper         *AbiBootstrapper
+	bootstrapper         AbiRepository
 	latestABI            *AbiItem
 	abiHistory           []*AbiItem
 	getSchema            MessageSchemaSupplier
@@ -71,7 +76,7 @@ type StreamedAbiCodec struct {
 }
 
 func NewStreamedAbiCodec(
-	bootstrapper *AbiBootstrapper,
+	bootstrapper AbiRepository,
 	getSchema MessageSchemaSupplier,
 	schemaRegistryClient srclient.ISchemaRegistryClient,
 	account string,
@@ -262,7 +267,6 @@ func (c *StreamedAbiCodec) newCodec(messageSchema MessageSchema) (Codec, error) 
 			return nil, err
 		}
 	}
-	zlog.Debug("register schema", zap.String("subject", subject))
 	schema, err := c.schemaRegistryClient.CreateSchema(subject, string(jsonSchema), srclient.Avro)
 	if err != nil {
 		return nil, fmt.Errorf("CreateSchema on subject: '%s', schema:\n%s error: %w", subject, string(jsonSchema), err)

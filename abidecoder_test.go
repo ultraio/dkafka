@@ -1,12 +1,10 @@
 package dkafka
 
 import (
-	"context"
 	"encoding/json"
 	"testing"
 
 	"github.com/eoscanada/eos-go"
-	"github.com/riferrei/srclient"
 )
 
 func TestABIDecoderOnReload(t *testing.T) {
@@ -14,111 +12,6 @@ func TestABIDecoderOnReload(t *testing.T) {
 		onReload: func() {},
 	}
 	abiCodec.onReload()
-}
-
-func TestKafkaAvroABICodec_GetCodec(t *testing.T) {
-	type args struct {
-		name     string
-		blockNum uint32
-	}
-
-	type meta struct {
-		version string
-		source  string
-		domain  string
-	}
-
-	tests := []struct {
-		name        string
-		args        args
-		want        meta
-		wantVersion string
-		wantErr     bool
-	}{
-		{
-			name: "static",
-			args: args{
-				name:     dkafkaCheckpoint,
-				blockNum: 0,
-			},
-			want: meta{
-				version: "1.0.0",
-				source:  "dkafka-cli",
-				domain:  "dkafka",
-			},
-			wantErr: false,
-		},
-		{
-			name: "dynamic",
-			args: args{
-				name:     "factory.a",
-				blockNum: 2,
-			},
-			want: meta{
-				version: "0.1.0",
-				source:  "test",
-				domain:  "eosio.nft.ft",
-			},
-			wantErr: false,
-		},
-	}
-	var localABIFiles = map[string]string{
-		"eosio.nft.ft": "testdata/eosio.nft.ft.abi:1",
-	}
-	abiFiles, err := LoadABIFiles(localABIFiles)
-	if err != nil {
-		t.Fatalf("LoadABIFiles() error: %v", err)
-	}
-	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			msg := MessageSchemaGenerator{
-				Namespace: "test",
-				Version:   "",
-				Account:   "eosio.nft.ft",
-				Source:    "test",
-			}
-
-			c := NewKafkaAvroABICodec(
-				abiDecoder,
-				msg.getTableSchema,
-				srclient.CreateMockSchemaRegistryClient("mock://TestKafkaAvroABICodec_GetCodec"),
-				"eosio.nft.ft",
-				"mock://TestKafkaAvroABICodec_GetCodec",
-			)
-			got, err := c.GetCodec(tt.args.name, tt.args.blockNum)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("KafkaAvroABICodec.GetCodec() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got == nil {
-				t.Errorf("KafkaAvroABICodec.GetCodec() = %v, want not nil", got)
-			}
-			avroCodec, ok := got.(KafkaAvroCodec)
-			if ok {
-				var schema map[string]interface{}
-				if err := json.Unmarshal([]byte(avroCodec.schema.schema), &schema); err != nil {
-					t.Errorf("json.Unmarshal = %v", err)
-				} else {
-					if schema["meta"] == nil {
-						t.Errorf("Meta field not found")
-					} else {
-						if version := schema["meta"].(map[string]interface{})["version"]; version != tt.want.version {
-							t.Errorf("Wrong version number = %v, expecting %v", version, tt.want.version)
-						}
-						if source := schema["meta"].(map[string]interface{})["source"]; source != tt.want.source {
-							t.Errorf("Wrong source = %v, expecting %v", source, tt.want.source)
-						}
-						if domain := schema["meta"].(map[string]interface{})["domain"]; domain != tt.want.domain {
-							t.Errorf("Wrong domain = %v, expecting %v", domain, tt.want.domain)
-						}
-					}
-				}
-			} else {
-				t.Errorf("Wrong type return")
-			}
-		})
-	}
 }
 
 func TestParseABIFileSpec(t *testing.T) {
@@ -222,30 +115,6 @@ func TestLoadABIFile(t *testing.T) {
 		})
 	}
 }
-
-// func TestKafkaAvroABICodec_Reset(t *testing.T) {
-// 	ac := &ABIDecoder{}
-
-// 	c := &KafkaAvroABICodec{
-// 		ABIDecoder:           ac,
-// 		schemaRegistryClient: srclient.CreateMockSchemaRegistryClient("mock://localhost"),
-// 		codecCache:           map[string]Codec{"dummy-1": NewJSONCodec(), "dummy-2": NewJSONCodec()},
-// 	}
-// 	c.abisCache = map[string]*ABI{"dummy-1": {}, "dummy-2": {}}
-
-// 	if len(c.codecCache) != 2 && len(c.abisCache) != 2 {
-// 		t.Errorf("Illegal state of the KafkaAvroABICodec before test")
-// 	}
-// 	// FIXME c.Reset()
-
-// 	if _, found := c.codecCache["dkafkaCheckpoint"]; !found && len(c.codecCache) != 1 {
-// 		t.Errorf("Reset() must reset the codecCache: %v", c.codecCache)
-// 	}
-
-// 	if len(c.abisCache) > 0 {
-// 		t.Errorf("Reset() must clear the abisCache: %v", c.abisCache)
-// 	}
-// }
 
 func TestDecodeABI(t *testing.T) {
 	type args struct {

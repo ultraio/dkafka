@@ -743,7 +743,7 @@ func newABICodec(codec string, account string, schemaRegistryURL string, abiDeco
 		return NewJsonABICodec(abiDecoder, account), nil
 	case AvroCodec:
 		schemaRegistryClient := srclient.CreateSchemaRegistryClient(schemaRegistryURL)
-		return NewStreamedAbiCodec(&AbiBootstrapper{
+		return NewStreamedAbiCodec(&DfuseAbiRepository{
 			overrides:   abiDecoder.overrides,
 			abiCodecCli: abiDecoder.abiCodecCli,
 			context:     abiDecoder.context,
