@@ -15,6 +15,7 @@ import (
 	"github.com/eoscanada/eos-go"
 	"github.com/linkedin/goavro/v2"
 	"github.com/riferrei/srclient"
+	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
 	"go.uber.org/zap"
 )
 
@@ -27,8 +28,7 @@ type ABICodec interface {
 	IsNOOP() bool
 	DecodeDBOp(in *pbcodec.DBOp, blockNum uint32) (*decodedDBOp, error)
 	GetCodec(name string, blockNum uint32) (Codec, error)
-	Refresh(blockNum uint32) error
-	Reset()
+	UpdateABI(blockNum uint32, step pbbstream.ForkStep, trxID string, actionTrace *pbcodec.ActionTrace) error
 }
 
 type JsonABICodec struct {
@@ -41,12 +41,8 @@ func (c *JsonABICodec) GetCodec(name string, blockNum uint32) (Codec, error) {
 	return c.codec, nil
 }
 
-func (c *JsonABICodec) Refresh(blockNum uint32) error {
+func (c *JsonABICodec) UpdateABI(_ uint32, _ pbbstream.ForkStep, _ string, _ *pbcodec.ActionTrace) error {
 	return nil
-}
-
-func (c *JsonABICodec) Reset() {
-	// nothing to do
 }
 
 func NewJsonABICodec(
@@ -114,9 +110,7 @@ func (c *KafkaAvroABICodec) newCodec(messageSchema MessageSchema) (Codec, error)
 	if err != nil {
 		return nil, err
 	}
-	if traceEnabled {
-		zlog.Debug("register schema", zap.String("subject", subject), zap.ByteString("schema", jsonSchema))
-	}
+	zlog.Debug("register schema", zap.String("subject", subject), zap.ByteString("schema", jsonSchema))
 	zlog.Debug("get compatibility level of subject's schema", zap.String("subject", subject))
 	actualCompatibilityLevel, err := c.schemaRegistryClient.GetCompatibilityLevel(subject, true)
 	unknownSubject := false
@@ -154,9 +148,10 @@ func (c *KafkaAvroABICodec) Refresh(blockNum uint32) error {
 	return err
 }
 
-func (c *KafkaAvroABICodec) Reset() {
+func (c *KafkaAvroABICodec) UpdateABI(blockNum uint32, step pbbstream.ForkStep, trxID string, actionTrace *pbcodec.ActionTrace) error {
 	c.onReload()
 	c.abisCache = make(map[string]*ABI)
+	return nil
 }
 
 func (c *KafkaAvroABICodec) onReload() {
@@ -168,7 +163,7 @@ func (c *KafkaAvroABICodec) initStaticSchema(cache map[string]Codec) map[string]
 	codec, err := c.newCodec(CheckpointMessageSchema)
 	if err != nil {
 		zlog.Error("initStaticSchema fail to create codec", zap.String("schema", dkafkaCheckpoint), zap.Error(err))
-		panic(1)
+		panic("initStaticSchema fail to create codec DKafkaCheckpoint")
 	}
 	cache[dkafkaCheckpoint] = codec
 	return cache
@@ -414,33 +409,6 @@ func (a *ABIDecoder) DecodeDBOps(in []*pbcodec.DBOp, blockNum uint32) (decodedDB
 	return
 }
 
-type abiItem struct {
-	abi      *eos.ABI
-	blockNum uint32
-}
-type abiHistory struct {
-	lastIrreversibleABI abiItem
-	abiStack            []abiItem
-}
-
-func DecodeABIAtBlock(trxID string, actionTrace *pbcodec.ActionTrace) (*eos.ABI, error) {
-	account := actionTrace.GetData("account").String()
-	hexABI := actionTrace.GetData("abi")
-	if !hexABI.Exists() {
-		zlog.Error("'setabi' action data payload not present", zap.String("account", account), zap.String("transaction_id", trxID))
-		return nil, fmt.Errorf("'setabi' action data payload not present. account: %s, transaction_id: %s ", account, trxID)
-	}
-
-	// TODO undo
-	// 	if undo {
-	// 		s.cache.RemoveABIAtBlockNum(account, uint32(blockRef.Num()))
-	// 		return nil
-	// 	}
-
-	hexData := hexABI.String()
-	return DecodeABI(trxID, account, hexData)
-}
-
 func DecodeABI(trxID string, account string, hexData string) (abi *eos.ABI, err error) {
 	if hexData == "" {
 		zlog.Warn("empty ABI in 'setabi' action", zap.String("account", account), zap.String("transaction_id", trxID))
@@ -467,98 +435,3 @@ func DecodeABI(trxID string, account string, hexData string) (abi *eos.ABI, err 
 	zlog.Debug("setting new abi", zap.String("account", account), zap.String("transaction_id", trxID))
 	return
 }
-
-func handleABIAction(trxID string, actionTrace *pbcodec.ActionTrace, undo bool) error {
-	account := actionTrace.GetData("account").String()
-	hexABI := actionTrace.GetData("abi")
-
-	if !hexABI.Exists() {
-		zlog.Error("'setabi' action data payload not present", zap.String("account", account), zap.String("transaction_id", trxID))
-		return fmt.Errorf("'setabi' action data payload not present, account: %s, trx: %s", account, trxID)
-	}
-
-	// TODO undo
-	// 	if undo {
-	// 		s.cache.RemoveABIAtBlockNum(account, uint32(blockRef.Num()))
-	// 		return nil
-	// 	}
-
-	hexData := hexABI.String()
-	if hexData == "" {
-		zlog.Error("empty ABI in 'setabi' action", zap.String("account", account), zap.String("transaction_id", trxID))
-		return fmt.Errorf("empty ABI in 'setabi' action, account: %s, trx: %s", account, trxID)
-	}
-
-	abiData, err := hex.DecodeString(hexData)
-	if err != nil {
-		zlog.Error("failed to hex decode abi string", zap.String("account", account), zap.String("transaction_id", trxID), zap.Error(err))
-		return fmt.Errorf("failed to hex decode abi string, account: %s, trx: %s, error: %w", account, trxID, err)
-	}
-
-	var abi *eos.ABI
-	err = eos.UnmarshalBinary(abiData, &abi)
-	if err != nil {
-		abiHexCutAt := math.Min(50, float64(len(hexData)))
-
-		zlog.Error("failed to unmarshal abi from binary",
-			zap.String("account", account),
-			zap.String("transaction_id", trxID),
-			zap.String("abi_hex_prefix", hexData[0:int(abiHexCutAt)]),
-			zap.Error(err),
-		)
-
-		return fmt.Errorf("failed to unmarshal abi from binary, account: %s, trx: %s, error: %w", account, trxID, err)
-	}
-
-	zlog.Debug("setting new abi", zap.String("account", account), zap.String("transaction_id", trxID))
-	// s.cache.SetABIAtBlockNum(account, uint32(blockRef.Num()), abi)
-
-	return nil
-}
-
-// func (s *ABISyncer) handleABIAction(blockRef bstream.BlockRef, trxID string, actionTrace *pbcodec.ActionTrace, undo bool) error {
-// 	account := actionTrace.GetData("account").String()
-// 	hexABI := actionTrace.GetData("abi")
-
-// 	if !hexABI.Exists() {
-// 		zlog.Warn("'setabi' action data payload not present", zap.String("account", account), zap.String("transaction_id", trxID))
-// 		return nil
-// 	}
-
-// 	if undo {
-// 		s.cache.RemoveABIAtBlockNum(account, uint32(blockRef.Num()))
-// 		return nil
-// 	}
-
-// 	hexData := hexABI.String()
-// 	if hexData == "" {
-// 		zlog.Info("empty ABI in 'setabi' action", zap.String("account", account), zap.String("transaction_id", trxID))
-// 		return nil
-// 	}
-
-// 	abiData, err := hex.DecodeString(hexData)
-// 	if err != nil {
-// 		zlog.Info("failed to hex decode abi string", zap.String("account", account), zap.String("transaction_id", trxID), zap.Error(err))
-// 		return nil // do not return the error. Worker will retry otherwise
-// 	}
-
-// 	var abi *eos.ABI
-// 	err = eos.UnmarshalBinary(abiData, &abi)
-// 	if err != nil {
-// 		abiHexCutAt := math.Min(50, float64(len(hexData)))
-
-// 		zlog.Info("failed to unmarshal abi from binary",
-// 			zap.String("account", account),
-// 			zap.String("transaction_id", trxID),
-// 			zap.String("abi_hex_prefix", hexData[0:int(abiHexCutAt)]),
-// 			zap.Error(err),
-// 		)
-
-// 		return nil
-// 	}
-
-// 	zlog.Debug("setting new abi", zap.String("account", account), zap.Stringer("transaction_id", blockRef), zap.Stringer("block", blockRef))
-// 	s.cache.SetABIAtBlockNum(account, uint32(blockRef.Num()), abi)
-
-// 	return nil
-// }

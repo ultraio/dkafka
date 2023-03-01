@@ -137,6 +137,7 @@ cdc-tables: ## CDC stream on tables
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--start-block-num=$(CDC_TABLES_START_BLOCK) \
 		--codec=$(CODEC) \
+		-vvvv \
 		--table-name=$(CDC_TABLES_TABLE_NAMES) $(CDC_TABLES_ACCOUNT)
 
 cdc-actions: build up ## CDC stream on tables

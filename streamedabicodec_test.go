@@ -16,19 +16,19 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		sut  *StreamedABICodec
+		sut  *StreamedAbiCodec
 		args args
-		want *StreamedABICodec
+		want *StreamedAbiCodec
 	}{
 		{
 			name: "empty-irreversible",
-			sut:  &StreamedABICodec{},
+			sut:  &StreamedAbiCodec{},
 			args: args{
 				abi:      &eos.ABI{Version: "123"},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_IRREVERSIBLE,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "123"},
 					blockNum:     42,
@@ -38,13 +38,13 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "empty-new",
-			sut:  &StreamedABICodec{},
+			sut:  &StreamedAbiCodec{},
 			args: args{
 				abi:      &eos.ABI{Version: "123"},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_NEW,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "123"},
 					blockNum:     42,
@@ -54,7 +54,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "not-empty-irreversible",
-			sut: &StreamedABICodec{
+			sut: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     42,
@@ -70,7 +70,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_IRREVERSIBLE,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     42,
@@ -92,7 +92,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "irreversible-compaction",
-			sut: &StreamedABICodec{
+			sut: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     42,
@@ -116,7 +116,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 				blockNum: 64,
 				step:     pbbstream.ForkStep_STEP_NEW,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "789"},
 					blockNum:     64,
@@ -138,7 +138,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "irreversible-only",
-			sut: &StreamedABICodec{
+			sut: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     42,
@@ -157,7 +157,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 				blockNum: 64,
 				step:     pbbstream.ForkStep_STEP_IRREVERSIBLE,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "789"},
 					blockNum:     64,
@@ -179,7 +179,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "undo",
-			sut: &StreamedABICodec{
+			sut: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     42,
@@ -198,7 +198,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNDO,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "123"},
 					blockNum:     1,
@@ -208,7 +208,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "unknown",
-			sut: &StreamedABICodec{
+			sut: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     42,
@@ -227,7 +227,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNKNOWN,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     42,
@@ -244,17 +244,17 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "undo-empty",
-			sut:  &StreamedABICodec{},
+			sut:  &StreamedAbiCodec{},
 			args: args{
 				abi:      &eos.ABI{Version: "456"},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNDO,
 			},
-			want: &StreamedABICodec{},
+			want: &StreamedAbiCodec{},
 		},
 		{
 			name: "undo-gt-latest",
-			sut: &StreamedABICodec{
+			sut: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "123"},
 					blockNum:     24,
@@ -266,7 +266,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNDO,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "123"},
 					blockNum:     24,
@@ -276,7 +276,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 		},
 		{
 			name: "undo-long-history",
-			sut: &StreamedABICodec{
+			sut: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "789"},
 					blockNum:     42,
@@ -300,7 +300,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNDO,
 			},
-			want: &StreamedABICodec{
+			want: &StreamedAbiCodec{
 				latestABI: &AbiItem{
 					abi:          &eos.ABI{Version: "456"},
 					blockNum:     24,
@@ -324,7 +324,7 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 	}
 }
 
-func assertEqual(t *testing.T, actual, expected *StreamedABICodec) {
+func assertEqual(t *testing.T, actual, expected *StreamedAbiCodec) {
 	if !reflect.DeepEqual(actual, expected) {
 		equal := assertFieldsEqual(t, "abiHistory", actual.abiHistory, expected.abiHistory) &&
 			assertFieldsEqual(t, "latestABI.abi", actual.latestABI.abi, expected.latestABI.abi) &&

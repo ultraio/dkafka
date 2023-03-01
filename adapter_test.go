@@ -291,7 +291,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 			adp = &CdCAdapter{
 				topic:     "test.topic",
 				saveBlock: saveBlockNoop,
-				generator: ActionGenerator2{
+				generator: &ActionGenerator2{
 					keyExtractors: actionKeyExpressions,
 					abiCodec:      NewJsonABICodec(abiDecoder, "eosio.nft.ft"),
 				},
@@ -331,7 +331,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 			adp = &CdCAdapter{
 				topic:     "test.topic",
 				saveBlock: saveBlockNoop,
-				generator: ActionGenerator2{
+				generator: &ActionGenerator2{
 					keyExtractors: actionKeyExpressions,
 					abiCodec:      abiCodec,
 				},

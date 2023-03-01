@@ -332,7 +332,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		if err != nil {
 			return appCtx, err
 		}
-		generator = ActionGenerator2{
+		generator = &ActionGenerator2{
 			keyExtractors: actionKeyExpressions,
 			abiCodec:      abiCodec,
 		}
@@ -743,7 +743,11 @@ func newABICodec(codec string, account string, schemaRegistryURL string, abiDeco
 		return NewJsonABICodec(abiDecoder, account), nil
 	case AvroCodec:
 		schemaRegistryClient := srclient.CreateSchemaRegistryClient(schemaRegistryURL)
-		return NewKafkaAvroABICodec(abiDecoder, getSchema, schemaRegistryClient, account, schemaRegistryURL), nil
+		return NewStreamedAbiCodec(&AbiBootstrapper{
+			overrides:   abiDecoder.overrides,
+			abiCodecCli: abiDecoder.abiCodecCli,
+			context:     abiDecoder.context,
+		}, getSchema, schemaRegistryClient, account, schemaRegistryURL), nil
 	default:
 		return nil, fmt.Errorf("unsupported codec type: '%s'", codec)
 	}

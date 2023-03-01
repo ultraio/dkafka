@@ -96,7 +96,7 @@ func (m *CdCAdapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 			}
 			if act.Action.Name == "setabi" {
 				zlog.Info("new abi published defer clear ABI cache at end of this block parsing", zap.Uint32("block_num", blk.Number), zap.Int("trx_index", int(trx.Index)), zap.String("trx_id", trx.Id))
-				defer m.abiCodec.Reset()
+				m.abiCodec.UpdateABI(blk.Number, blkStep.step, trx.Id, act)
 				continue
 			}
 			actionTracesReceived.Inc()

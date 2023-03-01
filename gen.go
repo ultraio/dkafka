@@ -162,7 +162,7 @@ type ActionGenerator2 struct {
 	abiCodec      ABICodec
 }
 
-func (ag ActionGenerator2) Apply(gc GenContext) ([]Generation2, error) {
+func (ag *ActionGenerator2) Apply(gc GenContext) ([]Generation2, error) {
 	gens, err := ag.doApply(gc)
 	if err != nil {
 		return nil, err
@@ -175,16 +175,7 @@ func (ag ActionGenerator2) Apply(gc GenContext) ([]Generation2, error) {
 		}
 		value, err := codec.Marshal(nil, g.Value)
 		if err != nil {
-			// this marshalling issue can comes from an out of date
-			// version of the ABI => refresh the ABI
-			err = ag.abiCodec.Refresh(gc.block.Number)
-			if err != nil {
-				return nil, err
-			}
-			value, err = codec.Marshal(nil, g.Value)
-			if err != nil {
-				return nil, err
-			}
+			return nil, err
 		}
 		return []Generation2{{
 			CeType:  g.CeType,
@@ -196,10 +187,9 @@ func (ag ActionGenerator2) Apply(gc GenContext) ([]Generation2, error) {
 	} else {
 		return nil, nil
 	}
-
 }
 
-func (ag ActionGenerator2) doApply(gc GenContext) ([]generation, error) {
+func (ag *ActionGenerator2) doApply(gc GenContext) ([]generation, error) {
 	actionName := gc.actionTrace.Action.Name
 	extractor, found := ag.keyExtractors(actionName)
 	if !found {
