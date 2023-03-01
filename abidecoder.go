@@ -13,8 +13,6 @@ import (
 	pbabicodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/abicodec/v1"
 	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
 	"github.com/eoscanada/eos-go"
-	"github.com/linkedin/goavro/v2"
-	"github.com/riferrei/srclient"
 	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
 	"go.uber.org/zap"
 )
@@ -60,142 +58,11 @@ func NewJsonABICodec(
 // of a given entity (i.e. table or action)
 type MessageSchemaSupplier = func(string, *ABI) (MessageSchema, error)
 
-type KafkaAvroABICodec struct {
-	*ABIDecoder
-	getSchema            MessageSchemaSupplier
-	schemaRegistryClient srclient.ISchemaRegistryClient
-	account              string
-	codecCache           map[string]Codec
-	schemaRegistryURL    string
-}
-
-func (c *KafkaAvroABICodec) GetCodec(name string, blockNum uint32) (Codec, error) {
-	if codec, found := c.codecCache[name]; found {
-		return codec, nil
-	}
-
-	abi, err := c.abi(c.account, blockNum, false)
-	if err != nil {
-		return nil, err
-	}
-	zlog.Debug("create schema from abi", zap.String("entry", name))
-	messageSchema, err := c.getSchema(name, abi)
-	if err != nil {
-		return nil, err
-	}
-	codec, err := c.newCodec(messageSchema)
-	if err != nil {
-		return nil, fmt.Errorf("KafkaAvroABICodec.GetCodec fail to create codec for schema %s, error: %w", messageSchema.Name, err)
-	}
-	zlog.Debug("register codec into cache", zap.String("name", name))
-	c.codecCache[name] = codec
-	return codec, nil
-}
-
-func (c *KafkaAvroABICodec) setSubjectCompatibilityToForward(subject string) error {
-	zlog.Debug("Set subject compatibility to FORWARD", zap.String("subject", subject), zap.String("compatibility", string(srclient.Forward)))
-	_, err := c.schemaRegistryClient.ChangeSubjectCompatibilityLevel(subject, srclient.Forward)
-	if err != nil {
-		if strings.HasPrefix(err.Error(), "mock") {
-			return nil
-		}
-		return fmt.Errorf("cannot change compatibility level of subject: '%s', error: %w", subject, err)
-	}
-	return err
-}
-
-func (c *KafkaAvroABICodec) newCodec(messageSchema MessageSchema) (Codec, error) {
-	subject := fmt.Sprintf("%s.%s", messageSchema.Namespace, messageSchema.Name)
-	jsonSchema, err := json.Marshal(messageSchema)
-	if err != nil {
-		return nil, err
-	}
-	zlog.Debug("register schema", zap.String("subject", subject), zap.ByteString("schema", jsonSchema))
-	zlog.Debug("get compatibility level of subject's schema", zap.String("subject", subject))
-	actualCompatibilityLevel, err := c.schemaRegistryClient.GetCompatibilityLevel(subject, true)
-	unknownSubject := false
-	if err != nil {
-		unknownSubject = true
-	} else if *actualCompatibilityLevel != srclient.Forward {
-		err = c.setSubjectCompatibilityToForward(subject)
-		if err != nil {
-			return nil, err
-		}
-	}
-	zlog.Debug("register schema", zap.String("subject", subject))
-	schema, err := c.schemaRegistryClient.CreateSchema(subject, string(jsonSchema), srclient.Avro)
-	if err != nil {
-		return nil, fmt.Errorf("CreateSchema on subject: '%s', schema:\n%s error: %w", subject, string(jsonSchema), err)
-	}
-	if unknownSubject {
-		err = c.setSubjectCompatibilityToForward(subject)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	zlog.Debug("create kafka avro codec", zap.Int("ID", schema.ID()))
-	ac, err := goavro.NewCodecWithConverters(schema.Schema(), schemaTypeConverters)
-	if err != nil {
-		return nil, fmt.Errorf("goavro.NewCodecWithConverters error: %w, with schema %s", err, string(jsonSchema))
-	}
-	codec := NewKafkaAvroCodec(c.schemaRegistryURL, schema, ac)
-	return codec, nil
-}
-
-func (c *KafkaAvroABICodec) Refresh(blockNum uint32) error {
-	_, err := c.abi(c.account, blockNum, true)
-	return err
-}
-
-func (c *KafkaAvroABICodec) UpdateABI(blockNum uint32, step pbbstream.ForkStep, trxID string, actionTrace *pbcodec.ActionTrace) error {
-	c.onReload()
-	c.abisCache = make(map[string]*ABI)
-	return nil
-}
-
-func (c *KafkaAvroABICodec) onReload() {
-	zlog.Info("clear schema cache on reload static schema")
-	c.codecCache = c.initStaticSchema(make(map[string]Codec))
-}
-
-func (c *KafkaAvroABICodec) initStaticSchema(cache map[string]Codec) map[string]Codec {
-	codec, err := c.newCodec(CheckpointMessageSchema)
-	if err != nil {
-		zlog.Error("initStaticSchema fail to create codec", zap.String("schema", dkafkaCheckpoint), zap.Error(err))
-		panic("initStaticSchema fail to create codec DKafkaCheckpoint")
-	}
-	cache[dkafkaCheckpoint] = codec
-	return cache
-}
-
-func NewKafkaAvroABICodec(
-	decoder *ABIDecoder,
-	getSchema MessageSchemaSupplier,
-	schemaRegistryClient srclient.ISchemaRegistryClient,
-	account string,
-	schemaRegistryURL string,
-) ABICodec {
-	codec := &KafkaAvroABICodec{
-		decoder,
-		getSchema,
-		schemaRegistryClient,
-		account,
-		make(map[string]Codec, 5),
-		schemaRegistryURL,
-	}
-	decoder.onReload = codec.onReload
-	zlog.Info("NewKafkaAvroABICodec() => call onReload()", zap.String("account", account))
-	codec.onReload()
-	return codec
-}
-
 // ABIDecoder legacy abi codec does not support schema registry
 type ABIDecoder struct {
 	overrides   map[string]*ABI
 	abiCodecCli pbabicodec.DecoderClient
 	abisCache   map[string]*ABI
-	onReload    func()
 	context     context.Context
 }
 
@@ -270,7 +137,6 @@ func NewABIDecoder(
 		overrides:   overrides,
 		abiCodecCli: abiCodecCli,
 		abisCache:   make(map[string]*ABI),
-		onReload:    func() {},
 		context:     context,
 	}
 }
@@ -321,7 +187,6 @@ func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*
 		}
 	}
 	zlog.Info("ABIDecoder.abi(...) => call onReload()", zap.String("contract", contract), zap.Uint32("block_num", blockNum), zap.Bool("force_refresh", forceRefresh))
-	a.onReload()
 	resp, err := a.abiCodecCli.GetAbi(a.context, &pbabicodec.GetAbiRequest{
 		Account:    contract,
 		AtBlockNum: blockNum,

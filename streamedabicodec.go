@@ -170,7 +170,7 @@ func (s *StreamedAbiCodec) decodeDBOp(op *decodedDBOp, blockNum uint32) error {
 
 func (s *StreamedAbiCodec) UpdateABI(blockNum uint32, step pbbstream.ForkStep, trxID string, actionTrace *pbcodec.ActionTrace) error {
 	zlog.Info("update abi", zap.Uint32("block_num", blockNum), zap.String("transaction_id", trxID))
-	abi, err := DecodeABIAtBlock(trxID, actionTrace)
+	abi, err := decodeABIAtBlock(trxID, actionTrace)
 	if err != nil {
 		return fmt.Errorf("fail to decode abi error: %w", err)
 	}
@@ -287,7 +287,7 @@ func (c *StreamedAbiCodec) newCodec(messageSchema MessageSchema) (Codec, error) 
 	return codec, nil
 }
 
-func DecodeABIAtBlock(trxID string, actionTrace *pbcodec.ActionTrace) (*eos.ABI, error) {
+func decodeABIAtBlock(trxID string, actionTrace *pbcodec.ActionTrace) (*eos.ABI, error) {
 	account := actionTrace.GetData("account").String()
 	hexABI := actionTrace.GetData("abi")
 	if !hexABI.Exists() {

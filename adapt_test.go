@@ -182,7 +182,11 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			finder, _ := buildTableKeyExtractorFinder([]string{fmt.Sprintf("%s:s+k", tt.table)})
 			g := TableGenerator{
 				getExtractKey: finder,
-				abiCodec:      NewKafkaAvroABICodec(abiDecoder, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter"),
+				abiCodec: NewStreamedAbiCodec(&DfuseAbiRepository{
+					overrides:   abiDecoder.overrides,
+					abiCodecCli: abiDecoder.abiCodecCli,
+					context:     abiDecoder.context,
+				}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter"),
 			}
 			a := &CdCAdapter{
 				topic:     "test.topic",

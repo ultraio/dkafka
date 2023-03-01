@@ -7,13 +7,6 @@ import (
 	"github.com/eoscanada/eos-go"
 )
 
-func TestABIDecoderOnReload(t *testing.T) {
-	abiCodec := ABIDecoder{
-		onReload: func() {},
-	}
-	abiCodec.onReload()
-}
-
 func TestParseABIFileSpec(t *testing.T) {
 	type args struct {
 		spec string
