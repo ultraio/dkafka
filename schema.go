@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/eoscanada/eos-go"
+	"github.com/eoscanada/eos-go/ecc"
 	"github.com/iancoleman/strcase"
 	"github.com/linkedin/goavro/v2"
 	"go.uber.org/zap"
@@ -295,8 +296,32 @@ func assetConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, in
 	}
 }
 
+func publicKeyConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, interface{}) ([]byte, error) {
+	return func(bytes []byte, value interface{}) ([]byte, error) {
+		switch valueType := value.(type) {
+		case ecc.PublicKey:
+			return f(bytes, map[string]interface{}{"curve": valueType.Curve, "content": valueType.Content})
+		default:
+			return bytes, fmt.Errorf("unsupported public key type type: %T", value)
+		}
+	}
+}
+
+func signatureConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, interface{}) ([]byte, error) {
+	return func(bytes []byte, value interface{}) ([]byte, error) {
+		switch valueType := value.(type) {
+		case ecc.PublicKey:
+			return f(bytes, map[string]interface{}{"curve": valueType.Curve, "content": valueType.Content})
+		default:
+			return bytes, fmt.Errorf("unsupported public key type type: %T", value)
+		}
+	}
+}
+
 var schemaTypeConverters = map[string]goavro.ConvertBuild{
-	"eosio.Asset": assetConverter,
+	"eosio.Asset":   assetConverter,
+	"ecc.PublicKey": publicKeyConverter,
+	"ecc.Signature": signatureConverter,
 }
 
 var avroPrimitiveTypeByBuiltInTypes map[string]interface{}
@@ -323,6 +348,40 @@ var assetSchema RecordSchema = RecordSchema{
 		{
 			Name: "precision",
 			Type: "int",
+		},
+	},
+}
+
+var publicKeySchema RecordSchema = RecordSchema{
+	Type:      "record",
+	Name:      "PublicKey",
+	Namespace: "ecc",
+	Convert:   "ecc.PublicKey",
+	Fields: []FieldSchema{
+		{
+			Name: "curve",
+			Type: "int",
+		},
+		{
+			Name: "content",
+			Type: "bytes",
+		},
+	},
+}
+
+var signatureSchema RecordSchema = RecordSchema{
+	Type:      "record",
+	Name:      "Signature",
+	Namespace: "ecc",
+	Convert:   "ecc.Signature",
+	Fields: []FieldSchema{
+		{
+			Name: "curve",
+			Type: "int",
+		},
+		{
+			Name: "content",
+			Type: "bytes",
 		},
 	},
 }
@@ -364,7 +423,9 @@ func initBuiltInTypesForTables() {
 		"symbol_code":          "string", // FIXME check with blockchain team
 	}
 	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{
-		"asset": assetSchema,
+		"asset":      assetSchema,
+		"public_key": publicKeySchema,
+		"signature":  signatureSchema,
 	}
 }
 
@@ -375,6 +436,8 @@ func initBuiltInTypesForTables() {
 func initBuiltInTypesForActions() {
 	initBuiltInTypesForTables()
 	avroPrimitiveTypeByBuiltInTypes["asset"] = "string"
+	avroPrimitiveTypeByBuiltInTypes["public_key"] = "string"
+	avroPrimitiveTypeByBuiltInTypes["signature"] = "string"
 	avroPrimitiveTypeByBuiltInTypes["time_point"] = "string"
 	avroPrimitiveTypeByBuiltInTypes["time_point_sec"] = "string"
 	avroPrimitiveTypeByBuiltInTypes["block_timestamp_type"] = "string"

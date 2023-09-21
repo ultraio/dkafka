@@ -358,7 +358,7 @@ func newSchema(t testing.TB, id uint32, s string, c *goavro.Codec) *srclient.Sch
 
 func newAvroCodec(t testing.TB, s string) *goavro.Codec {
 	// codec, err := goavro.NewCodec(s)
-	codec, err := goavro.NewCodecWithConverters(s, map[string]goavro.ConvertBuild{"eosio.Asset": assetConverter})
+	codec, err := goavro.NewCodecWithConverters(s, schemaTypeConverters)
 	if err != nil {
 		t.Fatalf("goavro.NewCodec() on schema: %s, error: %v", s, err)
 	}
