@@ -417,8 +417,6 @@ func initBuiltInTypesForTables() {
 		"checksum160":          "bytes",
 		"checksum256":          "bytes",
 		"checksum512":          "bytes",
-		"public_key":           "string", // FIXME check with blockchain team
-		"signature":            "string", // FIXME check with blockchain team
 		"symbol":               "string", // FIXME check with blockchain team
 		"symbol_code":          "string", // FIXME check with blockchain team
 	}
