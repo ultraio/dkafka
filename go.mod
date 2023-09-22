@@ -105,7 +105,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-replace github.com/eoscanada/eos-go v0.9.1-0.20210812015252-984fc96878b6 => github.com/ultraio/eos-go v0.9.1-0.20230721083853-e93454af9cae
+replace github.com/eoscanada/eos-go v0.9.1-0.20210812015252-984fc96878b6 => github.com/ultraio/eos-go v0.9.1-0.20230922083945-2019fa6fd8fd
 
 replace github.com/dfuse-io/dfuse-eosio v0.9.0-beta9.0.20210812023750-17e5f52111ab => github.com/ultraio/dfuse-eosio v0.9.2-nodeos1.27.6.0.20230721110507-c5118bc8ea4d
 

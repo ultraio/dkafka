@@ -310,7 +310,7 @@ func publicKeyConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte
 func signatureConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, interface{}) ([]byte, error) {
 	return func(bytes []byte, value interface{}) ([]byte, error) {
 		switch valueType := value.(type) {
-		case ecc.PublicKey:
+		case ecc.Signature:
 			return f(bytes, map[string]interface{}{"curve": valueType.Curve, "content": valueType.Content})
 		default:
 			return bytes, fmt.Errorf("unsupported public key type type: %T", value)

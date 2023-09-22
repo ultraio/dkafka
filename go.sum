@@ -924,8 +924,8 @@ github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8/go.mod h1:VFNgLljT
 github.com/ugorji/go/codec v0.0.0-20190204201341-e444a5086c43/go.mod h1:iT03XoTwV7xq/+UGwKO3UbC1nNNlopQiY61beSdrtOA=
 github.com/ultraio/dfuse-eosio v0.9.2-nodeos1.27.6.0.20230721110507-c5118bc8ea4d h1:MLy3ati4tKVOC4auMCRdb61vaa1m8yQ2U2Dm4o26GUg=
 github.com/ultraio/dfuse-eosio v0.9.2-nodeos1.27.6.0.20230721110507-c5118bc8ea4d/go.mod h1:iPWSSX4yCjxC/jWJzwhLpQJOyYGprDn3srnsG2map0k=
-github.com/ultraio/eos-go v0.9.1-0.20230721083853-e93454af9cae h1:V1DiOlrVLps/abpuUWRz7Ykk8RY+cj1QSmIA5/CrtUA=
-github.com/ultraio/eos-go v0.9.1-0.20230721083853-e93454af9cae/go.mod h1:dKlu/HXNPI4I5yD7cITTwzfYLNfVaaFt9Y4VngtnhrY=
+github.com/ultraio/eos-go v0.9.1-0.20230922083945-2019fa6fd8fd h1:JWs++CSdNrD0ozn+sF0hMrPvHXJ7nDcmLxs9ifqfX04=
+github.com/ultraio/eos-go v0.9.1-0.20230922083945-2019fa6fd8fd/go.mod h1:dKlu/HXNPI4I5yD7cITTwzfYLNfVaaFt9Y4VngtnhrY=
 github.com/unrolled/render v1.0.0/go.mod h1:tu82oB5W2ykJRVioYsB+IQKcft7ryBr7w12qMBUPyXg=
 github.com/urfave/cli v1.22.1/go.mod h1:Gos4lmkARVdJ6EkW0WaNv/tZAAMe9V7XWyB60NtXRu0=
 github.com/urfave/negroni v1.0.0/go.mod h1:Meg73S6kFm/4PpbYdq35yYWoCZ9mS/YSx+lKnmiohz4=

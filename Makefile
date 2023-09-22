@@ -8,6 +8,8 @@ COVERAGE_DIR := $(BUILD_DIR)
 ENV ?= prod-testnet
 KUBECONFIG ?= ~/.kube/dfuse.$(ENV).kube
 CODEC ?= "json"
+TOPIC ?= "io.dkafka.test"
+
 
 MESSAGE_TYPE ?= '{"create" : "EosioNftFtCreatedNotification","update" : "EosioNftFtUpdatedNotification","issue" : "EosioNftFtIssuedNotification"}[action]'
 KEY_EXPRESSION ?= '"action"=="create" ? [data.create.memo] : [transaction_id]'
@@ -29,13 +31,16 @@ STREAM_ACT_START_BLOCK ?= 49608000
 ## CDC TABLES
 # CDC_TABLES_ACCOUNT ?= 'eosio.token'
 # CDC_TABLES_TABLE_NAMES ?= 'accounts:s+k'
-CDC_TABLES_ACCOUNT ?= 'eosio.nft.ft'
-CDC_TABLES_TABLE_NAMES ?= '*:s+k'
-CDC_TABLES_START_BLOCK ?= 89495000
+CDC_START_BLOCK ?= 31
+CDC_ACCOUNT ?= eosio
+
+CDC_TABLES_START_BLOCK ?= $(CDC_START_BLOCK)
+CDC_TABLES_ACCOUNT ?= $(CDC_ACCOUNT)
+CDC_TABLES_TABLE_NAMES ?= *:s+k
 ## CDC ACTIONS
-CDC_ACTIONS_EXPRESSION ?= '{"issue":"data.issue.to", "*": "first_auth_actor"}'
-CDC_ACTIONS_START_BLOCK ?= 70837000
-CDC_ACTIONS_ACCOUNT ?= 'eosio.nft.ft'
+CDC_ACTIONS_START_BLOCK ?= $(CDC_START_BLOCK)
+CDC_ACTIONS_ACCOUNT ?= $(CDC_ACCOUNT)
+CDC_ACTIONS_EXPRESSION ?= {"*":"transaction_id"}
 ##
 
 COMPRESSION_TYPE ?= "snappy"
@@ -105,7 +110,7 @@ stream: ## stream expression based localy
 		--abicodec-grpc-addr=localhost:9001 \
 		--fail-on-undecodable-db-op \
 		--kafka-cursor-topic="cursor" \
-		--kafka-topic="io.dkafka.test" \
+		--kafka-topic=$(TOPIC) \
 		--dfuse-firehose-include-expr=$(INCLUDE_EXPRESSION) \
 		--event-keys-expr=$(KEY_EXPRESSION) \
 		--event-type-expr=$(MESSAGE_TYPE) \
@@ -119,37 +124,37 @@ cdc-tables-mig: ## CDC stream on tables
 		--dfuse-firehose-grpc-addr=localhost:9000 \
 		--abicodec-grpc-addr=localhost:9001 \
 		--kafka-cursor-topic="cursor" \
-		--kafka-topic="io.dkafka.test" \
+		--kafka-topic=$(TOPIC) \
 		--kafka-compression-type=$(COMPRESSION_TYPE) \
 		--kafka-compression-level=$(COMPRESSION_LEVEL) \
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--start-block-num=$(CDC_TABLES_START_BLOCK) \
 		--codec=$(CODEC) \
-		--table-name=$(CDC_TABLES_TABLE_NAMES) $(CDC_TABLES_ACCOUNT)
+		--table-name='$(CDC_TABLES_TABLE_NAMES)' '$(CDC_TABLES_ACCOUNT)'
 
 cdc-tables: ## CDC stream on tables
 	$(BINARY_PATH) cdc tables \
 		--dfuse-firehose-grpc-addr=localhost:9000 \
 		--abicodec-grpc-addr=localhost:9001 \
-		--kafka-topic="io.dkafka.test" \
+		--kafka-topic=$(TOPIC) \
 		--kafka-compression-type=$(COMPRESSION_TYPE) \
 		--kafka-compression-level=$(COMPRESSION_LEVEL) \
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--start-block-num=$(CDC_TABLES_START_BLOCK) \
 		--codec=$(CODEC) \
-		--table-name=$(CDC_TABLES_TABLE_NAMES) $(CDC_TABLES_ACCOUNT)
+		--table-name='$(CDC_TABLES_TABLE_NAMES)' '$(CDC_TABLES_ACCOUNT)'
 
 cdc-actions: build up ## CDC stream on tables
 	$(BINARY_PATH) cdc actions \
 		--dfuse-firehose-grpc-addr=localhost:9000 \
 		--abicodec-grpc-addr=localhost:9001 \
-		--kafka-topic="io.dkafka.test" \
+		--kafka-topic=$(TOPIC) \
 		--kafka-compression-type=$(COMPRESSION_TYPE) \
 		--kafka-compression-level=$(COMPRESSION_LEVEL) \
 		--start-block-num=$(CDC_ACTIONS_START_BLOCK) \
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--codec=$(CODEC) \
-		--actions-expr=$(CDC_ACTIONS_EXPRESSION) $(CDC_ACTIONS_ACCOUNT)
+		--actions-expr='$(CDC_ACTIONS_EXPRESSION)' '$(CDC_ACTIONS_ACCOUNT)'
 
 stream-act: ## stream actions based localy
 	$(BINARY_PATH) publish \
@@ -157,7 +162,7 @@ stream-act: ## stream actions based localy
 		--abicodec-grpc-addr=localhost:9001 \
 		--fail-on-undecodable-db-op \
 		--kafka-cursor-topic="cursor" \
-		--kafka-topic="io.dkafka.test" \
+		--kafka-topic=$(TOPIC) \
 		--dfuse-firehose-include-expr=$(STREAM_ACT_INCLUDE_EXPRESSION) \
 		--actions-expr=$(STREAM_ACT_ACTIONS_EXPRESSION) \
 		--kafka-compression-type=$(COMPRESSION_TYPE) \
@@ -171,7 +176,7 @@ batch: build up ## run batch localy
 		--abicodec-grpc-addr=localhost:9001 \
 		--fail-on-undecodable-db-op \
 		--batch-mode \
-		--kafka-topic="io.dkafka.test" \
+		--kafka-topic=$(TOPIC) \
 		--dfuse-firehose-include-expr=$(INCLUDE_EXPRESSION) \
 		--event-keys-expr=$(KEY_EXPRESSION) \
 		--event-type-expr=$(MESSAGE_TYPE) \
