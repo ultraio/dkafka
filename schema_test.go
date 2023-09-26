@@ -8,6 +8,7 @@ import (
 )
 
 func Test_resolveFieldTypeSchema(t *testing.T) {
+	initBuiltInTypesForTables()
 	type args struct {
 		fieldType string
 		abi       *ABI
@@ -214,6 +215,86 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 					{
 						Name: "fieldB",
 						Type: "long",
+					},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := resolveFieldTypeSchema(tt.args.abi, tt.args.fieldType, make(map[string]string))
+			if (err != nil) != tt.wantErr {
+				t.Errorf("resolveFieldTypeSchema() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("resolveFieldTypeSchema() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_variantResolveFieldTypeSchema(t *testing.T) {
+	initBuiltInTypesForTables()
+	type args struct {
+		fieldType string
+		abi       *ABI
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    Schema
+		wantErr bool
+	}{
+		{
+			name: "variant->union",
+			args: args{"regproducer2", &ABI{&eos.ABI{
+				Types: []eos.ABIType{{
+					NewTypeName: "block_signing_authority",
+					Type:        "variant_block_signing_authority_v0",
+				}},
+				Structs: []eos.StructDef{{
+					Name: "block_signing_authority_v0",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "threshold",
+							Type: "uint32",
+						},
+					},
+				}, {
+					Name: "regproducer2",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "producer_authority",
+							Type: "block_signing_authority",
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_block_signing_authority_v0",
+					Types: []string{"block_signing_authority_v0"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "Regproducer2",
+				Fields: []FieldSchema{
+					{
+						Name: "producer_authority",
+						Type: RecordSchema{
+							Type: "record",
+							Name: "BlockSigningAuthorityV0",
+							Fields: []FieldSchema{
+								{
+									Name: "threshold",
+									Type: "long",
+								},
+							},
+						},
 					},
 				},
 			},

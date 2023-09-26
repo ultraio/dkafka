@@ -1,0 +1,2167 @@
+{
+   "version": "eosio::abi/1.1",
+   "types": [
+      {
+         "new_type_name": "block_signing_authority",
+         "type": "variant_block_signing_authority_v0"
+      }
+   ],
+   "structs": [
+      {
+         "name": "abi_hash",
+         "base": "",
+         "fields": [
+            {
+               "name": "owner",
+               "type": "name"
+            },
+            {
+               "name": "hash",
+               "type": "checksum256"
+            }
+         ]
+      },
+      {
+         "name": "account_tier",
+         "base": "",
+         "fields": [
+            {
+               "name": "current_tier",
+               "type": "name"
+            },
+            {
+               "name": "is_eligible",
+               "type": "bool"
+            }
+         ]
+      },
+      {
+         "name": "activate",
+         "base": "",
+         "fields": [
+            {
+               "name": "feature_digest",
+               "type": "checksum256"
+            }
+         ]
+      },
+      {
+         "name": "activatechn",
+         "base": ""
+      },
+      {
+         "name": "addbillcode",
+         "base": "",
+         "fields": [
+            {
+               "name": "code",
+               "type": "int32"
+            },
+            {
+               "name": "type",
+               "type": "int32"
+            }
+         ]
+      },
+      {
+         "name": "allowpred",
+         "base": "",
+         "fields": [
+            {
+               "name": "payer",
+               "type": "name"
+            },
+            {
+               "name": "paid_contract",
+               "type": "name"
+            },
+            {
+               "name": "paid_action",
+               "type": "name"
+            },
+            {
+               "name": "maximum_power_usage",
+               "type": "uint64"
+            },
+            {
+               "name": "predicate_contract",
+               "type": "name?"
+            },
+            {
+               "name": "predicate_action",
+               "type": "name?"
+            }
+         ]
+      },
+      {
+         "name": "authority",
+         "base": "",
+         "fields": [
+            {
+               "name": "threshold",
+               "type": "uint32"
+            },
+            {
+               "name": "keys",
+               "type": "key_weight[]"
+            },
+            {
+               "name": "accounts",
+               "type": "permission_level_weight[]"
+            },
+            {
+               "name": "waits",
+               "type": "wait_weight[]"
+            }
+         ]
+      },
+      {
+         "name": "billing_cfg",
+         "base": "",
+         "fields": [
+            {
+               "name": "on",
+               "type": "bool"
+            },
+            {
+               "name": "hard_failure_codes",
+               "type": "uint32[]"
+            },
+            {
+               "name": "soft_failure_codes",
+               "type": "uint32[]"
+            },
+            {
+               "name": "strategy",
+               "type": "uint8"
+            }
+         ]
+      },
+      {
+         "name": "blacklist_ultra",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "level",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "block_header",
+         "base": "",
+         "fields": [
+            {
+               "name": "timestamp",
+               "type": "uint32"
+            },
+            {
+               "name": "producer",
+               "type": "name"
+            },
+            {
+               "name": "confirmed",
+               "type": "uint16"
+            },
+            {
+               "name": "previous",
+               "type": "checksum256"
+            },
+            {
+               "name": "transaction_mroot",
+               "type": "checksum256"
+            },
+            {
+               "name": "action_mroot",
+               "type": "checksum256"
+            },
+            {
+               "name": "schedule_version",
+               "type": "uint32"
+            },
+            {
+               "name": "new_producers",
+               "type": "producer_schedule?"
+            }
+         ]
+      },
+      {
+         "name": "block_signing_authority_v0",
+         "base": "",
+         "fields": [
+            {
+               "name": "threshold",
+               "type": "uint32"
+            },
+            {
+               "name": "keys",
+               "type": "key_weight[]"
+            }
+         ]
+      },
+      {
+         "name": "blockchain_parameters",
+         "base": "",
+         "fields": [
+            {
+               "name": "max_block_net_usage",
+               "type": "uint64"
+            },
+            {
+               "name": "target_block_net_usage_pct",
+               "type": "uint32"
+            },
+            {
+               "name": "max_transaction_net_usage",
+               "type": "uint32"
+            },
+            {
+               "name": "base_per_transaction_net_usage",
+               "type": "uint32"
+            },
+            {
+               "name": "net_usage_leeway",
+               "type": "uint32"
+            },
+            {
+               "name": "context_free_discount_net_usage_num",
+               "type": "uint32"
+            },
+            {
+               "name": "context_free_discount_net_usage_den",
+               "type": "uint32"
+            },
+            {
+               "name": "max_block_cpu_usage",
+               "type": "uint32"
+            },
+            {
+               "name": "target_block_cpu_usage_pct",
+               "type": "uint32"
+            },
+            {
+               "name": "max_transaction_cpu_usage",
+               "type": "uint32"
+            },
+            {
+               "name": "min_transaction_cpu_usage",
+               "type": "uint32"
+            },
+            {
+               "name": "ultra_veto_enabled",
+               "type": "uint8"
+            },
+            {
+               "name": "max_transaction_lifetime",
+               "type": "uint32"
+            },
+            {
+               "name": "deferred_trx_expiration_window",
+               "type": "uint32"
+            },
+            {
+               "name": "max_transaction_delay",
+               "type": "uint32"
+            },
+            {
+               "name": "max_inline_action_size",
+               "type": "uint32"
+            },
+            {
+               "name": "max_inline_action_depth",
+               "type": "uint16"
+            },
+            {
+               "name": "max_authority_depth",
+               "type": "uint16"
+            }
+         ]
+      },
+      {
+         "name": "buy_quote",
+         "base": "",
+         "fields": [
+            {
+               "name": "timestamp",
+               "type": "block_timestamp_type"
+            },
+            {
+               "name": "cost",
+               "type": "int64"
+            },
+            {
+               "name": "fee",
+               "type": "int64"
+            },
+            {
+               "name": "bytes",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "buyram",
+         "base": "",
+         "fields": [
+            {
+               "name": "payer",
+               "type": "name"
+            },
+            {
+               "name": "receiver",
+               "type": "name"
+            },
+            {
+               "name": "quant",
+               "type": "asset"
+            }
+         ]
+      },
+      {
+         "name": "buyrambytes",
+         "base": "",
+         "fields": [
+            {
+               "name": "payer",
+               "type": "name"
+            },
+            {
+               "name": "receiver",
+               "type": "name"
+            },
+            {
+               "name": "bytes",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "canceldelay",
+         "base": "",
+         "fields": [
+            {
+               "name": "canceling_auth",
+               "type": "permission_level"
+            },
+            {
+               "name": "trx_id",
+               "type": "checksum256"
+            }
+         ]
+      },
+      {
+         "name": "chain_state",
+         "base": "",
+         "fields": [
+            {
+               "name": "flags",
+               "type": "uint32"
+            },
+            {
+               "name": "scheduled_producers",
+               "type": "name[]"
+            },
+            {
+               "name": "chain_activated_time",
+               "type": "time_point"
+            },
+            {
+               "name": "next_producer_claim_time",
+               "type": "time_point"
+            },
+            {
+               "name": "active_schedule_version",
+               "type": "uint32"
+            },
+            {
+               "name": "active_schedule_size",
+               "type": "uint8"
+            },
+            {
+               "name": "last_schedule_elapsed_update",
+               "type": "time_point"
+            },
+            {
+               "name": "schedule_elapsed",
+               "type": "pair_uint8_uint32[]"
+            }
+         ]
+      },
+      {
+         "name": "contracts_actions_counter",
+         "base": "",
+         "fields": [
+            {
+               "name": "count",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "createtier",
+         "base": "",
+         "fields": [
+            {
+               "name": "tier",
+               "type": "name"
+            },
+            {
+               "name": "max_free_permission_objects",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_shared_keys",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_permission_levels",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_waits",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_permission_link_objects",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "default_sponsored_tier",
+         "base": "",
+         "fields": [
+            {
+               "name": "tier",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "delegatebw",
+         "base": "",
+         "fields": [
+            {
+               "name": "from",
+               "type": "name"
+            },
+            {
+               "name": "receiver",
+               "type": "name"
+            },
+            {
+               "name": "power",
+               "type": "asset"
+            },
+            {
+               "name": "transfer",
+               "type": "bool"
+            }
+         ]
+      },
+      {
+         "name": "delegated_bandwidth",
+         "base": "",
+         "fields": [
+            {
+               "name": "from",
+               "type": "name"
+            },
+            {
+               "name": "to",
+               "type": "name"
+            },
+            {
+               "name": "power_weight",
+               "type": "asset"
+            }
+         ]
+      },
+      {
+         "name": "deleteauth",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "permission",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "eosio_global_state",
+         "base": "blockchain_parameters",
+         "fields": [
+            {
+               "name": "max_ram_size",
+               "type": "uint64"
+            },
+            {
+               "name": "total_ram_bytes_reserved",
+               "type": "uint64"
+            },
+            {
+               "name": "total_ram_stake",
+               "type": "int64"
+            },
+            {
+               "name": "perblock_bucket",
+               "type": "int64"
+            },
+            {
+               "name": "new_ram_per_block",
+               "type": "uint16"
+            },
+            {
+               "name": "last_ram_increase",
+               "type": "block_timestamp_type"
+            }
+         ]
+      },
+      {
+         "name": "exchange_state",
+         "base": "",
+         "fields": [
+            {
+               "name": "ram_supply",
+               "type": "asset"
+            },
+            {
+               "name": "ram_reserved",
+               "type": "asset"
+            },
+            {
+               "name": "ram_total_limit_deprecated",
+               "type": "asset"
+            },
+            {
+               "name": "ram_unused_limit",
+               "type": "asset"
+            },
+            {
+               "name": "ram_purchase_limit",
+               "type": "asset"
+            },
+            {
+               "name": "core_reserve",
+               "type": "asset"
+            },
+            {
+               "name": "connector_weight",
+               "type": "float64"
+            },
+            {
+               "name": "ram_fee_rate",
+               "type": "float64"
+            },
+            {
+               "name": "is_trade_enabled",
+               "type": "bool"
+            }
+         ]
+      },
+      {
+         "name": "free_actions_tier",
+         "base": "",
+         "fields": [
+            {
+               "name": "max_free_permission_objects",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_shared_keys",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_permission_levels",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_waits",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_permission_link_objects",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "giftram",
+         "base": "",
+         "fields": [
+            {
+               "name": "receiver",
+               "type": "name"
+            },
+            {
+               "name": "bytes",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "init",
+         "base": "",
+         "fields": [
+            {
+               "name": "version",
+               "type": "varuint32"
+            },
+            {
+               "name": "core",
+               "type": "symbol"
+            }
+         ]
+      },
+      {
+         "name": "key_weight",
+         "base": "",
+         "fields": [
+            {
+               "name": "key",
+               "type": "public_key"
+            },
+            {
+               "name": "weight",
+               "type": "uint16"
+            }
+         ]
+      },
+      {
+         "name": "linkauth",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "code",
+               "type": "name"
+            },
+            {
+               "name": "type",
+               "type": "name"
+            },
+            {
+               "name": "requirement",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "newaccount",
+         "base": "",
+         "fields": [
+            {
+               "name": "creator",
+               "type": "name"
+            },
+            {
+               "name": "name",
+               "type": "name"
+            },
+            {
+               "name": "owner",
+               "type": "authority"
+            },
+            {
+               "name": "active",
+               "type": "authority"
+            }
+         ]
+      },
+      {
+         "name": "newactconfig",
+         "base": "",
+         "fields": [
+            {
+               "name": "cost",
+               "type": "asset"
+            },
+            {
+               "name": "oracle",
+               "type": "name"
+            },
+            {
+               "name": "candidate_moving_average",
+               "type": "asset[]"
+            }
+         ]
+      },
+      {
+         "name": "newebact",
+         "base": "",
+         "fields": [
+            {
+               "name": "active",
+               "type": "authority"
+            },
+            {
+               "name": "major_idp",
+               "type": "name"
+            },
+            {
+               "name": "major_idp_id",
+               "type": "string"
+            },
+            {
+               "name": "account",
+               "type": "name?"
+            },
+            {
+               "name": "memo",
+               "type": "string"
+            }
+         ]
+      },
+      {
+         "name": "newnonebact",
+         "base": "",
+         "fields": [
+            {
+               "name": "creator",
+               "type": "name"
+            },
+            {
+               "name": "owner",
+               "type": "authority"
+            },
+            {
+               "name": "active",
+               "type": "authority"
+            },
+            {
+               "name": "max_payment",
+               "type": "asset"
+            }
+         ]
+      },
+      {
+         "name": "next_eba_num",
+         "base": "",
+         "fields": [
+            {
+               "name": "num",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "next_non_eba_num",
+         "base": "",
+         "fields": [
+            {
+               "name": "num",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "non_eba_config",
+         "base": "",
+         "fields": [
+            {
+               "name": "cost",
+               "type": "asset"
+            },
+            {
+               "name": "oracle",
+               "type": "name"
+            },
+            {
+               "name": "ma_settings",
+               "type": "asset[]"
+            }
+         ]
+      },
+      {
+         "name": "onblock",
+         "base": "",
+         "fields": [
+            {
+               "name": "header",
+               "type": "block_header"
+            }
+         ]
+      },
+      {
+         "name": "onerror",
+         "base": "",
+         "fields": [
+            {
+               "name": "sender_id",
+               "type": "uint128"
+            },
+            {
+               "name": "sent_trx",
+               "type": "bytes"
+            }
+         ]
+      },
+      {
+         "name": "pair_uint8_uint32",
+         "base": "",
+         "fields": [
+            {
+               "name": "key",
+               "type": "uint8"
+            },
+            {
+               "name": "value",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "payer_contract_action_id",
+         "base": "",
+         "fields": [
+            {
+               "name": "paid_action",
+               "type": "name"
+            },
+            {
+               "name": "paid_contract_action_id",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "payer_predicate",
+         "base": "",
+         "fields": [
+            {
+               "name": "paid_contract_action_id",
+               "type": "uint64"
+            },
+            {
+               "name": "maximum_power_usage",
+               "type": "uint64"
+            },
+            {
+               "name": "predicate_contract",
+               "type": "name?"
+            },
+            {
+               "name": "predicate_action",
+               "type": "name?"
+            }
+         ]
+      },
+      {
+         "name": "permission_level",
+         "base": "",
+         "fields": [
+            {
+               "name": "actor",
+               "type": "name"
+            },
+            {
+               "name": "permission",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "permission_level_weight",
+         "base": "",
+         "fields": [
+            {
+               "name": "permission",
+               "type": "permission_level"
+            },
+            {
+               "name": "weight",
+               "type": "uint16"
+            }
+         ]
+      },
+      {
+         "name": "producer_info",
+         "base": "",
+         "fields": [
+            {
+               "name": "owner",
+               "type": "name"
+            },
+            {
+               "name": "producer_key",
+               "type": "public_key"
+            },
+            {
+               "name": "is_active",
+               "type": "bool"
+            },
+            {
+               "name": "url",
+               "type": "string"
+            },
+            {
+               "name": "last_claim_time",
+               "type": "time_point"
+            },
+            {
+               "name": "location",
+               "type": "uint16"
+            },
+            {
+               "name": "producer_authority",
+               "type": "block_signing_authority$"
+            },
+            {
+               "name": "activate_time",
+               "type": "time_point"
+            },
+            {
+               "name": "unclaimed_blocks",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "producer_key",
+         "base": "",
+         "fields": [
+            {
+               "name": "producer_name",
+               "type": "name"
+            },
+            {
+               "name": "block_signing_key",
+               "type": "public_key"
+            }
+         ]
+      },
+      {
+         "name": "producer_schedule",
+         "base": "",
+         "fields": [
+            {
+               "name": "version",
+               "type": "uint32"
+            },
+            {
+               "name": "producers",
+               "type": "producer_key[]"
+            }
+         ]
+      },
+      {
+         "name": "ram_offer",
+         "base": "",
+         "fields": [
+            {
+               "name": "total_ram_gifted",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "ram_payment",
+         "base": "",
+         "fields": [
+            {
+               "name": "total_uos",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "ram_purchase",
+         "base": "",
+         "fields": [
+            {
+               "name": "total_ram_bought",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "ram_sponsor_account",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "ram_whitelist",
+         "base": "",
+         "fields": [
+            {
+               "name": "ram_unused_limit",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "reclaimram",
+         "base": "",
+         "fields": [
+            {
+               "name": "receiver",
+               "type": "name"
+            },
+            {
+               "name": "max_bytes",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "refund",
+         "base": "",
+         "fields": [
+            {
+               "name": "owner",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "refund_request",
+         "base": "",
+         "fields": [
+            {
+               "name": "owner",
+               "type": "name"
+            },
+            {
+               "name": "request_time",
+               "type": "time_point_sec"
+            },
+            {
+               "name": "power_amount",
+               "type": "asset"
+            }
+         ]
+      },
+      {
+         "name": "refundram",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "bytes",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "regproducer",
+         "base": "",
+         "fields": [
+            {
+               "name": "producer",
+               "type": "name"
+            },
+            {
+               "name": "producer_key",
+               "type": "public_key"
+            },
+            {
+               "name": "url",
+               "type": "string"
+            },
+            {
+               "name": "location",
+               "type": "uint16"
+            }
+         ]
+      },
+      {
+         "name": "regproducer2",
+         "base": "",
+         "fields": [
+            {
+               "name": "producer",
+               "type": "name"
+            },
+            {
+               "name": "producer_authority",
+               "type": "block_signing_authority"
+            },
+            {
+               "name": "url",
+               "type": "string"
+            },
+            {
+               "name": "location",
+               "type": "uint16"
+            }
+         ]
+      },
+      {
+         "name": "restriction_level_configs",
+         "base": "",
+         "fields": [
+            {
+               "name": "max_voting_duration_sec",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "restriction_level_vote",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "votes",
+               "type": "name[]"
+            },
+            {
+               "name": "block_time",
+               "type": "block_timestamp_type"
+            }
+         ]
+      },
+      {
+         "name": "resvrambytes",
+         "base": "",
+         "fields": [
+            {
+               "name": "bytes",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "revokepred",
+         "base": "",
+         "fields": [
+            {
+               "name": "payer",
+               "type": "name"
+            },
+            {
+               "name": "paid_contract",
+               "type": "name"
+            },
+            {
+               "name": "paid_action",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "rmbillcode",
+         "base": "",
+         "fields": [
+            {
+               "name": "code",
+               "type": "int32"
+            },
+            {
+               "name": "type",
+               "type": "int32"
+            }
+         ]
+      },
+      {
+         "name": "rtnrambytes",
+         "base": "",
+         "fields": [
+            {
+               "name": "bytes",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "setabi",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "abi",
+               "type": "bytes"
+            }
+         ]
+      },
+      {
+         "name": "setacblcklst",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "level",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "setacctpow",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "power_weight",
+               "type": "int64?"
+            }
+         ]
+      },
+      {
+         "name": "setacctram",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "ram_bytes",
+               "type": "int64?"
+            }
+         ]
+      },
+      {
+         "name": "setalimits",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "ram_bytes",
+               "type": "int64"
+            },
+            {
+               "name": "power_weight",
+               "type": "int64"
+            }
+         ]
+      },
+      {
+         "name": "setbilling",
+         "base": "",
+         "fields": [
+            {
+               "name": "on",
+               "type": "bool"
+            }
+         ]
+      },
+      {
+         "name": "setbillstrat",
+         "base": "",
+         "fields": [
+            {
+               "name": "s",
+               "type": "int32"
+            }
+         ]
+      },
+      {
+         "name": "setcode",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "vmtype",
+               "type": "uint8"
+            },
+            {
+               "name": "vmversion",
+               "type": "uint8"
+            },
+            {
+               "name": "code",
+               "type": "bytes"
+            }
+         ]
+      },
+      {
+         "name": "setdeftier",
+         "base": "",
+         "fields": [
+            {
+               "name": "tier",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "setparams",
+         "base": "",
+         "fields": [
+            {
+               "name": "params",
+               "type": "blockchain_parameters"
+            }
+         ]
+      },
+      {
+         "name": "setpriv",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "is_priv",
+               "type": "uint8"
+            }
+         ]
+      },
+      {
+         "name": "setprods",
+         "base": "",
+         "fields": [
+            {
+               "name": "schedule",
+               "type": "name[]"
+            }
+         ]
+      },
+      {
+         "name": "setram",
+         "base": "",
+         "fields": [
+            {
+               "name": "max_ram_size",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "setramcurve",
+         "base": "",
+         "fields": [
+            {
+               "name": "core_reserve",
+               "type": "asset"
+            },
+            {
+               "name": "ram_supply",
+               "type": "int64"
+            },
+            {
+               "name": "connector_weight",
+               "type": "float64"
+            }
+         ]
+      },
+      {
+         "name": "setramfee",
+         "base": "",
+         "fields": [
+            {
+               "name": "ram_fee_percent",
+               "type": "float64"
+            }
+         ]
+      },
+      {
+         "name": "setramprchlm",
+         "base": "",
+         "fields": [
+            {
+               "name": "ram_purchase_limit",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "setramrate",
+         "base": "",
+         "fields": [
+            {
+               "name": "bytes_per_block",
+               "type": "uint16"
+            }
+         ]
+      },
+      {
+         "name": "setramsponsr",
+         "base": "",
+         "fields": [
+            {
+               "name": "ram_sponsor",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "setramtrade",
+         "base": "",
+         "fields": [
+            {
+               "name": "state",
+               "type": "bool"
+            }
+         ]
+      },
+      {
+         "name": "setrankalgo",
+         "base": "",
+         "fields": [
+            {
+               "name": "algorithm",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "settax",
+         "base": "",
+         "fields": [
+            {
+               "name": "country_subregion",
+               "type": "symbol_code"
+            },
+            {
+               "name": "percentage",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "settier",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "tier",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "settiereligb",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "is_eligible",
+               "type": "bool"
+            }
+         ]
+      },
+      {
+         "name": "setunusedlm",
+         "base": "",
+         "fields": [
+            {
+               "name": "ram_unused_limit",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "taxes",
+         "base": "",
+         "fields": [
+            {
+               "name": "percentage",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "unclaimed_block",
+         "base": "",
+         "fields": [
+            {
+               "name": "owner",
+               "type": "name"
+            },
+            {
+               "name": "blocks",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "undelegatebw",
+         "base": "",
+         "fields": [
+            {
+               "name": "from",
+               "type": "name"
+            },
+            {
+               "name": "receiver",
+               "type": "name"
+            },
+            {
+               "name": "power",
+               "type": "asset"
+            }
+         ]
+      },
+      {
+         "name": "unlinkauth",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "code",
+               "type": "name"
+            },
+            {
+               "name": "type",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "unregprod",
+         "base": "",
+         "fields": [
+            {
+               "name": "producer",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "unwhtlistact",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "updateauth",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "permission",
+               "type": "name"
+            },
+            {
+               "name": "parent",
+               "type": "name"
+            },
+            {
+               "name": "auth",
+               "type": "authority"
+            }
+         ]
+      },
+      {
+         "name": "updatetier",
+         "base": "",
+         "fields": [
+            {
+               "name": "tier",
+               "type": "name"
+            },
+            {
+               "name": "max_free_permission_objects",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_shared_keys",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_permission_levels",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_waits",
+               "type": "uint64"
+            },
+            {
+               "name": "max_free_permission_link_objects",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "user_resources",
+         "base": "",
+         "fields": [
+            {
+               "name": "owner",
+               "type": "name"
+            },
+            {
+               "name": "power_weight",
+               "type": "asset"
+            },
+            {
+               "name": "ram_bytes",
+               "type": "int64"
+            },
+            {
+               "name": "flags",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "voteban",
+         "base": "",
+         "fields": [
+            {
+               "name": "voter",
+               "type": "name"
+            },
+            {
+               "name": "account",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "votebancfg",
+         "base": "",
+         "fields": [
+            {
+               "name": "max_voting_duration_sec",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "wait_weight",
+         "base": "",
+         "fields": [
+            {
+               "name": "wait_sec",
+               "type": "uint32"
+            },
+            {
+               "name": "weight",
+               "type": "uint16"
+            }
+         ]
+      },
+      {
+         "name": "whitelistact",
+         "base": "",
+         "fields": [
+            {
+               "name": "account",
+               "type": "name"
+            },
+            {
+               "name": "ram_unused_limit",
+               "type": "uint64"
+            }
+         ]
+      }
+   ],
+   "actions": [
+      {
+         "name": "activate",
+         "type": "activate",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Activate Protocol Feature\nsummary: 'Activate protocol feature {{nowrap feature_digest}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{$action.account}} activates the protocol feature with a digest of {{feature_digest}}."
+      },
+      {
+         "name": "activatechn",
+         "type": "activatechn",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Activate the Chain\nsummary: 'Activates the chain.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nActivates the chain for multi-producer mode."
+      },
+      {
+         "name": "addbillcode",
+         "type": "addbillcode",
+         "ricardian_contract": ""
+      },
+      {
+         "name": "allowpred",
+         "type": "allowpred",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Allow predicate action\nsummary: 'Adds a payer predicate for specific contract and action'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{payer}}} adds a predicate for {{paid_contract}} {{paid_action}} to allow other accounts to add him as a @payer on this contract-action pair."
+      },
+      {
+         "name": "buyram",
+         "type": "buyram",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Buy RAM\nsummary: '{{nowrap payer}} buys RAM on behalf of {{nowrap receiver}} by paying {{nowrap quant}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/resource.png#3830f1ce8cb07f7757dbcf383b1ec1b11914ac34a1f9d8b065f07600fa9dac19\n---\n\n{{payer}} buys RAM on behalf of {{receiver}} by paying {{quant}}. This transaction will incur a 0.5% fee out of {{quant}} and the amount of RAM delivered will depend on market rates."
+      },
+      {
+         "name": "buyrambytes",
+         "type": "buyrambytes",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Buy RAM\nsummary: '{{nowrap payer}} buys {{nowrap bytes}} bytes of RAM on behalf of {{nowrap receiver}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/resource.png#3830f1ce8cb07f7757dbcf383b1ec1b11914ac34a1f9d8b065f07600fa9dac19\n---\n\n{{payer}} buys approximately {{bytes}} bytes of RAM on behalf of {{receiver}} by paying market rates for RAM. This transaction will incur a 0.5% fee and the cost will depend on market rates."
+      },
+      {
+         "name": "canceldelay",
+         "type": "canceldelay",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Cancel Delayed Transaction\nsummary: '{{nowrap canceling_auth.actor}} cancels a delayed transaction'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{canceling_auth.actor}} cancels the delayed transaction with id {{trx_id}}."
+      },
+      {
+         "name": "createtier",
+         "type": "createtier",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create a new sponsored actions tier\nsummary: 'Create a new sponsored actions tier with specified limitations'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nNew tier {{tier}} is created with provided maximum item storage limitations."
+      },
+      {
+         "name": "delegatebw",
+         "type": "delegatebw",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Stake Tokens for POWER\nsummary: 'Stake tokens for POWER and optionally transfer ownership'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/resource.png#3830f1ce8cb07f7757dbcf383b1ec1b11914ac34a1f9d8b065f07600fa9dac19\n---\n\n{{#if transfer}} {{from}} stakes POWER on behalf of {{receiver}}.\n\nStaked tokens will also be transferred to {{receiver}}. The sum of these two quantities will be deducted from {{from}}’s liquid balance and add to the vote weight of {{receiver}}.\n{{else}}\n{{from}} stakes POWER to self and delegates to {{receiver}}.\n\nThe sum of these two quantities add to the vote weight of {{from}}.\n{{/if}}"
+      },
+      {
+         "name": "deleteauth",
+         "type": "deleteauth",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Delete Account Permission\nsummary: 'Delete the {{nowrap permission}} permission of {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nDelete the {{permission}} permission of {{account}}."
+      },
+      {
+         "name": "giftram",
+         "type": "giftram",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Gift RAM\nsummary: 'Gift ram bytes to a user.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{reciever}} will receive {{bytes}} bytes from the ram supply."
+      },
+      {
+         "name": "init",
+         "type": "init",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Initialize System Contract\nsummary: 'Initialize system contract'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\nInitialize system contract. The core token symbol will be set to {{core}}."
+      },
+      {
+         "name": "linkauth",
+         "type": "linkauth",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Link Action to Permission\nsummary: '{{nowrap account}} sets the minimum required permission for the {{#if type}}{{nowrap type}} action of the{{/if}} {{nowrap code}} contract to {{nowrap requirement}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{account}} sets the minimum required permission for the {{#if type}}{{type}} action of the{{/if}} {{code}} contract to {{requirement}}.\n\n{{#if type}}{{else}}Any links explicitly associated to specific actions of {{code}} will take precedence.{{/if}}"
+      },
+      {
+         "name": "newaccount",
+         "type": "newaccount",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create New Account\nsummary: '{{nowrap creator}} creates a new account with the name {{nowrap name}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{creator}} creates a new account with the name {{name}} and the following permissions:\n\nowner permission with authority:\n{{to_json owner}}\n\nactive permission with authority:\n{{to_json active}}"
+      },
+      {
+         "name": "newactconfig",
+         "type": "newactconfig",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set non eba config\nsummary: 'Set non eba account creation policy'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{cost}} will be set for non eba account creation and which {{oracle}} contract and {{candicate_moving_average}} the rate will base on."
+      },
+      {
+         "name": "newebact",
+         "type": "newebact",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create EBA account\nsummary: 'Create new EBA account'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nNew account with generated name will be created with {{active}} authority and {{major_idp}} with {{major_ipd_id}} as account default id providers."
+      },
+      {
+         "name": "newnonebact",
+         "type": "newnonebact",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create non-EBA account\nsummary: 'Create new non-EBA account'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{creator}} will be able to create new account with {{owner}} authority and {{active}} authority with cost that should not exceed {{max_payment}}."
+      },
+      {
+         "name": "onblock",
+         "type": "onblock",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: onblock\nsummary: 'Currently not useable.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nNo description is provided."
+      },
+      {
+         "name": "onerror",
+         "type": "onerror",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: When an error occurs\nsummary: 'Currently not useable.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nNo description is provided."
+      },
+      {
+         "name": "reclaimram",
+         "type": "reclaimram",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Reclaim RAM\nsummary: 'Reclaim max gifted ram bytes from a user.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{reciever}} will try to return {{max_bytes}} gifted bytes to the ram supply."
+      },
+      {
+         "name": "refund",
+         "type": "refund",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Claim Unstaked Tokens\nsummary: 'Return previously unstaked tokens to {{nowrap owner}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nReturn previously unstaked tokens to {{owner}} after the unstaking period has elapsed."
+      },
+      {
+         "name": "refundram",
+         "type": "refundram",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Refund RAM From Account\nsummary: 'Refund unused RAM from {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/resource.png#3830f1ce8cb07f7757dbcf383b1ec1b11914ac34a1f9d8b065f07600fa9dac19\n---\n\nRefund {{bytes}} bytes of unused RAM from account {{account}} at the price which is averaged based on total UOS spent for RAM purchase and actual RAM that was purchased in this way. This action will weigh the gifted RAM and bought RAM depending on their amount."
+      },
+      {
+         "name": "regproducer",
+         "type": "regproducer",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Register as a Block Producer Candidate\nsummary: 'Register {{nowrap producer}} account as a block producer candidate'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/voting.png#db28cd3db6e62d4509af3644ce7d377329482a14bb4bfaca2aa5f1400d8e8a84\n---\n\nRegister {{producer}} account as a block producer candidate.\n\nURL: {{url}}\nLocation code: {{location}}\nBlock signing key: {{producer_key}}\n\n## Block Producer Agreement\n{{$clauses.BlockProducerAgreement}}"
+      },
+      {
+         "name": "regproducer2",
+         "type": "regproducer2",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Register as a Block Producer Candidate\nsummary: 'Register {{nowrap producer}} account as a block producer candidate'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/voting.png#db28cd3db6e62d4509af3644ce7d377329482a14bb4bfaca2aa5f1400d8e8a84\n---\n\nRegister {{producer}} account as a block producer candidate.\n\nURL: {{url}}\nLocation code: {{location}}\nBlock signing authority:\n{{to_json producer_authority}}\n\n## Block Producer Agreement\n{{$clauses.BlockProducerAgreement}}"
+      },
+      {
+         "name": "resvrambytes",
+         "type": "resvrambytes",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Reserve Ram Bytes\nsummary: 'Reserve ram from ram supply.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{bytes}} bytes will be reserved from the total ram supply."
+      },
+      {
+         "name": "revokepred",
+         "type": "revokepred",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Revoke predicate action\nsummary: 'Removes a payer predicate for specific contract and action'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{payer}}} removes a predicate for {{paid_contract}} {{paid_action}} to no longer allow other accounts to add him as a @payer on this contract-action pair."
+      },
+      {
+         "name": "rmbillcode",
+         "type": "rmbillcode",
+         "ricardian_contract": ""
+      },
+      {
+         "name": "rtnrambytes",
+         "type": "rtnrambytes",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Return RAM Bytes\nsummary: 'Return reserved ram to ram supply.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{bytes}} bytes will be returned back to the total ram supply."
+      },
+      {
+         "name": "setabi",
+         "type": "setabi",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Deploy Contract ABI\nsummary: 'Deploy contract ABI on account {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nDeploy the ABI file associated with the contract on account {{account}}."
+      },
+      {
+         "name": "setacblcklst",
+         "type": "setacblcklst",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set account blacklist status\nsummary: 'Set account level in ultra blacklist limiting transaction execution'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{account}} will be assigned status {{level}} in ultra blacklist thus altering the limits of transaction execution for it."
+      },
+      {
+         "name": "setacctpow",
+         "type": "setacctpow",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Explicitly Manage the POWER Quota of Account\nsummary: 'Explicitly manage the POWER bandwidth quota of account {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{#if_has_value power_weight}}\nExplicitly manage the POWER quota of account {{account}} by pinning it to a weight of {{power_weight}}.\n\n{{account}} can stake and unstake, however, it will not change their POWER quota as long as it remains pinned.\n{{else}}\nUnpin the POWER quota of account {{account}}. The POWER quota of {{account}} will be driven by the current tokens staked for POWER by {{account}}.\n{{/if_has_value}}"
+      },
+      {
+         "name": "setacctram",
+         "type": "setacctram",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Explicitly Manage the RAM Quota of Account\nsummary: 'Explicitly manage the RAM quota of account {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{#if_has_value ram_bytes}}\nExplicitly manage the RAM quota of account {{account}} by pinning it to {{ram_bytes}} bytes.\n\n{{account}} can buy and sell RAM, however, it will not change their RAM quota as long as it remains pinned.\n{{else}}\nUnpin the RAM quota of account {{account}}. The RAM quota of {{account}} will be driven by the current RAM holdings of {{account}}.\n{{/if_has_value}}"
+      },
+      {
+         "name": "setalimits",
+         "type": "setalimits",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Adjust Resource Limits of Account\nsummary: 'Adjust resource limits of account {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{$action.account}} updates {{account}}’s resource limits to have a RAM quota of {{ram_bytes}} bytes, and a POWER quota of {{power_weight}}."
+      },
+      {
+         "name": "setbilling",
+         "type": "setbilling",
+         "ricardian_contract": ""
+      },
+      {
+         "name": "setbillstrat",
+         "type": "setbillstrat",
+         "ricardian_contract": ""
+      },
+      {
+         "name": "setcode",
+         "type": "setcode",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Deploy Contract Code\nsummary: 'Deploy contract code on account {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nDeploy compiled contract code to the account {{account}}."
+      },
+      {
+         "name": "setdeftier",
+         "type": "setdeftier",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set default sponsored actions tier for new account\nsummary: 'Overwrites default sponsored tier for all new accounts'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nDefault sponsored actions tier for all new accounts is replaced with {{tier}}."
+      },
+      {
+         "name": "setparams",
+         "type": "setparams",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set System Parameters\nsummary: 'Set System Parameters'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{$action.account}} sets system parameters to:\n{{to_json params}}"
+      },
+      {
+         "name": "setpriv",
+         "type": "setpriv",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Make an Account Privileged or Unprivileged\nsummary: '{{#if is_priv}}Make {{nowrap account}} privileged{{else}}Remove privileged status of {{nowrap account}}{{/if}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{#if is_priv}}\n{{$action.account}} makes {{account}} privileged.\n{{else}}\n{{$action.account}} removes privileged status of {{account}}.\n{{/if}}"
+      },
+      {
+         "name": "setprods",
+         "type": "setprods",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set Producing Schedule\nsummary: 'Set new list of producing producer.'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{schedule}} will be set as new list of producing producer or a new producer schedule"
+      },
+      {
+         "name": "setram",
+         "type": "setram",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Configure the Available RAM\nsummary: 'Configure the available RAM'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{$action.account}} configures the available RAM to {{max_ram_size}} bytes."
+      },
+      {
+         "name": "setramcurve",
+         "type": "setramcurve",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set the Ram Market Curve\nsummary: 'Set the state of ram market and selling curve by overwriting current settings'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{core_reserve}}, {{ram_supply}} and {{connector_weight}} will be used to initialize RAM market by overwriting current values for market settings."
+      },
+      {
+         "name": "setramfee",
+         "type": "setramfee",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set the Ram Purchase Fee\nsummary: 'Set the ram fee percentage applied to ram purchases'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nOverwrite current ram purchase fee rate to {{ram_fee_percent}}% that is applied to each purchase."
+      },
+      {
+         "name": "setramprchlm",
+         "type": "setramprchlm",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set the RAM Purchase Limit in a Single Buy Action\nsummary: 'Set the RAM purchase limit for all users in a single buy action'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{ram_purchase_limit}} is used to overwrite current ram purchase limit for all accounts limiting the maximum ram purchased in a single buy action."
+      },
+      {
+         "name": "setramrate",
+         "type": "setramrate",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set the Rate of Increase of RAM\nsummary: 'Set the rate of increase of RAM per block'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\n{{$action.account}} sets the rate of increase of RAM to {{bytes_per_block}} bytes/block."
+      },
+      {
+         "name": "setramsponsr",
+         "type": "setramsponsr",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set tiered system ram sponsor account\nsummary: 'Initializes account that will sponsor the tiered system'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nAccount used for RAM sponsorship in the tiered system will be initialzied and set to {{ram_sponsor}}."
+      },
+      {
+         "name": "setramtrade",
+         "type": "setramtrade",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set RAM trading\nsummary: 'Enable or disable RAM trading'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nRAM trading system state will be set to {{state}}"
+      },
+      {
+         "name": "setrankalgo",
+         "type": "setrankalgo",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Change the transaction queue's ranking algorithm\nsummary: 'Changes the way that queued transactions are pulled out of the queue and pushed into blocks'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/admin.png#9bf1cec664863bd6aaac0f814b235f8799fb02c850e9aa5da34e8a004bd6518e\n---\n\nChange the ranking algorithm for queued transactions to flag type {{algorithm}}"
+      },
+      {
+         "name": "settax",
+         "type": "settax",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set Tax Rate\nsummary: 'Set tax rate for a Country'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{country_code}} country and sub region {{sub_region}} will be taxed at a {{percentage}} percentage for sales."
+      },
+      {
+         "name": "settier",
+         "type": "settier",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set accounts sponsored actions tier\nsummary: 'Overwrites current user sponsored actions tier with a new tier'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nCurrent tier of {{account}} is overwritten with a new tier {{tier}}."
+      },
+      {
+         "name": "settiereligb",
+         "type": "settiereligb",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set account eligibility for sponsored actions system\nsummary: 'Enables or disables sponsored actions system of account'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nEligibility for sponsored actions system of account {{account}} is overwritten to be {{is_eligible}}"
+      },
+      {
+         "name": "setunusedlm",
+         "type": "setunusedlm",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set the Unused Ram limit\nsummary: 'Set the unused ram limit'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nany account cannot own more unused ram than {{ram_unused_limit}}."
+      },
+      {
+         "name": "undelegatebw",
+         "type": "undelegatebw",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Unstake Tokens for POWER\nsummary: 'Unstake tokens for POWER from {{nowrap receiver}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/resource.png#3830f1ce8cb07f7757dbcf383b1ec1b11914ac34a1f9d8b065f07600fa9dac19\n---\n\n{{from}} unstakes power from {{receiver}}.\n\nThe sum of these two quantities will be removed from the vote weight of {{receiver}} and will be made available to {{from}} after an uninterrupted 3 day period without further unstaking by {{from}}. After the uninterrupted 3 day period passes, the system will attempt to automatically return the funds to {{from}}’s regular token balance. However, this automatic refund may occasionally fail which will then require {{from}} to manually claim the funds with the refund action."
+      },
+      {
+         "name": "unlinkauth",
+         "type": "unlinkauth",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Unlink Action from Permission\nsummary: '{{nowrap account}} unsets the minimum required permission for the {{#if type}}{{nowrap type}} action of the{{/if}} {{nowrap code}} contract'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{account}} removes the association between the {{#if type}}{{type}} action of the{{/if}} {{code}} contract and its minimum required permission.\n\n{{#if type}}{{else}}This will not remove any links explicitly associated to specific actions of {{code}}.{{/if}}"
+      },
+      {
+         "name": "unregprod",
+         "type": "unregprod",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Unregister as a Block Producer Candidate\nsummary: '{{nowrap producer}} unregisters as a block producer candidate'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/voting.png#db28cd3db6e62d4509af3644ce7d377329482a14bb4bfaca2aa5f1400d8e8a84\n---\n\n{{producer}} unregisters as a block producer candidate. {{producer}} account will retain its votes and those votes can change based on voter stake changes or votes removed from {{producer}}. However new voters will not be able to vote for {{producer}} while it remains unregistered."
+      },
+      {
+         "name": "unwhtlistact",
+         "type": "unwhtlistact",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Remove a User from the Whitelist in RAM Market\nsummary: 'Remove a user from the whitelist'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{account}} is removed from the whitelist and respective KYC limits now apply limiting the ram purchases."
+      },
+      {
+         "name": "updateauth",
+         "type": "updateauth",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Modify Account Permission\nsummary: 'Add or update the {{nowrap permission}} permission of {{nowrap account}}'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nModify, and create if necessary, the {{permission}} permission of {{account}} to have a parent permission of {{parent}} and the following authority:\n{{to_json auth}}"
+      },
+      {
+         "name": "updatetier",
+         "type": "updatetier",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Modify existing sponsored actions tier\nsummary: 'Updates an existing sponsored actions tier with specified new limitations'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nExisting tier {{tier}} is updated and current item storage limitations are overwritten with a new ones."
+      },
+      {
+         "name": "voteban",
+         "type": "voteban",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Vote for account ban\nsummary: 'Vote to raise account's ban level'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nVoter {{voter}} will add a vote for raising account {{account}}'s ban level to the next higher restrictive level. When enough votes are accumulated changes will take place chain-wide"
+      },
+      {
+         "name": "votebancfg",
+         "type": "votebancfg",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set ban voting settings\nsummary: 'Set ban voting settings'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nBan voting duration by voters will be set to {{max_voting_duration_sec}}"
+      },
+      {
+         "name": "whitelistact",
+         "type": "whitelistact",
+         "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Add a User to the Whitelist in RAM Market\nsummary: 'Add a user to the whitelist and set a custom threshold for his unused ram'\nicon: http://127.0.0.1/ricardian_assets/eosio.contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{account}} is added to the whitelist removing a total ram limit from it and allowing to have an unused ram threshold of {{ram_unused_limit}}."
+      }
+   ],
+   "tables": [
+      {
+         "name": "abihash",
+         "index_type": "i64",
+         "type": "abi_hash"
+      },
+      {
+         "name": "accounttier",
+         "index_type": "i64",
+         "type": "account_tier"
+      },
+      {
+         "name": "billingcfg",
+         "index_type": "i64",
+         "type": "billing_cfg"
+      },
+      {
+         "name": "blcklstultra",
+         "index_type": "i64",
+         "type": "blacklist_ultra"
+      },
+      {
+         "name": "buyquote",
+         "index_type": "i64",
+         "type": "buy_quote"
+      },
+      {
+         "name": "chainstate",
+         "index_type": "i64",
+         "type": "chain_state"
+      },
+      {
+         "name": "contactcntr",
+         "index_type": "i64",
+         "type": "contracts_actions_counter"
+      },
+      {
+         "name": "defaulttier",
+         "index_type": "i64",
+         "type": "default_sponsored_tier"
+      },
+      {
+         "name": "delband",
+         "index_type": "i64",
+         "type": "delegated_bandwidth"
+      },
+      {
+         "name": "freeacttier",
+         "index_type": "i64",
+         "type": "free_actions_tier"
+      },
+      {
+         "name": "global",
+         "index_type": "i64",
+         "type": "eosio_global_state"
+      },
+      {
+         "name": "next.eba",
+         "index_type": "i64",
+         "type": "next_eba_num"
+      },
+      {
+         "name": "next.noneba",
+         "index_type": "i64",
+         "type": "next_non_eba_num"
+      },
+      {
+         "name": "nonebaconfig",
+         "index_type": "i64",
+         "type": "non_eba_config"
+      },
+      {
+         "name": "paycntactid",
+         "index_type": "i64",
+         "type": "payer_contract_action_id"
+      },
+      {
+         "name": "payerpred",
+         "index_type": "i64",
+         "type": "payer_predicate"
+      },
+      {
+         "name": "producers",
+         "index_type": "i64",
+         "type": "producer_info"
+      },
+      {
+         "name": "rammarket",
+         "index_type": "i64",
+         "type": "exchange_state"
+      },
+      {
+         "name": "ramoffer",
+         "index_type": "i64",
+         "type": "ram_offer"
+      },
+      {
+         "name": "rampayment",
+         "index_type": "i64",
+         "type": "ram_payment"
+      },
+      {
+         "name": "rampurchase",
+         "index_type": "i64",
+         "type": "ram_purchase"
+      },
+      {
+         "name": "ramsponsor",
+         "index_type": "i64",
+         "type": "ram_sponsor_account"
+      },
+      {
+         "name": "ramwhitelist",
+         "index_type": "i64",
+         "type": "ram_whitelist"
+      },
+      {
+         "name": "refunds",
+         "index_type": "i64",
+         "type": "refund_request"
+      },
+      {
+         "name": "restrictcfgs",
+         "index_type": "i64",
+         "type": "restriction_level_configs"
+      },
+      {
+         "name": "restrictvote",
+         "index_type": "i64",
+         "type": "restriction_level_vote"
+      },
+      {
+         "name": "tax",
+         "index_type": "i64",
+         "type": "taxes"
+      },
+      {
+         "name": "unclaimed",
+         "index_type": "i64",
+         "type": "unclaimed_block"
+      },
+      {
+         "name": "userres",
+         "index_type": "i64",
+         "type": "user_resources"
+      }
+   ],
+   "ricardian_clauses": [
+      {
+         "id": "UserAgreement",
+         "body": "User agreement for the chain can go here."
+      },
+      {
+         "id": "BlockProducerAgreement",
+         "body": "I, {{producer}}, hereby nominate myself for consideration as an elected block producer.\n\nIf {{producer}} is selected to produce blocks by the system contract, I will sign blocks with my registered block signing keys and I hereby attest that I will keep these keys secret and secure.\n\nIf {{producer}} is unable to perform obligations under this contract I will resign my position using the unregprod action.\n\nI acknowledge that a block is 'objectively valid' if it conforms to the deterministic blockchain rules in force at the time of its creation, and is 'objectively invalid' if it fails to conform to those rules.\n\n{{producer}} hereby agrees to only use my registered block signing keys to sign messages under the following scenarios:\n\n* proposing an objectively valid block at the time appointed by the block scheduling algorithm;\n* pre-confirming a block produced by another producer in the schedule when I find said block objectively valid;\n* and, confirming a block for which {{producer}} has received pre-confirmation messages from more than two-thirds of the active block producers.\n\nI hereby accept liability for any and all provable damages that result from my:\n\n* signing two different block proposals with the same timestamp;\n* signing two different block proposals with the same block number;\n* signing any block proposal which builds off of an objectively invalid block;\n* signing a pre-confirmation for an objectively invalid block;\n* or, signing a confirmation for a block for which I do not possess pre-confirmation messages from more than two-thirds of the active block producers.\n\nI hereby agree that double-signing for a timestamp or block number in concert with two or more other block producers shall automatically be deemed malicious and cause {{producer}} to be subject to:\n\n* a fine equal to the past year of compensation received,\n* immediate disqualification from being a producer,\n* and/or other damages.\n\nAn exception may be made if {{producer}} can demonstrate that the double-signing occurred due to a bug in the reference software; the burden of proof is on {{producer}}.\n\nI hereby agree not to interfere with the producer election process. I agree to process all producer election transactions that occur in blocks I create, to sign all objectively valid blocks I create that contain election transactions, and to sign all pre-confirmations and confirmations necessary to facilitate transfer of control to the next set of producers as determined by the system contract.\n\nI hereby acknowledge that more than two-thirds of the active block producers may vote to disqualify {{producer}} in the event {{producer}} is unable to produce blocks or is unable to be reached, according to criteria agreed to among block producers.\n\nIf {{producer}} qualifies for and chooses to collect compensation due to votes received, {{producer}} will provide a public endpoint allowing at least 100 peers to maintain synchronization with the blockchain and/or submit transactions to be included. {{producer}} shall maintain at least one validating node with full state and signature checking and shall report any objectively invalid blocks produced by the active block producers. Reporting shall be via a method to be agreed to among block producers, said method and reports to be made public.\n\nThe community agrees to allow {{producer}} to authenticate peers as necessary to prevent abuse and denial of service attacks; however, {{producer}} agrees not to discriminate against non-abusive peers.\n\nI agree to process transactions on a FIFO (first in, first out) best-effort basis and to honestly bill transactions for measured execution time.\n\nI {{producer}} agree not to manipulate the contents of blocks in order to derive profit from: the order in which transactions are included, or the hash of the block that is produced.\n\nI, {{producer}}, hereby agree to disclose and attest under penalty of perjury all ultimate beneficial owners of my business entity who own more than 10% and all direct shareholders.\n\nI, {{producer}}, hereby agree to cooperate with other block producers to carry out our respective and mutual obligations under this agreement, including but not limited to maintaining network stability and a valid blockchain.\n\nI, {{producer}}, agree to maintain a website hosted at {{url}} which contains up-to-date information on all disclosures required by this contract.\n\nI, {{producer}}, agree to set the location value of {{location}} such that {{producer}} is scheduled with minimal latency between my previous and next peer.\n\nI, {{producer}}, agree to maintain time synchronization within 10 ms of global atomic clock time, using a method agreed to among block producers.\n\nI, {{producer}}, agree not to produce blocks before my scheduled time unless I have received all blocks produced by the prior block producer.\n\nI, {{producer}}, agree not to publish blocks with timestamps more than 500ms in the future unless the prior block is more than 75% full by either NET or CPU bandwidth metrics.\n\nI, {{producer}}, agree not to set the RAM supply to more RAM than my nodes contain and to resign if I am unable to provide the RAM approved by more than two-thirds of active block producers, as shown in the system parameters."
+      }
+   ],
+   "variants": [
+      {
+         "name": "variant_block_signing_authority_v0",
+         "types": [
+            "block_signing_authority_v0"
+         ]
+      }
+   ]
+}

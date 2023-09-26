@@ -162,6 +162,26 @@ func NewTimestampMillisType() Schema {
 	}
 }
 
+func NewInt128Type() Schema {
+	return map[string]interface{}{
+		"type":        "bytes",
+		"logicalType": "decimal",
+		"precision":   39,
+		"scale":       0,
+		"convert":     "eos.Int128",
+	}
+}
+
+func NewUint128Type() Schema {
+	return map[string]interface{}{
+		"type":        "bytes",
+		"logicalType": "decimal",
+		"precision":   39,
+		"scale":       0,
+		"convert":     "eos.Uint128",
+	}
+}
+
 func NewIntField(name string) FieldSchema {
 	return FieldSchema{
 		Name: name,

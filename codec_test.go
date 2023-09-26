@@ -1,7 +1,7 @@
 package dkafka
 
 import (
-	"fmt"
+	"encoding/json"
 	"reflect"
 	"testing"
 
@@ -349,7 +349,7 @@ func newSchema(t testing.TB, id uint32, s string, c *goavro.Codec) *srclient.Sch
 	if c == nil {
 		c = newAvroCodec(t, s)
 	}
-	schema, err := srclient.NewSchema(42, UserSchema, srclient.Avro, 1, nil, c, nil)
+	schema, err := srclient.NewSchema(42, s, srclient.Avro, 1, nil, c, nil)
 	if err != nil {
 		t.Fatalf("srclient.NewSchema() on schema: %s, error: %v", s, err)
 	}
@@ -453,6 +453,7 @@ var AccountSchema = `
 	]
 }
 `
+
 var NullableAccountSchema = `
 {
 	"namespace": "dkafka.test",
@@ -515,7 +516,85 @@ func TestAvroCodecAsset(t *testing.T) {
 		t.Fatalf("codec.Marshal() error: %v", err)
 	}
 	value, err := codec.Unmarshal(bytes)
-	t.Log(fmt.Sprintf("%v", value))
+	t.Logf("%v", value)
+	if err != nil {
+		t.Fatalf("codec.Unmarshal() error: %v", err)
+	}
+}
+
+var Uint128Record = newRecordFQN(
+	"dkafka.test",
+	"Uint128Record",
+	[]FieldSchema{
+		{
+			Name: "sender_id",
+			Type: NewUint128Type(),
+		},
+	})
+
+func TestAvroCodecUint128(t *testing.T) {
+	schema := newSchema(t, 42, marshalSchema(t, Uint128Record), nil)
+
+	codec := KafkaAvroCodec{
+		"mock://test/schemas/ids/%d",
+		RegisteredSchema{
+			id:      uint32(schema.ID()),
+			schema:  schema.Schema(),
+			version: schema.Version(),
+			codec:   schema.Codec(),
+		},
+	}
+	v := eos.Uint128{
+		Lo: 42,
+		Hi: 0,
+	}
+	bytes, err := codec.Marshal(nil, map[string]interface{}{
+		"sender_id": v,
+	})
+	if err != nil {
+		t.Fatalf("codec.Marshal() error: %v", err)
+	}
+	value, err := codec.Unmarshal(bytes)
+	t.Logf("%v", value)
+	if err != nil {
+		t.Fatalf("codec.Unmarshal() error: %v", err)
+	}
+}
+
+var Int128Record = newRecordFQN(
+	"dkafka.test",
+	"Int128Record",
+	[]FieldSchema{
+		{
+			Name: "sender_id",
+			Type: NewInt128Type(),
+		},
+	})
+
+func TestAvroCodecInt128(t *testing.T) {
+	schema := newSchema(t, 42, marshalSchema(t, Int128Record), nil)
+
+	codec := KafkaAvroCodec{
+		"mock://test/schemas/ids/%d",
+		RegisteredSchema{
+			id:      uint32(schema.ID()),
+			schema:  schema.Schema(),
+			version: schema.Version(),
+			codec:   schema.Codec(),
+		},
+	}
+	v := eos.Int128{
+		Lo: 42,
+		Hi: 0,
+	}
+	bytes, err := codec.Marshal(nil, map[string]interface{}{
+		"sender_id": v,
+	})
+	if err != nil {
+		t.Fatalf("codec.Marshal() error: %v", err)
+	}
+	value, err := codec.Unmarshal(bytes)
+	t.Logf("%v", value)
 	if err != nil {
 		t.Fatalf("codec.Unmarshal() error: %v", err)
 	}
@@ -548,7 +627,7 @@ func TestAvroCodecNullableAsset(t *testing.T) {
 		t.Fatalf("codec.Marshal() error: %v", err)
 	}
 	value, err := codec.Unmarshal(bytes)
-	t.Log(fmt.Sprintf("%v", value))
+	t.Logf("%v", value)
 	if err != nil {
 		t.Fatalf("codec.Unmarshal() error: %v", err)
 	}
@@ -574,7 +653,7 @@ func TestAvroCodecNullAsset(t *testing.T) {
 		t.Fatalf("codec.Marshal() error: %v", err)
 	}
 	value, err := codec.Unmarshal(bytes)
-	t.Log(fmt.Sprintf("%v", value))
+	t.Logf("%v", value)
 	if err != nil {
 		t.Fatalf("codec.Unmarshal() error: %v", err)
 	}
@@ -675,8 +754,17 @@ func TestAccountsTableNotification(t *testing.T) {
 		t.Fatalf("codec.Marshal() error: %v", err)
 	}
 	value, err := codec.Unmarshal(bytes)
-	t.Log(fmt.Sprintf("%v", value))
+	t.Logf("%v", value)
 	if err != nil {
 		t.Fatalf("codec.Unmarshal() error: %v", err)
 	}
+}
+
+func marshalSchema(t *testing.T, schema Schema) string {
+	bytes, err := json.Marshal(schema)
+	if err != nil {
+		t.Fatalf("cannot convert to json string the schema: %v", schema)
+		return ""
+	}
+	return string(bytes)
 }

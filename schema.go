@@ -218,6 +218,28 @@ func abiFieldToRecordField(abi *ABI, fieldDef eos.FieldDef, visited map[string]s
 	}
 }
 
+func variantToUnion(abi *ABI, name string, visited map[string]string) (Schema, error) {
+	v := abi.VariantForName(name)
+	if v == nil {
+		return nil, nil
+	}
+	if len(v.Types) == 1 {
+		//edge case where there is only one type in the union
+		//then return the type ;)
+		return resolveType(abi, v.Types[0], visited)
+	} else {
+		var union = make([]Schema, len(v.Types))
+		for i, aType := range v.Types {
+			if resolved, err := resolveType(abi, aType, visited); err != nil {
+				union[i] = resolved
+			} else {
+				return nil, err
+			}
+		}
+		return union, nil
+	}
+}
+
 /*
    built_in_types.emplace("bool",                      pack_unpack<uint8_t>());
    built_in_types.emplace("int8",                      pack_unpack<int8_t>());
@@ -318,10 +340,36 @@ func signatureConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte
 	}
 }
 
+func int128Converter(f func([]byte, interface{}) ([]byte, error)) func([]byte, interface{}) ([]byte, error) {
+	return func(bytes []byte, value interface{}) ([]byte, error) {
+		switch valueType := value.(type) {
+		case eos.Int128:
+			rat := new(big.Rat).SetInt(valueType.BigInt())
+			return f(bytes, rat)
+		default:
+			return bytes, fmt.Errorf("unsupported asset type: %T", value)
+		}
+	}
+}
+
+func uint128Converter(f func([]byte, interface{}) ([]byte, error)) func([]byte, interface{}) ([]byte, error) {
+	return func(bytes []byte, value interface{}) ([]byte, error) {
+		switch valueType := value.(type) {
+		case eos.Uint128:
+			rat := new(big.Rat).SetInt(valueType.BigInt())
+			return f(bytes, rat)
+		default:
+			return bytes, fmt.Errorf("unsupported asset type: %T", value)
+		}
+	}
+}
+
 var schemaTypeConverters = map[string]goavro.ConvertBuild{
 	"eosio.Asset":   assetConverter,
 	"ecc.PublicKey": publicKeyConverter,
 	"ecc.Signature": signatureConverter,
+	"eos.Int128":    int128Converter,
+	"eos.Uint128":   uint128Converter,
 }
 
 var avroPrimitiveTypeByBuiltInTypes map[string]interface{}
@@ -388,7 +436,6 @@ var signatureSchema RecordSchema = RecordSchema{
 
 var avroRecordTypeByBuiltInTypes map[string]RecordSchema
 
-// "int128":    "",
 // "uint128":   "",
 // "float128",
 // "extended_asset",
@@ -404,6 +451,8 @@ func initBuiltInTypesForTables() {
 		"uint32":               "long",
 		"int64":                "long",
 		"uint64":               "long", // FIXME maybe use Decimal here see goavro or FIXED
+		"int128":               NewInt128Type(),
+		"uint128":              NewUint128Type(),
 		"varint32":             "int",
 		"varuint32":            "long",
 		"float32":              "float",
@@ -493,6 +542,13 @@ func resolveType(abi *ABI, name string, visited map[string]string) (Schema, erro
 		visited[name] = reference(record)
 		return record, nil
 	}
+	union, er := variantToUnion(abi, name, visited)
+	if union != nil && er == nil {
+		return union, nil
+	} else if er != nil {
+		return union, er
+	}
+
 	if record, err := structToRecord(abi, name, visited); err != nil {
 		return nil, err
 	} else {
