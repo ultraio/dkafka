@@ -115,6 +115,7 @@ This remove the error messages`)
 	CdCCmd.PersistentFlags().String("schema-registry-url", "http://localhost:8081", "Schema registry url whose schemas are pushed to")
 
 	CdCCmd.PersistentFlags().StringP("namespace", "n", "", "namespace of the schema(s). Default: account name")
+	CdCCmd.PersistentFlags().Uint("major-version", 0, "Optional but strongly recommended if --version of the schema(s) is not used. It is used in conjunction with the ABI Block Number to version the schema in semver form: [Major].[ABIBlockNumber].0")
 	CdCCmd.PersistentFlags().StringP("version", "V", "", "Optional but strongly recommended version of the schema(s) in a semver form: 1.2.3.")
 	CdCCmd.PersistentFlags().StringSlice("local-abi-files", []string{}, `repeatable, ABI file definition in this format:
 '{account}:{path/to/filename}[:{block-number}]' (ex: 'eosio.token:/tmp/eosio_token.abi[:3]').
