@@ -270,7 +270,7 @@ func Test_transactionGenerator_Apply(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t1 *testing.T) {
-			abiCodec := NewStreamedAbiCodec(&DfuseAbiRepository{},
+			abiCodec := NewStreamedAbiCodecWithTransaction(&DfuseAbiRepository{},
 				nil, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), "", "mock://bench-adapter")
 			codec, err := abiCodec.GetCodec(transactionNotification, 0)
 			if err != nil {
@@ -332,7 +332,7 @@ func Test_transactionGenerator_Apply_approval(t *testing.T) {
 				t.Fatalf("jsonpb.UnmarshalString(): %v", err)
 			}
 
-			abiCodec := NewStreamedAbiCodec(&DfuseAbiRepository{},
+			abiCodec := NewStreamedAbiCodecWithTransaction(&DfuseAbiRepository{},
 				nil, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), "", "mock://bench-adapter")
 
 			if err != nil {
