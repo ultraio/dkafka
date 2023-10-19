@@ -137,9 +137,8 @@ func Test_transactionGenerator_Apply(t *testing.T) {
 					"producer_block_id": map[string]interface{}{"string": ""},
 					"receipt": map[string]interface{}{
 						"io.ultra.dkafka.transaction.TransactionReceiptHeader": map[string]interface{}{
-							"cpu_usage_micro_micro_seconds": map[string]interface{}{"long": int64(0)},
-							"net_usage_words":               map[string]interface{}{"long": int64(0)},
-							"status":                        map[string]interface{}{"int": int32(0)},
+							"cpu_usage_micro_seconds": map[string]interface{}{"long": int64(0)},
+							"status":                  map[string]interface{}{"int": int32(0)},
 						}},
 					"elapsed":   map[string]interface{}{"long": int64(0)},
 					"net_usage": map[string]interface{}{"long": int64(0)},
@@ -247,9 +246,8 @@ func Test_transactionGenerator_Apply(t *testing.T) {
 					"producer_block_id": map[string]interface{}{"string": ""},
 					"receipt": map[string]interface{}{
 						"io.ultra.dkafka.transaction.TransactionReceiptHeader": map[string]interface{}{
-							"cpu_usage_micro_micro_seconds": nil,
-							"net_usage_words":               nil,
-							"status":                        nil,
+							"cpu_usage_micro_seconds": nil,
+							"status":                  nil,
 						}},
 					"elapsed":       map[string]interface{}{"long": int64(0)},
 					"net_usage":     map[string]interface{}{"long": int64(0)},

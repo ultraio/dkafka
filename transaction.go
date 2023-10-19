@@ -56,8 +56,7 @@ func newTransactionReceiptHeaderBasicSchema() TransactionReceiptHeaderBasicSchem
 		"TransactionReceiptHeader",
 		[]FieldSchema{
 			NewOptionalField("status", "int"),
-			NewOptionalField("cpu_usage_micro_micro_seconds", "long"),
-			NewOptionalField("net_usage_words", "long"),
+			NewOptionalField("cpu_usage_micro_seconds", "long"),
 		},
 	)
 }
@@ -188,9 +187,8 @@ func newTransactionMap(transaction *pbcodec.TransactionTrace) map[string]interfa
 func newTransactionReceiptHeaderMap(transactionReceiptHeader *pbcodec.TransactionReceiptHeader) map[string]interface{} {
 	if transactionReceiptHeader != nil {
 		return map[string]interface{}{
-			"status":                        transactionReceiptHeader.Status,
-			"cpu_usage_micro_micro_seconds": transactionReceiptHeader.CpuUsageMicroSeconds,
-			"net_usage_words":               transactionReceiptHeader.NetUsageWords,
+			"status":                  transactionReceiptHeader.Status,
+			"cpu_usage_micro_seconds": transactionReceiptHeader.CpuUsageMicroSeconds,
 		}
 	} else {
 		return nil
