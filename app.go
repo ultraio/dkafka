@@ -303,6 +303,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		abiCodec, err = newABICodec(
 			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
 			msg.getTableSchema,
+			NewStreamedAbiCodec,
 		)
 		if err != nil {
 			return appCtx, err
@@ -338,6 +339,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		abiCodec, err = newABICodec(
 			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
 			msg.getActionSchema,
+			NewStreamedAbiCodec,
 		)
 		if err != nil {
 			return appCtx, err
@@ -369,6 +371,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		abiCodec, err = newABICodec(
 			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
 			msg.getNoopSchema,
+			NewStreamedAbiCodecWithTransaction,
 		)
 		if err != nil {
 			return appCtx, err
@@ -593,6 +596,7 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 		func(s string, a *ABI) (MessageSchema, error) {
 			return MessageSchema{}, fmt.Errorf("json message publisher does not support schema generation. Requested schema: %s", s)
 		},
+		NewStreamedAbiCodec,
 	)
 	sender = NewFastSender(ctx, producer, a.config.KafkaTopic, headers, abiCodec)
 	if err != nil {
@@ -779,13 +783,13 @@ func getCompressionLevel(compressionType string, config *Config) int {
 	return level.normalize(compressionLevel)
 }
 
-func newABICodec(codec string, account string, schemaRegistryURL string, abiDecoder *ABIDecoder, getSchema MessageSchemaSupplier) (ABICodec, error) {
+func newABICodec(codec string, account string, schemaRegistryURL string, abiDecoder *ABIDecoder, getSchema MessageSchemaSupplier, construct StreamAbiCodecConstructor) (ABICodec, error) {
 	switch codec {
 	case JsonCodec:
 		return NewJsonABICodec(abiDecoder, account), nil
 	case AvroCodec:
 		schemaRegistryClient := srclient.CreateSchemaRegistryClient(schemaRegistryURL)
-		return NewStreamedAbiCodec(&DfuseAbiRepository{
+		return construct(&DfuseAbiRepository{
 			overrides:   abiDecoder.overrides,
 			abiCodecCli: abiDecoder.abiCodecCli,
 			context:     abiDecoder.context,

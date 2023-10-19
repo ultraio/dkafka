@@ -73,7 +73,15 @@ type StreamedAbiCodec struct {
 	account              string
 	codecCache           map[string]Codec
 	schemaRegistryURL    string
+	staticSchemas        []MessageSchema
 }
+
+type StreamAbiCodecConstructor = func(AbiRepository,
+	MessageSchemaSupplier,
+	srclient.ISchemaRegistryClient,
+	string,
+	string,
+) ABICodec
 
 func NewStreamedAbiCodec(
 	bootstrapper AbiRepository,
@@ -82,12 +90,48 @@ func NewStreamedAbiCodec(
 	account string,
 	schemaRegistryURL string,
 ) ABICodec {
+	return newStreamedAbiCodec(
+		bootstrapper,
+		getSchema,
+		schemaRegistryClient,
+		account,
+		schemaRegistryURL,
+		[]MessageSchema{CheckpointMessageSchema},
+	)
+}
+
+func NewStreamedAbiCodecWithTransaction(
+	bootstrapper AbiRepository,
+	getSchema MessageSchemaSupplier,
+	schemaRegistryClient srclient.ISchemaRegistryClient,
+	account string,
+	schemaRegistryURL string,
+) ABICodec {
+	return newStreamedAbiCodec(
+		bootstrapper,
+		getSchema,
+		schemaRegistryClient,
+		account,
+		schemaRegistryURL,
+		[]MessageSchema{CheckpointMessageSchema, TransactionMessageSchema},
+	)
+}
+
+func newStreamedAbiCodec(
+	bootstrapper AbiRepository,
+	getSchema MessageSchemaSupplier,
+	schemaRegistryClient srclient.ISchemaRegistryClient,
+	account string,
+	schemaRegistryURL string,
+	staticSchemas []MessageSchema,
+) ABICodec {
 	codec := &StreamedAbiCodec{
 		bootstrapper:         bootstrapper,
 		getSchema:            getSchema,
 		schemaRegistryClient: schemaRegistryClient,
 		account:              account,
 		schemaRegistryURL:    schemaRegistryURL,
+		staticSchemas:        staticSchemas,
 	}
 	codec.resetCodecs()
 	return codec
@@ -228,8 +272,10 @@ func (s *StreamedAbiCodec) resetCodecs() {
 }
 
 func (s *StreamedAbiCodec) initStaticSchemas(cache map[string]Codec) map[string]Codec {
-	s.registerStaticSchema(cache, CheckpointMessageSchema)
-	s.registerStaticSchema(cache, TransactionMessageSchema)
+	for i, schema := range s.staticSchemas {
+		zlog.Info("register static schema", zap.Int("index", i), zap.String("name", schema.Name))
+		s.registerStaticSchema(cache, schema)
+	}
 	return cache
 }
 
