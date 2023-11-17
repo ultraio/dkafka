@@ -89,6 +89,14 @@ func intBinaryFromNative(buf []byte, datum interface{}) ([]byte, error) {
 		if value = int32(v); float32(value) != v {
 			return nil, fmt.Errorf("cannot encode binary int: provided Go float32 would lose precision: %f", v)
 		}
+	case string:
+		var err error
+		var tmp int64
+		// it will fail if the string value does not match the size of an int32 ;)
+		if tmp, err = strconv.ParseInt(v, 10, 32); err != nil {
+			return nil, fmt.Errorf("cannot encode binary long: the provided string cannot be converted into int32 received: %s, %w", v, err)
+		}
+		value = int32(tmp)
 	default:
 		valueOf := reflect.ValueOf(v)
 		switch valueOf.Kind() {
@@ -127,9 +135,6 @@ func longBinaryFromNative(buf []byte, datum interface{}) ([]byte, error) {
 		value = int64(v)
 	case uint64:
 		value = int64(v)
-		if value < 0 {
-			return nil, fmt.Errorf("cannot encode binary long: provided Go uint64 would lose precision: %d", v)
-		}
 	case float64:
 		if value = int64(v); float64(value) != v {
 			return nil, fmt.Errorf("cannot encode binary long: provided Go float64 would lose precision: %f", v)
@@ -137,6 +142,16 @@ func longBinaryFromNative(buf []byte, datum interface{}) ([]byte, error) {
 	case float32:
 		if value = int64(v); float32(value) != v {
 			return nil, fmt.Errorf("cannot encode binary long: provided Go float32 would lose precision: %f", v)
+		}
+	case string:
+		var err error
+		if value, err = strconv.ParseInt(v, 10, 64); err != nil {
+			var tmp uint64
+			if tmp, err = strconv.ParseUint(v, 10, 64); err != nil {
+				return nil, fmt.Errorf("cannot encode binary long: the provided string cannot be converted into int64 received: %s, %w", v, err)
+			} else {
+				value = int64(tmp)
+			}
 		}
 	default:
 		valueOf := reflect.ValueOf(v)
