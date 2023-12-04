@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
+	pbcodec "github.com/pinax-network/firehose-antelope/types/pb/sf/antelope/type/v1"
 	"github.com/google/cel-go/cel"
-	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
+	pbbstream "github.com/streamingfast/pbgo/sf/firehose/v1"
 	"go.uber.org/zap"
 )
 
@@ -261,7 +261,7 @@ func notificationContextMap(gc ActionContext) map[string]interface{} {
 		gc.stepName,
 		gc.transaction.Id,
 		newOptionalCorrelation(gc.correlation),
-		gc.block.MustTime().UTC(),
+		gc.block.Time().UTC(),
 		gc.cursor,
 	)
 }

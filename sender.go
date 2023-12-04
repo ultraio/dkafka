@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/streamingfast/bstream/forkable"
+	"github.com/streamingfast/bstream"
 	"go.uber.org/zap"
 )
 
@@ -66,7 +66,7 @@ func (s *FastKafkaSender) Send(ctx context.Context, messages []*kafka.Message, l
 
 func (s *FastKafkaSender) SaveCP(ctx context.Context, location location) error {
 	cursor := location.opaqueCursor()
-	c, err := forkable.CursorFromOpaque(cursor)
+	c, err := bstream.CursorFromOpaque(cursor)
 	if err != nil {
 		zlog.Error("FastKafkaSender.SaveCP() cannot decode cursor", zap.String("cursor", cursor), zap.Error(err))
 		return err

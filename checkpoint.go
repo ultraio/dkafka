@@ -9,7 +9,6 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/streamingfast/bstream"
-	"github.com/streamingfast/bstream/forkable"
 	"go.uber.org/zap"
 )
 
@@ -103,7 +102,7 @@ var CheckpointMessageSchema = MessageSchema{
 	newMeta(dkafkaMetaSupplier{}),
 }
 
-func newCheckpointMap(cursor *forkable.Cursor, time time.Time) map[string]interface{} {
+func newCheckpointMap(cursor *bstream.Cursor, time time.Time) map[string]interface{} {
 	return map[string]interface{}{
 		"step":                  int(cursor.Step),
 		"block":                 newBlockRefMap(cursor.Block),

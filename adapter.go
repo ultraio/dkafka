@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
+	pbcodec "github.com/pinax-network/firehose-antelope/types/pb/sf/antelope/type/v1"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 	"github.com/google/cel-go/cel"
@@ -121,7 +121,7 @@ func (m *adapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 		zlog.Debug("incoming block 1/10", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
 	}
 	msgs := make([]*kafka.Message, 0, 1)
-	blkTime := blk.MustTime().UTC()
+	blkTime := blk.Time().UTC()
 	// blkTimeStr := blkTime.Format("2006-01-02T15:04:05.9Z")
 	blkTimeStr := blkTime.Format(time.RFC3339)
 	blkTimeBytes := []byte(blkTimeStr)

@@ -9,7 +9,7 @@ import (
 	pbabicodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/abicodec/v1"
 	"github.com/eoscanada/eos-go"
 	"github.com/riferrei/srclient"
-	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
+	pbbstream "github.com/streamingfast/pbgo/sf/firehose/v1"
 	"google.golang.org/grpc"
 )
 

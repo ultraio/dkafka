@@ -4,16 +4,16 @@ import (
 	"fmt"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/streamingfast/bstream/forkable"
-	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
+	"github.com/streamingfast/bstream"
+	pbbstream "github.com/streamingfast/pbgo/sf/firehose/v1"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 type position struct {
-	cursor               *forkable.Cursor
+	cursor               *bstream.Cursor
 	opaqueCursor         string
-	previousCursor       *forkable.Cursor
+	previousCursor       *bstream.Cursor
 	previousOpaqueCursor string
 }
 
@@ -44,8 +44,8 @@ func (p position) opaque() string {
 	}
 }
 
-func NewRequest(filter string, startBlock int64, stopBlock uint64, cursor string, irreversibleOnly bool) *pbbstream.BlocksRequestV2 {
-	req := pbbstream.BlocksRequestV2{
+func NewRequest(filter string, startBlock int64, stopBlock uint64, cursor string, irreversibleOnly bool) *pbbstream.Request {
+	req := pbbstream.Request{
 		IncludeFilterExpr: filter,
 		StartBlockNum:     startBlock,
 		StopBlockNum:      stopBlock,
@@ -153,10 +153,10 @@ func getHeadCursorFromPartition(consumer *kafka.Consumer, topic string, partitio
 				continue
 			}
 			zlog.Debug("read opaque cursor")
-			if position.cursor, err = forkable.CursorFromOpaque(position.opaqueCursor); err != nil {
+			if position.cursor, err = bstream.CursorFromOpaque(position.opaqueCursor); err != nil {
 				return
 			}
-			position.previousCursor, _ = forkable.CursorFromOpaque(position.previousOpaqueCursor)
+			position.previousCursor, _ = bstream.CursorFromOpaque(position.previousOpaqueCursor)
 			return
 		default:
 			zlog.Info("un-handled kafka.Event type", zap.Any("event", event))

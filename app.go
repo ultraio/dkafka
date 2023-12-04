@@ -12,15 +12,15 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	pbabicodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/abicodec/v1"
-	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
+	pbcodec "github.com/pinax-network/firehose-antelope/types/pb/sf/antelope/type/v1"
 	"github.com/eoscanada/eos-go"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/cel-go/cel"
 	"github.com/riferrei/srclient"
-	"github.com/streamingfast/bstream/forkable"
+	"github.com/streamingfast/bstream"
 	"github.com/streamingfast/dgrpc"
-	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
-	pbhealth "github.com/streamingfast/pbgo/grpc/health/v1"
+	pbbstream "github.com/streamingfast/pbgo/sf/firehose/v1"
+	pbhealth "google.golang.org/grpc/health/grpc_health_v1"
 	"go.uber.org/zap"
 	"golang.org/x/oauth2"
 	"google.golang.org/grpc"
@@ -91,7 +91,7 @@ type Config struct {
 type App struct {
 	*shutter.Shutter
 	config         *Config
-	readinessProbe pbhealth.HealthClient
+	readinessProbe pbhealth.HealthClient // defined but not used
 }
 
 func New(config *Config) *App {
@@ -260,7 +260,7 @@ func (a *App) Run() (err error) {
 	}
 
 	zlog.Debug("Create streaming client")
-	client := pbbstream.NewBlockStreamV2Client(conn)
+	client := pbbstream.NewStreamClient(conn)
 
 	zlog.Info("Filter blocks", zap.Any("request", req))
 	executor, err := client.Blocks(ctx, req)
@@ -495,7 +495,7 @@ func LoadCursorFromCursorTopic(config *Config, cp checkpointer) (string, error) 
 		zlog.Info("no cursor found in cursor topic", zap.String("cursor_topic", config.KafkaCursorTopic))
 		return "", nil
 	case nil:
-		c, err := forkable.CursorFromOpaque(cursor)
+		c, err := bstream.CursorFromOpaque(cursor)
 		if err != nil {
 			zlog.Error("cannot decode cursor", zap.String("cursor", cursor), zap.Error(err))
 			return "", err
@@ -610,7 +610,7 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 	return appCtx, nil
 }
 
-func iterate(ctx context.Context, cancel context.CancelFunc, appCtx appCtx, tickDuration time.Duration, stream pbbstream.BlockStreamV2_BlocksClient, out chan error) error {
+func iterate(ctx context.Context, cancel context.CancelFunc, appCtx appCtx, tickDuration time.Duration, stream pbbstream.Stream_BlocksClient, out chan error) error {
 	// loop: receive block,  transform block, send message...
 	zlog.Info("Start looping over blocks...")
 

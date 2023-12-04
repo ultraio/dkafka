@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/streamingfast/bstream/forkable"
+	"github.com/streamingfast/bstream"
 )
 
 const opaqueCursor1 = "6QXTyGxzkcfhhxXa-8kWF6WzLpc-DFJmUQLgLBFEj4vz9XfM1Z6jBWNxaRuDxqDwjka-TA79jN2bHXspoJZRvYTrlbg25SM-RC8lmt_oqeXncKH3MV8Ydbw3C-KJY9nRUzXTaw_9c7AK4NDiP_rRbxA7Zc90LGLg2z9Y84dUJqIQ6ndnw22rJc_S0P-SoIdE_LF2RO2jliimBzF8eBtTOs-BZ_Kbuzp2MA=="
@@ -16,8 +16,8 @@ const opaqueCursor2 = "hsDNMretWsuoLJ-5SF69saWzLpc-DFJmUQLgLBFFj4vz9XfM1Z6iBmRxb
 
 var cursor2 = cursorFromOpaque(opaqueCursor2)
 
-func cursorFromOpaque(in string) (cursor *forkable.Cursor) {
-	cursor, _ = forkable.CursorFromOpaque(in)
+func cursorFromOpaque(in string) (cursor *bstream.Cursor) {
+	cursor, _ = bstream.CursorFromOpaque(in)
 	return
 }
 

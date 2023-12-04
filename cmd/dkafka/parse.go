@@ -7,7 +7,7 @@ import (
 	"github.com/dfuse-io/dkafka"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/streamingfast/bstream/forkable"
+	"github.com/streamingfast/bstream"
 )
 
 var ParseCmd = &cobra.Command{
@@ -53,7 +53,7 @@ func parseCursor(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("un-expected parameter only opaque cursor must be provided")
 	}
 
-	cursor, err := forkable.CursorFromOpaque(opaqueCursor)
+	cursor, err := bstream.CursorFromOpaque(opaqueCursor)
 	if err != nil {
 		return err
 	}

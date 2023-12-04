@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
+	pbcodec "github.com/pinax-network/firehose-antelope/types/pb/sf/antelope/type/v1"
 	"github.com/eoscanada/eos-go"
 	"github.com/linkedin/goavro/v2"
 	"github.com/riferrei/srclient"
