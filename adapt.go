@@ -72,8 +72,8 @@ func (m *CdCAdapter) Adapt(blkStep BlockStep) ([]*kafka.Message, error) {
 	step := sanitizeStep(blkStep.step.String())
 
 	m.saveBlock(blk)
-	if blk.Number%100 == 0 {
-		zlog.Info("incoming block 1/100", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
+	if blk.Number%1000 == 0 {
+		zlog.Info("incoming block 1/1000", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))
 	}
 	if blk.Number%10 == 0 {
 		zlog.Debug("incoming block 1/10", zap.Uint32("block_num", blk.Number), zap.String("step", step), zap.Int("length_filtered_trx_traces", len(blk.FilteredTransactionTraces)))

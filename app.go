@@ -650,7 +650,7 @@ func iterate(ctx context.Context, cancel context.CancelFunc, appCtx appCtx, tick
 			if err := ptypes.UnmarshalAny(msg.Block, blk); err != nil {
 				return fmt.Errorf("decoding any of type %q: %w", msg.Block.TypeUrl, err)
 			}
-			zlog.Info("Receive new block", zap.Uint32("block_num", blk.Number), zap.String("block_id", blk.Id), zap.String("cursor", msg.Cursor))
+			zlog.Debug("Receive new block", zap.Uint32("block_num", blk.Number), zap.String("block_id", blk.Id), zap.String("cursor", msg.Cursor))
 			blocksReceived.Inc()
 			blkStep := BlockStep{
 				blk:    blk,

@@ -384,11 +384,6 @@ func symbolConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, i
 			return f(bytes, valueType.Symbol)
 		case *eos.Symbol:
 			return f(bytes, valueType.Symbol)
-		case string:
-			return f(bytes, valueType)
-		case *string:
-			return f(bytes, valueType)
-
 		default:
 			return bytes, fmt.Errorf("unsupported symbol type: %T", value)
 		}

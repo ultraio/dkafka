@@ -60,7 +60,7 @@ func (s *FastKafkaSender) Send(ctx context.Context, messages []*kafka.Message, l
 			return err
 		}
 	}
-	zlog.Info("messages sent", zap.Uint32("block_id", location.blockNum()), zap.String("block_id", location.blockId()), zap.Int("nb", len(messages)))
+	zlog.Debug("messages sent", zap.Uint32("block_id", location.blockNum()), zap.String("block_id", location.blockId()), zap.Int("nb", len(messages)))
 	return nil
 }
 
@@ -71,7 +71,7 @@ func (s *FastKafkaSender) SaveCP(ctx context.Context, location location) error {
 		zlog.Error("FastKafkaSender.SaveCP() cannot decode cursor", zap.String("cursor", cursor), zap.Error(err))
 		return err
 	}
-	zlog.Info("save checkpoint",
+	zlog.Debug("save checkpoint",
 		zap.String("cursor", cursor),
 		zap.Stringer("plain_cursor", c),
 		zap.Stringer("cursor_block", c.Block),

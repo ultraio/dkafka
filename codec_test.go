@@ -9,6 +9,7 @@ import (
 	"github.com/eoscanada/eos-go"
 	"github.com/linkedin/goavro/v2"
 	"github.com/riferrei/srclient"
+	"gotest.tools/assert"
 )
 
 func TestNewJSONCode(t *testing.T) {
@@ -614,11 +615,130 @@ func TestAccountsTableNotification(t *testing.T) {
 	}
 }
 
+var MoreAssetSchema = `
+{
+    "type": "record",
+    "name": "AccountsTableNotification",
+    "namespace": "test.dkafka",
+    "fields": [
+        {
+            "name": "maximum_resell_price",
+			"type": {
+				"namespace": "eosio",
+				"name": "Asset",
+				"type": "record",
+				"convert": "eosio.Asset",
+				"fields": [
+					{
+						"name": "amount",
+						"type": {
+							"type": "bytes",
+							"logicalType": "decimal",
+							"precision": 32,
+							"scale": 8
+						}
+					},
+					{
+						"name": "symbol",
+						"type": "string"
+					}
+				]
+			}
+        },
+		{
+			"name": "minimum_resell_price",
+			"type": "eosio.Asset"
+		}
+    ]
+}
+`
+
+func TestMoreAsset(t *testing.T) {
+
+	schema := newSchema(t, 42, MoreAssetSchema, nil)
+
+	codec := KafkaAvroCodec{
+		"mock://test/schemas/ids/%d",
+		RegisteredSchema{
+			id:      uint32(schema.ID()),
+			schema:  schema.Schema(),
+			version: schema.Version(),
+			codec:   schema.Codec(),
+		},
+	}
+	asset := eos.Asset{
+		Amount: eos.Int64(100_000_000),
+		Symbol: eos.Symbol{
+			Precision: uint8(8),
+			Symbol:    "UOS",
+		},
+	}
+	// asset := map[string]interface{}{
+	// 	"balance": "1.0",
+	// }
+	bytes, err := codec.Marshal(nil, map[string]interface{}{
+		"maximum_resell_price": asset,
+		"minimum_resell_price": asset,
+	})
+	if err != nil {
+		t.Fatalf("codec.Marshal() error: %v", err)
+	}
+	value, err := codec.Unmarshal(bytes)
+	t.Logf("%v", value)
+	if err != nil {
+		t.Fatalf("codec.Unmarshal() error: %v", err)
+	}
+}
+
 func TestAvroCodecSymbol(t *testing.T) {
 	checkCodec(t, NewSymbolType(), eos.Symbol{
 		Precision: uint8(8),
 		Symbol:    "UOS",
 	})
+}
+
+var TestSymbolSchema = `
+{
+    "type": "record",
+    "name": "TestSymbol",
+    "namespace": "test.dkafka",
+    "fields": [
+		{"name":"block_id","type":"string"},
+		{"name": "symbol", "type":{"convert":"eos.Symbol","type":"string"}}
+    ]
+}
+`
+
+func TestAvroCodecSymbolWithString(t *testing.T) {
+
+	schema := newSchema(t, 42, TestSymbolSchema, nil)
+
+	codec := KafkaAvroCodec{
+		"mock://test/schemas/ids/%d",
+		RegisteredSchema{
+			id:      uint32(schema.ID()),
+			schema:  schema.Schema(),
+			version: schema.Version(),
+			codec:   schema.Codec(),
+		},
+	}
+	bytes, err := codec.Marshal(nil, map[string]interface{}{
+		"block_id": "abc",
+		"symbol": eos.Symbol{Precision: uint8(8),
+			Symbol: "UOS",
+		},
+	})
+	if err != nil {
+		t.Fatalf("codec.Marshal() error: %v", err)
+	}
+	value, err := codec.Unmarshal(bytes)
+	if err != nil {
+		t.Fatalf("codec.Unmarshal() error: %v", err)
+	}
+	actual := value.(map[string]interface{})
+	t.Logf("%v", value)
+	assert.Equal(t, actual["block_id"], "abc")
+
 }
 
 func checkCodec[T any](t *testing.T, fieldType interface{}, value T) {

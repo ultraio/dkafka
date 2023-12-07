@@ -17,9 +17,9 @@ import (
 // Fixed does not have child objects, therefore whatever namespace it defines is
 // just to store its name in the symbol table.
 func makeFixedCodec(st map[string]*Codec, enclosingNamespace string, schemaMap map[string]interface{}) (*Codec, error) {
-	c, err := registerNewCodec(st, schemaMap, enclosingNamespace)
+	c, err := registerNewNamedCodec(st, schemaMap, enclosingNamespace)
 	if err != nil {
-		return nil, fmt.Errorf("Fixed ought to have valid name: %s", err)
+		return nil, fmt.Errorf("fixed ought to have valid name: %s", err)
 	}
 	size, err := sizeFromSchemaMap(c.typeName, schemaMap)
 	if err != nil {
@@ -89,23 +89,23 @@ func sizeFromSchemaMap(typeName *name, schemaMap map[string]interface{}) (uint, 
 	// Fixed type must have size
 	sizeRaw, ok := schemaMap["size"]
 	if !ok {
-		return 0, fmt.Errorf("Fixed %q ought to have size key", typeName)
+		return 0, fmt.Errorf("fixed %q ought to have size key", typeName)
 	}
 	var size uint
 	switch val := sizeRaw.(type) {
 	case string:
 		s, err := strconv.ParseUint(val, 10, 0)
 		if err != nil {
-			return 0, fmt.Errorf("Fixed %q size ought to be number greater than zero: %v", typeName, sizeRaw)
+			return 0, fmt.Errorf("fixed %q size ought to be number greater than zero: %v", typeName, sizeRaw)
 		}
 		size = uint(s)
 	case float64:
 		if val <= 0 {
-			return 0, fmt.Errorf("Fixed %q size ought to be number greater than zero: %v", typeName, sizeRaw)
+			return 0, fmt.Errorf("fixed %q size ought to be number greater than zero: %v", typeName, sizeRaw)
 		}
 		size = uint(val)
 	default:
-		return 0, fmt.Errorf("Fixed %q size ought to be number greater than zero: %v", typeName, sizeRaw)
+		return 0, fmt.Errorf("fixed %q size ought to be number greater than zero: %v", typeName, sizeRaw)
 	}
 	return size, nil
 }
