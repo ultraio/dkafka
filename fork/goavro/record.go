@@ -16,18 +16,18 @@ import (
 func makeRecordCodec(converters map[string]ConvertBuild, st map[string]*Codec, enclosingNamespace string, schemaMap map[string]interface{}, cb *codecBuilder) (*Codec, error) {
 	// NOTE: To support recursive data types, create the codec and register it
 	// using the specified name, and fill in the codec functions later.
-	c, err := registerNewCodec(st, schemaMap, enclosingNamespace)
+	c, err := registerNewNamedCodec(st, schemaMap, enclosingNamespace)
 	if err != nil {
-		return nil, fmt.Errorf("Record ought to have valid name: %s", err)
+		return nil, fmt.Errorf("record ought to have valid name: %s", err)
 	}
 
 	fields, ok := schemaMap["fields"]
 	if !ok {
-		return nil, fmt.Errorf("Record %q ought to have fields key", c.typeName)
+		return nil, fmt.Errorf("record %q ought to have fields key", c.typeName)
 	}
 	fieldSchemas, ok := fields.([]interface{})
 	if !ok || fieldSchemas == nil {
-		return nil, fmt.Errorf("Record %q fields ought to be non-nil array: %v", c.typeName, fields)
+		return nil, fmt.Errorf("record %q fields ought to be non-nil array: %v", c.typeName, fields)
 	}
 
 	codecFromFieldName := make(map[string]*Codec)
@@ -38,7 +38,7 @@ func makeRecordCodec(converters map[string]ConvertBuild, st map[string]*Codec, e
 	for i, fieldSchema := range fieldSchemas {
 		fieldSchemaMap, ok := fieldSchema.(map[string]interface{})
 		if !ok {
-			return nil, fmt.Errorf("Record %q field %d ought to be valid Avro named type; received: %v", c.typeName, i+1, fieldSchema)
+			return nil, fmt.Errorf("record %q field %d ought to be valid Avro named type; received: %v", c.typeName, i+1, fieldSchema)
 		}
 
 		// NOTE: field names are not registered in the symbol table, because
@@ -46,18 +46,18 @@ func makeRecordCodec(converters map[string]ConvertBuild, st map[string]*Codec, e
 
 		fieldCodec, err := buildCodec(converters, st, c.typeName.namespace, fieldSchemaMap, cb)
 		if err != nil {
-			return nil, fmt.Errorf("Record %q field %d ought to be valid Avro named type: %s", c.typeName, i+1, err)
+			return nil, fmt.Errorf("record %q field %d ought to be valid Avro named type: %s", c.typeName, i+1, err)
 		}
 
 		// However, when creating a full name for the field name, be sure to use
 		// record's namespace
 		n, err := newNameFromSchemaMap(c.typeName.namespace, fieldSchemaMap)
 		if err != nil {
-			return nil, fmt.Errorf("Record %q field %d ought to have valid name: %v", c.typeName, i+1, fieldSchemaMap)
+			return nil, fmt.Errorf("record %q field %d ought to have valid name: %v", c.typeName, i+1, fieldSchemaMap)
 		}
 		fieldName := n.short()
 		if _, ok := codecFromFieldName[fieldName]; ok {
-			return nil, fmt.Errorf("Record %q field %d ought to have unique name: %q", c.typeName, i+1, fieldName)
+			return nil, fmt.Errorf("record %q field %d ought to have unique name: %q", c.typeName, i+1, fieldName)
 		}
 
 		if defaultValue, ok := fieldSchemaMap["default"]; ok {
@@ -66,43 +66,43 @@ func makeRecordCodec(converters map[string]ConvertBuild, st map[string]*Codec, e
 			case "boolean":
 				v, ok := defaultValue.(bool)
 				if !ok {
-					return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+					return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 				}
 				defaultValue = bool(v)
 			case "bytes":
 				v, ok := defaultValue.(string)
 				if !ok {
-					return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+					return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 				}
 				defaultValue = []byte(v)
 			case "double":
 				v, ok := defaultValue.(float64)
 				if !ok {
-					return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+					return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 				}
 				defaultValue = float64(v)
 			case "float":
 				v, ok := defaultValue.(float64)
 				if !ok {
-					return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+					return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 				}
 				defaultValue = float32(v)
 			case "int":
 				v, ok := defaultValue.(float64)
 				if !ok {
-					return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+					return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 				}
 				defaultValue = int32(v)
 			case "long":
 				v, ok := defaultValue.(float64)
 				if !ok {
-					return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+					return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 				}
 				defaultValue = int64(v)
 			case "string":
 				v, ok := defaultValue.(string)
 				if !ok {
-					return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+					return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 				}
 				defaultValue = string(v)
 			case "union":
@@ -123,7 +123,7 @@ func makeRecordCodec(converters map[string]ConvertBuild, st map[string]*Codec, e
 			// attempt to encode default value using codec
 			_, err = fieldCodec.binaryFromNative(nil, defaultValue)
 			if err != nil {
-				return nil, fmt.Errorf("Record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
+				return nil, fmt.Errorf("record %q field %q: default value ought to encode using field schema: %s", c.typeName, fieldName, err)
 			}
 			defaultValueFromName[fieldName] = defaultValue
 		}

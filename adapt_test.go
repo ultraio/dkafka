@@ -10,6 +10,7 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
+	"github.com/eoscanada/eos-go"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/riferrei/srclient"
 	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
@@ -134,6 +135,8 @@ func tableSchema(t testing.TB, abiFile string, tableName string) string {
 }
 
 func TestCdCAdapter_Adapt_pb(t *testing.T) {
+	eos.NativeType = true
+
 	tests := []struct {
 		name       string
 		file       string
