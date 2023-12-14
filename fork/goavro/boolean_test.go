@@ -28,6 +28,9 @@ func TestSchemaPrimitiveCodecBoolean(t *testing.T) {
 func TestPrimitiveBooleanBinary(t *testing.T) {
 	testBinaryEncodePass(t, `"boolean"`, 0, []byte{0})
 	testBinaryEncodePass(t, `"boolean"`, 1, []byte{1})
+	testBinaryEncodePass(t, `"boolean"`, 2, []byte{1})
+	testBinaryEncodeFail(t, `"boolean"`, -1, "cannot encode binary boolean: provided Go numeric is not equal or superior to 0: -1")
+	testBinaryEncodePass(t, `"boolean"`, 42.0, []byte{1})
 	testBinaryDecodeFailShortBuffer(t, `"boolean"`, nil)
 	testBinaryCodecPass(t, `"boolean"`, false, []byte{0})
 	testBinaryCodecPass(t, `"boolean"`, true, []byte{1})
