@@ -33,32 +33,44 @@ func booleanNativeFromBinary(buf []byte) (interface{}, []byte, error) {
 }
 
 func booleanBinaryFromNative(buf []byte, datum interface{}) ([]byte, error) {
-	var value bool
+	var i int
 	switch v := datum.(type) {
 	case bool:
-		value = v
-	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
-		if v != 0 && v != 1 {
-			return nil, fmt.Errorf("cannot encode binary boolean: provided Go numeric is not 1 or 0: %f", v)
+		if v {
+			i = 1
 		}
-		value = (v == 1)
+	case int:
+		i = int(v)
+	case int8:
+		i = int(v)
+	case int16:
+		i = int(v)
+	case int32:
+		i = int(v)
+	case int64:
+		i = int(v)
+	case uint:
+		i = int(v)
+	case uint8:
+		i = int(v)
+	case uint16:
+		i = int(v)
+	case uint32:
+		i = int(v)
+	case uint64:
+		i = int(v)
 	case float32:
-		i := int(v)
-		if i != 0 && i != 1 {
-			return nil, fmt.Errorf("cannot encode binary boolean: provided Go numeric is not 1 or 0: %f", v)
-		}
-		value = (i == 1)
+		i = int(v)
 	case float64:
-		i := int(v)
-		if i != 0 && i != 1 {
-			return nil, fmt.Errorf("cannot encode binary boolean: provided Go numeric is not 1 or 0: %f", v)
-		}
-		value = (i == 1)
+		i = int(v)
 	default:
 		return nil, fmt.Errorf("cannot encode binary boolean: expected: Go bool; received: %T", datum)
 	}
+	if i < 0 {
+		return nil, fmt.Errorf("cannot encode binary boolean: provided Go numeric is not equal or superior to 0: %v", datum)
+	}
 	var b byte
-	if value {
+	if i > 0 {
 		b = 1
 	}
 	return append(buf, b), nil
