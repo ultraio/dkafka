@@ -1,6 +1,7 @@
 package dkafka
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -13,108 +14,107 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		fieldType string
 		abi       *ABI
 	}
-	tests := []struct {
+	type test struct {
 		name    string
 		args    args
 		want    Schema
 		wantErr bool
-	}{
-		{
-			name:    "bool->boolean",
-			args:    args{"bool", nil},
-			want:    "boolean",
-			wantErr: false,
-		},
-		{
-			name:    "int8->int",
-			args:    args{"int8", nil},
-			want:    "int",
-			wantErr: false,
-		},
-		{
-			name:    "uint8->int",
-			args:    args{"uint8", nil},
-			want:    "int",
-			wantErr: false,
-		},
-		{
-			name:    "int16->int",
-			args:    args{"int16", nil},
-			want:    "int",
-			wantErr: false,
-		},
-		{
-			name:    "uint16->int",
-			args:    args{"uint16", nil},
-			want:    "int",
-			wantErr: false,
-		},
-		{
-			name:    "int32->int",
-			args:    args{"int32", nil},
-			want:    "int",
-			wantErr: false,
-		},
+	}
+
+	newTest := func(eosType string, want string, wantErr bool) test {
+		return test{
+			name:    fmt.Sprintf("%s->%s", eosType, want),
+			args:    args{eosType, nil},
+			want:    map[string]interface{}{"type": want, "eos.type": eosType},
+			wantErr: wantErr,
+		}
+	}
+
+	tests := []test{
+		newTest(
+			"bool",
+			"boolean",
+			false),
+		newTest(
+			"int8",
+			"int",
+			false,
+		),
+		newTest(
+			"uint8",
+			"int",
+			false,
+		),
+		newTest(
+			"int16",
+			"int",
+			false,
+		),
+		newTest(
+			"uint16",
+			"int",
+			false,
+		),
+		newTest(
+			"int32",
+			"int",
+			false,
+		),
 		{
 			name:    "int32[]->[]int",
 			args:    args{"int32[]", nil},
-			want:    NewArray("int"),
+			want:    NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"}),
 			wantErr: false,
 		},
 		{
 			name:    "int32$->['null', 'int']",
 			args:    args{"int32$", nil},
-			want:    NewOptional("int"),
+			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
 			wantErr: false,
 		},
 		{
 			name:    "int32?$->['null','int']",
 			args:    args{"int32?$", nil},
-			want:    NewOptional("int"),
+			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
 			wantErr: false,
 		},
 		{
 			name:    "int32[]?->['null',[]int]",
 			args:    args{"int32[]?$", nil},
-			want:    NewOptional(NewArray("int")),
+			want:    NewOptional(NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"})),
 			wantErr: false,
 		},
 		{
 			name:    "int32?->['null','int']",
 			args:    args{"int32?", nil},
-			want:    NewOptional("int"),
+			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
 			wantErr: false,
 		},
-		{
-			name:    "uint32->long",
-			args:    args{"uint32", nil},
-			want:    "long",
-			wantErr: false,
-		},
-		{
-			name:    "int64->long",
-			args:    args{"int64", nil},
-			want:    "long",
-			wantErr: false,
-		},
-		{
-			name:    "uint64->long",
-			args:    args{"uint64", nil},
-			want:    "long",
-			wantErr: false,
-		},
-		{
-			name:    "varint32->int",
-			args:    args{"varint32", nil},
-			want:    "int",
-			wantErr: false,
-		},
-		{
-			name:    "varuint32->long",
-			args:    args{"varuint32", nil},
-			want:    "long",
-			wantErr: false,
-		},
+		newTest(
+			"uint32",
+			"long",
+			false,
+		),
+		newTest(
+			"int64",
+			"long",
+			false,
+		),
+		newTest(
+			"uint64",
+			"long",
+			false,
+		),
+		newTest(
+			"varint32",
+			"int",
+			false,
+		),
+		newTest(
+			"varuint32",
+			"long",
+			false,
+		),
 		{
 			name:    "unknown->error",
 			args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
@@ -149,11 +149,11 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "fieldA",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
 					},
 				},
 			},
@@ -202,19 +202,19 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "parentfieldA",
-						Type: "string",
+						Type: map[string]interface{}{"type": "string", "eos.type": "string"},
 					},
 					{
 						Name: "parentFieldB",
-						Type: "int",
+						Type: map[string]interface{}{"type": "int", "eos.type": "int32"},
 					},
 					{
 						Name: "fieldA",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
 					},
 				},
 			},
@@ -291,7 +291,7 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 							Fields: []FieldSchema{
 								{
 									Name: "threshold",
-									Type: "long",
+									Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
 								},
 							},
 						},
@@ -363,11 +363,11 @@ func TestActionToRecord(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "fieldA",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
 					},
 				},
 			},
@@ -446,11 +446,11 @@ func TestTableToRecord(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "fieldA",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: "long",
+						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
 					},
 				},
 			},

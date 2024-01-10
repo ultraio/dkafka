@@ -469,32 +469,32 @@ var avroRecordTypeByBuiltInTypes map[string]RecordSchema
 
 func initBuiltInTypesForTables() {
 	avroPrimitiveTypeByBuiltInTypes = map[string]interface{}{
-		"bool":                 "boolean",
-		"int8":                 "int",
-		"uint8":                "int",
-		"int16":                "int",
-		"uint16":               "int",
-		"int32":                "int",
-		"uint32":               "long",
-		"int64":                "long",
-		"uint64":               "long", // FIXME maybe use Decimal here see goavro or FIXED
+		"bool":                 map[string]interface{}{"type": "boolean", "eos.type": "bool"},
+		"int8":                 map[string]interface{}{"type": "int", "eos.type": "int8"},
+		"uint8":                map[string]interface{}{"type": "int", "eos.type": "uint8"},
+		"int16":                map[string]interface{}{"type": "int", "eos.type": "int16"},
+		"uint16":               map[string]interface{}{"type": "int", "eos.type": "uint16"},
+		"int32":                map[string]interface{}{"type": "int", "eos.type": "int32"},
+		"uint32":               map[string]interface{}{"type": "long", "eos.type": "uint32"},
+		"int64":                map[string]interface{}{"type": "long", "eos.type": "int64"},
+		"uint64":               map[string]interface{}{"type": "long", "eos.type": "uint64"}, // FIXME maybe use Decimal here see goavro or FIXED
 		"int128":               NewInt128Type(),
 		"uint128":              NewUint128Type(),
-		"varint32":             "int",
-		"varuint32":            "long",
-		"float32":              "float",
-		"float64":              "double",
-		"time_point":           NewTimestampMillisType(), // fork/eos-go/abidecoder.go TODO add ABI.nativeTime bool to skip time to string conversion in abidecoder read method
-		"time_point_sec":       NewTimestampMillisType(), // fork/eos-go/abidecoder.go
-		"block_timestamp_type": NewTimestampMillisType(), // fork/eos-go/abidecoder.go
-		"name":                 "string",
-		"bytes":                "bytes",
-		"string":               "string",
-		"checksum160":          "bytes",
-		"checksum256":          "bytes",
-		"checksum512":          "bytes",
+		"varint32":             map[string]interface{}{"type": "int", "eos.type": "varint32"},
+		"varuint32":            map[string]interface{}{"type": "long", "eos.type": "varuint32"},
+		"float32":              map[string]interface{}{"type": "float", "eos.type": "float32"},
+		"float64":              map[string]interface{}{"type": "double", "eos.type": "float64"},
+		"time_point":           NewTimestampMillisType("time_point"),           // fork/eos-go/abidecoder.go TODO add ABI.nativeTime bool to skip time to string conversion in abidecoder read method
+		"time_point_sec":       NewTimestampMillisType("time_point_sec"),       // fork/eos-go/abidecoder.go
+		"block_timestamp_type": NewTimestampMillisType("block_timestamp_type"), // fork/eos-go/abidecoder.go
+		"name":                 map[string]interface{}{"type": "string", "eos.type": "name"},
+		"bytes":                map[string]interface{}{"type": "bytes", "eos.type": "bytes"},
+		"string":               map[string]interface{}{"type": "string", "eos.type": "string"},
+		"checksum160":          map[string]interface{}{"type": "bytes", "eos.type": "checksum160"},
+		"checksum256":          map[string]interface{}{"type": "bytes", "eos.type": "checksum256"},
+		"checksum512":          map[string]interface{}{"type": "bytes", "eos.type": "checksum512"},
 		"symbol":               NewSymbolType(),
-		"symbol_code":          "string", // FIXME check with blockchain team
+		"symbol_code":          map[string]interface{}{"type": "string", "eos.type": "symbol_code"}, // FIXME check with blockchain team
 	}
 	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{
 		"asset":      assetSchema,
