@@ -115,6 +115,51 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 			"long",
 			false,
 		),
+		newTest(
+			"float32",
+			"float",
+			false,
+		),
+		newTest(
+			"float64",
+			"double",
+			false,
+		),
+		newTest(
+			"name",
+			"string",
+			false,
+		),
+		newTest(
+			"bytes",
+			"bytes",
+			false,
+		),
+		newTest(
+			"string",
+			"string",
+			false,
+		),
+		newTest(
+			"checksum160",
+			"bytes",
+			false,
+		),
+		newTest(
+			"checksum256",
+			"bytes",
+			false,
+		),
+		newTest(
+			"checksum512",
+			"bytes",
+			false,
+		),
+		newTest(
+			"symbol_code",
+			"string",
+			false,
+		),
 		{
 			name:    "unknown->error",
 			args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
