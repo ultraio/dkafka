@@ -153,7 +153,7 @@ var transactionSchema = RecordSchema{
 		NewOptionalField("id", "string"),
 		NewOptionalField("block_num", "long"),
 		NewOptionalField("index", "long"),
-		NewOptionalField("block_time", NewTimestampMillisType()),
+		NewOptionalField("block_time", NewTimestampMillisType("block_timestamp_type")),
 		NewOptionalField("producer_block_id", "string"),
 		NewOptionalField("receipt", newTransactionReceiptHeaderBasicSchema()),
 		NewOptionalField("elapsed", "long"),

@@ -151,14 +151,15 @@ func NewOptional(schema Schema) Union {
 func NewTimestampMillisField(name string) FieldSchema {
 	return FieldSchema{
 		Name: name,
-		Type: NewTimestampMillisType(),
+		Type: NewTimestampMillisType("block_timestamp_type"),
 	}
 }
 
-func NewTimestampMillisType() Schema {
-	return map[string]string{
+func NewTimestampMillisType(eosType string) Schema {
+	return map[string]interface{}{
 		"type":        "long",
 		"logicalType": "timestamp-millis",
+		"eos.type":    eosType,
 	}
 }
 
@@ -169,6 +170,7 @@ func NewInt128Type() Schema {
 		"precision":   39,
 		"scale":       0,
 		"convert":     "eos.Int128",
+		"eos.type":    "int128",
 	}
 }
 
@@ -178,6 +180,7 @@ func NewUint64Type() Schema {
 		"logicalType": "decimal",
 		"precision":   20,
 		"scale":       0,
+		"eos.type":    "uint64",
 	}
 }
 
@@ -188,6 +191,7 @@ func NewUint128Type() Schema {
 		"precision":   39,
 		"scale":       0,
 		"convert":     "eos.Uint128",
+		"eos.type":    "uint128",
 	}
 }
 
@@ -200,7 +204,8 @@ func NewIntField(name string) FieldSchema {
 
 func NewSymbolType() Schema {
 	return map[string]interface{}{
-		"type":    "string",
-		"convert": "eos.Symbol",
+		"type":     "string",
+		"convert":  "eos.Symbol",
+		"eos.type": "symbol",
 	}
 }
