@@ -477,7 +477,7 @@ func initBuiltInTypesForTables() {
 		"int32":                map[string]interface{}{"type": "int", "eos.type": "int32"},
 		"uint32":               map[string]interface{}{"type": "long", "eos.type": "uint32"},
 		"int64":                map[string]interface{}{"type": "long", "eos.type": "int64"},
-		"uint64":               map[string]interface{}{"type": "long", "eos.type": "uint64"}, // FIXME maybe use Decimal here see goavro or FIXED
+		"uint64":               map[string]interface{}{"type": "long", "eos.type": "uint64", "logicalType": "eos.uint64"}, // FIXME maybe use Decimal here see goavro or FIXED
 		"int128":               NewInt128Type(),
 		"uint128":              NewUint128Type(),
 		"varint32":             map[string]interface{}{"type": "int", "eos.type": "varint32"},
