@@ -100,11 +100,12 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 			"long",
 			false,
 		),
-		newTest(
-			"uint64",
-			"long",
-			false,
-		),
+		{
+			name:    "uint64->long",
+			args:    args{"uint64", nil},
+			want:    map[string]interface{}{"type": "long", "eos.type": "uint64", "logicalType": "eos.uint64"},
+			wantErr: false,
+		},
 		newTest(
 			"varint32",
 			"int",
