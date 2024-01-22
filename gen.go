@@ -62,16 +62,25 @@ type DecodeDBOp func(in *pbcodec.DBOp, blockNum uint32) (decodedDBOps *decodedDB
 
 type ExtractKey func(*pbcodec.DBOp) string
 
+// normalizeName return a 13 dotted string when the name value is empty otherwise it returns the given name
+func normalizeName(name string) string {
+	if name == "" {
+		return "............."
+	} else {
+		return name
+	}
+}
+
 func extractFullKey(dbOp *pbcodec.DBOp) string {
-	return fmt.Sprintf("%s:%s", dbOp.Scope, dbOp.PrimaryKey)
+	return fmt.Sprintf("%s:%s", extractScope(dbOp), extractPrimaryKey(dbOp))
 }
 
 func extractScope(dbOp *pbcodec.DBOp) string {
-	return dbOp.Scope
+	return normalizeName(dbOp.Scope)
 }
 
 func extractPrimaryKey(dbOp *pbcodec.DBOp) string {
-	return dbOp.PrimaryKey
+	return normalizeName(dbOp.PrimaryKey)
 }
 
 func indexDbOps(gc ActionContext) []*IndexedEntry[*pbcodec.DBOp] {
