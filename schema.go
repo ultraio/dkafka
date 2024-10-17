@@ -230,7 +230,7 @@ func variantToUnion(abi *ABI, name string, visited map[string]string) (Schema, e
 	} else {
 		var union = make([]Schema, len(v.Types))
 		for i, aType := range v.Types {
-			if resolved, err := resolveType(abi, aType, visited); err != nil {
+			if resolved, err := resolveType(abi, aType, visited); err == nil {
 				union[i] = resolved
 			} else {
 				return nil, err
@@ -577,12 +577,12 @@ func resolveType(abi *ABI, name string, visited map[string]string) (Schema, erro
 		return union, er
 	}
 
-	if record, err := structToRecord(abi, name, visited); err != nil {
-		return nil, err
-	} else {
+	if record, err := structToRecord(abi, name, visited); err == nil {
 		visited[name] = reference(record)
 		return record, nil
 	}
+
+	return nil, fmt.Errorf("type not found: %s", name)
 }
 
 func reference(record RecordSchema) string {

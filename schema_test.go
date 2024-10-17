@@ -346,6 +346,67 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "variant->union multiple types",
+			args: args{"pair_string_key_value_store", &ABI{&eos.ABI{
+				Types: []eos.ABIType{
+					{
+						NewTypeName: "key_value_store",
+						Type:        "variant_int8_VEC_FLOAT",
+					}, {
+						NewTypeName: "FLOAT_VEC",
+						Type:        "float32[]",
+					},
+				},
+				Structs: []eos.StructDef{{
+					Name: "pair_string_key_value_store",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "first",
+							Type: "string",
+						},
+						{
+							Name: "second",
+							Type: "key_value_store",
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_int8_VEC_FLOAT",
+					Types: []string{"int8", "FLOAT_VEC"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "pair_string_key_value_store",
+				Fields: []FieldSchema{
+					{
+						Type: map[string]interface{}{"type": "string", "eos.type": "string"},
+						Name: "first",
+					},
+					{
+						Type: []map[string]interface{}{
+							{
+								"eos.type": "int8",
+								"type":     "int",
+							},
+							{
+								"array": []map[string]interface{}{
+									{
+										"eos.type": "float32",
+										"type":     "float",
+									},
+								},
+							},
+						},
+						Name: "second",
+					},
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
