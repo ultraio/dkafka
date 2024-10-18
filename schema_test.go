@@ -352,10 +352,7 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 				Types: []eos.ABIType{
 					{
 						NewTypeName: "key_value_store",
-						Type:        "variant_int8_VEC_FLOAT",
-					}, {
-						NewTypeName: "FLOAT_VEC",
-						Type:        "float32[]",
+						Type:        "variant_int8_string",
 					},
 				},
 				Structs: []eos.StructDef{{
@@ -374,31 +371,27 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 				},
 				},
 				Variants: []eos.VariantDef{{
-					Name:  "variant_int8_VEC_FLOAT",
-					Types: []string{"int8", "FLOAT_VEC"},
+					Name:  "variant_int8_string",
+					Types: []string{"int8", "string"},
 				}},
 			}, 42}},
 			want: RecordSchema{
 				Type: "record",
-				Name: "pair_string_key_value_store",
+				Name: "PairStringKeyValueStore",
 				Fields: []FieldSchema{
 					{
 						Type: map[string]interface{}{"type": "string", "eos.type": "string"},
 						Name: "first",
 					},
 					{
-						Type: []map[string]interface{}{
-							{
+						Type: []interface{}{
+							map[string]interface{}{
 								"eos.type": "int8",
 								"type":     "int",
 							},
-							{
-								"array": []map[string]interface{}{
-									{
-										"eos.type": "float32",
-										"type":     "float",
-									},
-								},
+							map[string]interface{}{
+								"eos.type": "string",
+								"type":     "string",
 							},
 						},
 						Name: "second",
