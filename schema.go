@@ -218,6 +218,28 @@ func abiFieldToRecordField(abi *ABI, fieldDef eos.FieldDef, visited map[string]s
 	}
 }
 
+func mergeType(left Schema, right Schema) (Schema, error) {
+	switch {
+	case left == nil && right == nil:
+		return nil, fmt.Errorf("Both are null")
+	case left == nil:
+		return right, nil
+	case right == nil:
+		return left, nil
+	case left["type"] != right["type"]:
+		return nil, fmt.Errorf("Type doesn't match")
+	}
+
+	switch valueType := left.(type) {
+	case "array":
+		return nil, nil
+	case "int8", "uint8":
+		return Schema{"type": "int"}, nil
+	default:
+		return nil, fmt.Errorf("Is not a managed type")
+	}
+}
+
 func variantToUnion(abi *ABI, name string, visited map[string]string) (Schema, error) {
 	v := abi.VariantForName(name)
 	if v == nil {
@@ -228,15 +250,21 @@ func variantToUnion(abi *ABI, name string, visited map[string]string) (Schema, e
 		//then return the type ;)
 		return resolveType(abi, v.Types[0], visited)
 	} else {
-		var union = make([]Schema, len(v.Types))
+		var allUnionTypes = make([]Schema, len(v.Types))
 		for i, aType := range v.Types {
 			if resolved, err := resolveType(abi, aType, visited); err == nil {
-				union[i] = resolved
+				allUnionTypes[i] = resolved
 			} else {
 				return nil, err
 			}
 		}
-		return union, nil
+
+		var unionMerged = map[string]Schema{}
+		for schema := range allUnionTypes {
+			unionMerged[schema["type"]] = mergeType(schema, unionMerged[resolved.Type])
+		}
+
+		return unionMerged, nil
 	}
 }
 
