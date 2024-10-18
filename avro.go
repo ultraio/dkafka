@@ -145,7 +145,12 @@ func NewOptionalField(n string, t Schema) FieldSchema {
 }
 
 func NewOptional(schema Schema) Union {
-	return []Schema{"null", schema}
+	switch typpedSchema := schema.(type) {
+	case []interface{}:
+		return append([]interface{}{"null"}, typpedSchema...)
+	default:
+		return []Schema{"null", schema}
+	}
 }
 
 func NewTimestampMillisField(name string) FieldSchema {

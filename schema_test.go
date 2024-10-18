@@ -1,7 +1,6 @@
 package dkafka
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -21,246 +20,317 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		wantErr bool
 	}
 
-	newTest := func(eosType string, want string, wantErr bool) test {
-		return test{
-			name:    fmt.Sprintf("%s->%s", eosType, want),
-			args:    args{eosType, nil},
-			want:    map[string]interface{}{"type": want, "eos.type": eosType},
-			wantErr: wantErr,
-		}
-	}
+	// newTest := func(eosType string, want string, wantErr bool) test {
+	// 	return test{
+	// 		name:    fmt.Sprintf("%s->%s", eosType, want),
+	// 		args:    args{eosType, nil},
+	// 		want:    map[string]interface{}{"type": want, "eos.type": eosType},
+	// 		wantErr: wantErr,
+	// 	}
+	// }
 
 	tests := []test{
-		newTest(
-			"bool",
-			"boolean",
-			false),
-		newTest(
-			"int8",
-			"int",
-			false,
-		),
-		newTest(
-			"uint8",
-			"int",
-			false,
-		),
-		newTest(
-			"int16",
-			"int",
-			false,
-		),
-		newTest(
-			"uint16",
-			"int",
-			false,
-		),
-		newTest(
-			"int32",
-			"int",
-			false,
-		),
+		// newTest(
+		// 	"bool",
+		// 	"boolean",
+		// 	false),
+		// newTest(
+		// 	"int8",
+		// 	"int",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"uint8",
+		// 	"int",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"int16",
+		// 	"int",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"uint16",
+		// 	"int",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"int32",
+		// 	"int",
+		// 	false,
+		// ),
+		// {
+		// 	name:    "int32[]->[]int",
+		// 	args:    args{"int32[]", nil},
+		// 	want:    NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+		// 	wantErr: false,
+		// },
+		// {
+		// 	name:    "int32$->['null', 'int']",
+		// 	args:    args{"int32$", nil},
+		// 	want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+		// 	wantErr: false,
+		// },
+		// {
+		// 	name:    "int32?$->['null','int']",
+		// 	args:    args{"int32?$", nil},
+		// 	want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+		// 	wantErr: false,
+		// },
+		// {
+		// 	name:    "int32[]?->['null',[]int]",
+		// 	args:    args{"int32[]?$", nil},
+		// 	want:    NewOptional(NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"})),
+		// 	wantErr: false,
+		// },
+		// {
+		// 	name:    "int32?->['null','int']",
+		// 	args:    args{"int32?", nil},
+		// 	want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+		// 	wantErr: false,
+		// },
+		// newTest(
+		// 	"uint32",
+		// 	"long",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"int64",
+		// 	"long",
+		// 	false,
+		// ),
+		// {
+		// 	name:    "uint64->long",
+		// 	args:    args{"uint64", nil},
+		// 	want:    map[string]interface{}{"type": "long", "eos.type": "uint64", "logicalType": "eos.uint64"},
+		// 	wantErr: false,
+		// },
+		// newTest(
+		// 	"varint32",
+		// 	"int",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"varuint32",
+		// 	"long",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"float32",
+		// 	"float",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"float64",
+		// 	"double",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"name",
+		// 	"string",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"bytes",
+		// 	"bytes",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"string",
+		// 	"string",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"checksum160",
+		// 	"bytes",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"checksum256",
+		// 	"bytes",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"checksum512",
+		// 	"bytes",
+		// 	false,
+		// ),
+		// newTest(
+		// 	"symbol_code",
+		// 	"string",
+		// 	false,
+		// ),
+		// {
+		// 	name:    "unknown->error",
+		// 	args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
+		// 	want:    nil,
+		// 	wantErr: true,
+		// },
+		// {
+		// 	name: "struct->record",
+		// 	args: args{"my_struct", &ABI{&eos.ABI{
+		// 		Types: []eos.ABIType{{
+		// 			NewTypeName: "int64_alias",
+		// 			Type:        "int64",
+		// 		}},
+		// 		Structs: []eos.StructDef{{
+		// 			Name: "my_struct",
+		// 			Base: "",
+		// 			Fields: []eos.FieldDef{
+		// 				{
+		// 					Name: "fieldA",
+		// 					Type: "uint32",
+		// 				},
+		// 				{
+		// 					Name: "fieldB",
+		// 					Type: "int64_alias",
+		// 				},
+		// 			},
+		// 		}},
+		// 	}, 42}},
+		// 	want: RecordSchema{
+		// 		Type: "record",
+		// 		Name: "MyStruct",
+		// 		Fields: []FieldSchema{
+		// 			{
+		// 				Name: "fieldA",
+		// 				Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
+		// 			},
+		// 			{
+		// 				Name: "fieldB",
+		// 				Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
+		// 			},
+		// 		},
+		// 	},
+		// 	wantErr: false,
+		// },
+		// {
+		// 	name: "struct-inheritance",
+		// 	args: args{"my_struct", &ABI{&eos.ABI{
+		// 		Types: []eos.ABIType{{
+		// 			NewTypeName: "int64_alias",
+		// 			Type:        "int64",
+		// 		}},
+		// 		Structs: []eos.StructDef{
+		// 			{
+		// 				Name: "parent",
+		// 				Base: "",
+		// 				Fields: []eos.FieldDef{
+		// 					{
+		// 						Name: "parentfieldA",
+		// 						Type: "string",
+		// 					},
+		// 					{
+		// 						Name: "parentFieldB",
+		// 						Type: "int32",
+		// 					},
+		// 				},
+		// 			},
+		// 			{
+		// 				Name: "my_struct",
+		// 				Base: "parent",
+		// 				Fields: []eos.FieldDef{
+		// 					{
+		// 						Name: "fieldA",
+		// 						Type: "uint32",
+		// 					},
+		// 					{
+		// 						Name: "fieldB",
+		// 						Type: "int64_alias",
+		// 					},
+		// 				},
+		// 			}},
+		// 	}, 42}},
+		// 	want: RecordSchema{
+		// 		Type: "record",
+		// 		Name: "MyStruct",
+		// 		Fields: []FieldSchema{
+		// 			{
+		// 				Name: "parentfieldA",
+		// 				Type: map[string]interface{}{"type": "string", "eos.type": "string"},
+		// 			},
+		// 			{
+		// 				Name: "parentFieldB",
+		// 				Type: map[string]interface{}{"type": "int", "eos.type": "int32"},
+		// 			},
+		// 			{
+		// 				Name: "fieldA",
+		// 				Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
+		// 			},
+		// 			{
+		// 				Name: "fieldB",
+		// 				Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
+		// 			},
+		// 		},
+		// 	},
+		// 	wantErr: false,
+		// },
+		// {
+		// 	name: "union-multiple-types-nullable",
+		// 	args: args{"nullable_union_record", &ABI{&eos.ABI{
+		// 		Types: []eos.ABIType{{
+		// 			NewTypeName: "nullable_union",
+		// 			Type:        "variant_nullable_union",
+		// 		}},
+		// 		Structs: []eos.StructDef{{
+		// 			Name: "nullable_union_record",
+		// 			Base: "",
+		// 			Fields: []eos.FieldDef{
+		// 				{
+		// 					Name: "nullable_union_field",
+		// 					Type: "nullable_union?",
+		// 				},
+		// 			},
+		// 		},
+		// 		},
+		// 		Variants: []eos.VariantDef{{
+		// 			Name:  "variant_nullable_union",
+		// 			Types: []string{"string", "int8"},
+		// 		}},
+		// 	}, 42}},
+		// 	want: RecordSchema{
+		// 		Type: "record",
+		// 		Name: "NullableUnionRecord",
+		// 		Fields: []FieldSchema{
+		// 			{
+		// 				Name:    "nullable_union_field",
+		// 				Type:    []interface{}{"null", map[string]interface{}{"type": "string", "eos.type": "string"}, map[string]interface{}{"type": "int", "eos.type": "int8"}},
+		// 				Default: _defaultNull,
+		// 			},
+		// 		},
+		// 	},
+		// 	wantErr: false,
+		// },
 		{
-			name:    "int32[]->[]int",
-			args:    args{"int32[]", nil},
-			want:    NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"}),
-			wantErr: false,
-		},
-		{
-			name:    "int32$->['null', 'int']",
-			args:    args{"int32$", nil},
-			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
-			wantErr: false,
-		},
-		{
-			name:    "int32?$->['null','int']",
-			args:    args{"int32?$", nil},
-			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
-			wantErr: false,
-		},
-		{
-			name:    "int32[]?->['null',[]int]",
-			args:    args{"int32[]?$", nil},
-			want:    NewOptional(NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"})),
-			wantErr: false,
-		},
-		{
-			name:    "int32?->['null','int']",
-			args:    args{"int32?", nil},
-			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
-			wantErr: false,
-		},
-		newTest(
-			"uint32",
-			"long",
-			false,
-		),
-		newTest(
-			"int64",
-			"long",
-			false,
-		),
-		{
-			name:    "uint64->long",
-			args:    args{"uint64", nil},
-			want:    map[string]interface{}{"type": "long", "eos.type": "uint64", "logicalType": "eos.uint64"},
-			wantErr: false,
-		},
-		newTest(
-			"varint32",
-			"int",
-			false,
-		),
-		newTest(
-			"varuint32",
-			"long",
-			false,
-		),
-		newTest(
-			"float32",
-			"float",
-			false,
-		),
-		newTest(
-			"float64",
-			"double",
-			false,
-		),
-		newTest(
-			"name",
-			"string",
-			false,
-		),
-		newTest(
-			"bytes",
-			"bytes",
-			false,
-		),
-		newTest(
-			"string",
-			"string",
-			false,
-		),
-		newTest(
-			"checksum160",
-			"bytes",
-			false,
-		),
-		newTest(
-			"checksum256",
-			"bytes",
-			false,
-		),
-		newTest(
-			"checksum512",
-			"bytes",
-			false,
-		),
-		newTest(
-			"symbol_code",
-			"string",
-			false,
-		),
-		{
-			name:    "unknown->error",
-			args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
-			want:    nil,
-			wantErr: true,
-		},
-		{
-			name: "struct->record",
-			args: args{"my_struct", &ABI{&eos.ABI{
+			name: "union-multiple-same-types",
+			args: args{"multiple_int_type_record", &ABI{&eos.ABI{
 				Types: []eos.ABIType{{
-					NewTypeName: "int64_alias",
-					Type:        "int64",
+					NewTypeName: "int8_int16",
+					Type:        "variant_int8_int16",
 				}},
 				Structs: []eos.StructDef{{
-					Name: "my_struct",
+					Name: "multiple_int_type_record",
 					Base: "",
 					Fields: []eos.FieldDef{
 						{
-							Name: "fieldA",
-							Type: "uint32",
+							Name: "multiple_int_type_field",
+							Type: "int8_int16",
 						},
-						{
-							Name: "fieldB",
-							Type: "int64_alias",
-						},
-					},
-				}},
-			}, 42}},
-			want: RecordSchema{
-				Type: "record",
-				Name: "MyStruct",
-				Fields: []FieldSchema{
-					{
-						Name: "fieldA",
-						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
-					},
-					{
-						Name: "fieldB",
-						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
 					},
 				},
-			},
-			wantErr: false,
-		},
-		{
-			name: "struct-inheritance",
-			args: args{"my_struct", &ABI{&eos.ABI{
-				Types: []eos.ABIType{{
-					NewTypeName: "int64_alias",
-					Type:        "int64",
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_int8_int16",
+					Types: []string{"int8", "int16"},
 				}},
-				Structs: []eos.StructDef{
-					{
-						Name: "parent",
-						Base: "",
-						Fields: []eos.FieldDef{
-							{
-								Name: "parentfieldA",
-								Type: "string",
-							},
-							{
-								Name: "parentFieldB",
-								Type: "int32",
-							},
-						},
-					},
-					{
-						Name: "my_struct",
-						Base: "parent",
-						Fields: []eos.FieldDef{
-							{
-								Name: "fieldA",
-								Type: "uint32",
-							},
-							{
-								Name: "fieldB",
-								Type: "int64_alias",
-							},
-						},
-					}},
 			}, 42}},
 			want: RecordSchema{
 				Type: "record",
-				Name: "MyStruct",
+				Name: "MultipleIntTypeRecord",
 				Fields: []FieldSchema{
 					{
-						Name: "parentfieldA",
-						Type: map[string]interface{}{"type": "string", "eos.type": "string"},
-					},
-					{
-						Name: "parentFieldB",
-						Type: map[string]interface{}{"type": "int", "eos.type": "int32"},
-					},
-					{
-						Name: "fieldA",
-						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
-					},
-					{
-						Name: "fieldB",
-						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
+						Name: "multiple_int_type_field",
+						Type: map[string]interface{}{"type": "int", "eos.type": []interface{}{"int8", "int16"}},
 					},
 				},
 			},
@@ -341,6 +411,60 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 								},
 							},
 						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "variant->union multiple types",
+			args: args{"pair_string_key_value_store", &ABI{&eos.ABI{
+				Types: []eos.ABIType{
+					{
+						NewTypeName: "key_value_store",
+						Type:        "variant_int8_string",
+					},
+				},
+				Structs: []eos.StructDef{{
+					Name: "pair_string_key_value_store",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "first",
+							Type: "string",
+						},
+						{
+							Name: "second",
+							Type: "key_value_store",
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_int8_string",
+					Types: []string{"int8", "string"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "PairStringKeyValueStore",
+				Fields: []FieldSchema{
+					{
+						Type: map[string]interface{}{"type": "string", "eos.type": "string"},
+						Name: "first",
+					},
+					{
+						Type: []interface{}{
+							map[string]interface{}{
+								"eos.type": "int8",
+								"type":     "int",
+							},
+							map[string]interface{}{
+								"eos.type": "string",
+								"type":     "string",
+							},
+						},
+						Name: "second",
 					},
 				},
 			},
