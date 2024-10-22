@@ -256,6 +256,14 @@ $ # Run go with "-tags dynamic" to link ARM incompatible libraries dynamically
 $ go [go-command] -tags dynamic [parameters]
 ```
 
+### Nix
+To setup your dev environment you can install nix and use the `shell.nix` file like
+```shell
+nix-shell
+```
+
+Or by using the VSCode extension [Nix env selector](https://marketplace.visualstudio.com/items?itemName=arrterian.nix-env-selector)
+
 ### Build (clean)
 
 ```bash
