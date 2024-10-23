@@ -64,7 +64,7 @@
         },
         {
             "new_type_name": "key_value_store",
-            "type": "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC"
+            "type": "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_bool_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC"
         },
         {
             "new_type_name": "key_value_vec",
@@ -3100,8 +3100,8 @@
     "ricardian_clauses": [],
     "variants": [
         {
-            "name": "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC",
-            "types": ["int8","int16","int32","int64","uint8","uint16","uint32","uint64","float32","float64","string","INT8_VEC","INT16_VEC","INT32_VEC","INT64_VEC","UINT8_VEC","UINT16_VEC","UINT32_VEC","UINT64_VEC","FLOAT32_VEC","FLOAT64_VEC","STRING_VEC"]
+            "name": "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_bool_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC",
+            "types": ["int8","int16","int32","int64","uint8","uint16","uint32","uint64","float32","float64","string","bool","INT8_VEC","INT16_VEC","INT32_VEC","INT64_VEC","UINT8_VEC","UINT16_VEC","UINT32_VEC","UINT64_VEC","FLOAT32_VEC","FLOAT64_VEC","STRING_VEC"]
         }
     ],
     "action_results": []
