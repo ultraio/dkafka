@@ -44,5 +44,15 @@
         "zlog",
         "zstd"
     ],
-    "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix"
+    "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix",
+    "terminal.integrated.profiles.linux": {
+        "BashWithStartup": {
+          "path": "bash",
+          "args": [
+            "-c",
+            "nix-shell"
+          ]
+        }
+      },
+      "terminal.integrated.defaultProfile.linux": "BashWithStartup"
 }

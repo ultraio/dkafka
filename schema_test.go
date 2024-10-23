@@ -303,6 +303,91 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			name: "uber-variant",
+			args: args{"uber_variant", &ABI{&eos.ABI{
+				Types: []eos.ABIType{
+					{
+						NewTypeName: "INT8_VEC",
+						Type:        "int8[]",
+					},
+					{
+						NewTypeName: "INT16_VEC",
+						Type:        "int16[]",
+					},
+					{
+						NewTypeName: "INT32_VEC",
+						Type:        "int32[]",
+					},
+					{
+						NewTypeName: "INT64_VEC",
+						Type:        "int64[]",
+					},
+					{
+						NewTypeName: "UINT8_VEC",
+						Type:        "uint8[]",
+					},
+					{
+						NewTypeName: "UINT16_VEC",
+						Type:        "uint16[]",
+					},
+					{
+						NewTypeName: "UINT32_VEC",
+						Type:        "uint32[]",
+					},
+					{
+						NewTypeName: "UINT64_VEC",
+						Type:        "uint64[]",
+					},
+					{
+						NewTypeName: "FLOAT32_VEC",
+						Type:        "float32[]",
+					},
+					{
+						NewTypeName: "FLOAT64_VEC",
+						Type:        "float64[]",
+					},
+					{
+						NewTypeName: "STRING_VEC",
+						Type:        "string[]",
+					},
+					{
+						NewTypeName: "BOOL_VEC",
+						Type:        "boolean[]",
+					},
+					{
+						NewTypeName: "key_value_store",
+						Type:        HardcodedUberVariant,
+					},
+				},
+				Structs: []eos.StructDef{{
+					Name: "uber_variant",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "default_value",
+							Type: HardcodedUberVariant,
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  HardcodedUberVariant,
+					Types: []string{"int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float32", "float64", "string", "boolean", "INT8_VEC", "INT16_VEC", "INT32_VEC", "INT64_VEC", "UINT8_VEC", "UINT16_VEC", "UINT32_VEC", "UINT64_VEC", "FLOAT32_VEC", "FLOAT64_VEC", "STRING_VEC", "BOOL_VEC"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "UberVariant",
+				Fields: []FieldSchema{
+					{
+						Name: "default_value",
+						Type: hardcodedVariantType[HardcodedUberVariant],
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
 			name: "union-multiple-types-nullable",
 			args: args{"nullable_union_record", &ABI{&eos.ABI{
 				Types: []eos.ABIType{{

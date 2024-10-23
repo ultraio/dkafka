@@ -223,6 +223,9 @@ func variantToUnion(abi *ABI, name string, visited map[string]string) (Schema, e
 	if v == nil {
 		return nil, nil
 	}
+	if uberVariant, found := hardcodedVariantType[name]; found {
+		return uberVariant, nil
+	}
 	if len(v.Types) == 1 {
 		//edge case where there is only one type in the union
 		//then return the type ;)
@@ -464,9 +467,47 @@ var signatureSchema RecordSchema = RecordSchema{
 
 var avroRecordTypeByBuiltInTypes map[string]RecordSchema
 
+const (
+	HardcodedUberVariant = "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_bool_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC"
+)
+
+var hardcodedVariantType map[string]interface{}
+
 // "uint128":   "",
 // "float128",
 // "extended_asset",
+
+var allPrimitiveTypes = []TypedSchema{
+	{
+		Type: "int",
+	},
+	{
+		Type: "long",
+	},
+	{
+		Type: "float",
+	},
+	{
+		Type: "double",
+	},
+	{
+		Type: "string",
+	},
+	{
+		Type: "bytes",
+	},
+	{
+		Type: "boolean",
+	},
+}
+
+func convertAllPrimitiveTypeToInterface() []interface{} {
+	converted := make([]interface{}, len(allPrimitiveTypes))
+	for i, v := range allPrimitiveTypes {
+		converted[i] = v
+	}
+	return converted
+}
 
 func initBuiltInTypesForTables() {
 	avroPrimitiveTypeByBuiltInTypes = map[string]TypedSchema{
@@ -504,6 +545,9 @@ func initBuiltInTypesForTables() {
 		"asset":      assetSchema,
 		"public_key": publicKeySchema,
 		"signature":  signatureSchema,
+	}
+	hardcodedVariantType = map[string]interface{}{
+		HardcodedUberVariant: append(convertAllPrimitiveTypeToInterface(), NewArray(allPrimitiveTypes)),
 	}
 }
 
