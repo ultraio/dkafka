@@ -276,6 +276,14 @@ $ make clean build
 $ make test
 ```
 
+The purpose of this project is to generates Avro schema based on ABI.
+
+The final test to ensure that you ABI will be 100% compatible you can run
+```bash
+$ make test-avro-generation
+```
+If there is no error then your schema should be valid for a production integration ;)
+
 ### Run
 There is several launcher in the `Makefile` and multiple variables can be overridden. 
 Please have look to the `Makefile` for more details.

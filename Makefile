@@ -217,3 +217,20 @@ forward-stop: ## stop port fowarding to dfuse
 help: ## Display this help screen
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+avro-tools.jar:
+	 wget https://dlcdn.apache.org/avro/avro-1.12.0/java/avro-tools-1.12.0.jar -O avro-tools.jar
+	 sha512sum avro-tools.jar
+	 [ "$(sha512sum avro-tools-1.12.0.jar)" = "$(cat avro-tools-1.12.0.jar.sha512)" ] || \ 
+	 {
+	 	echo "sha512 doesn't match; removing jar file; please check!" && \
+		rm avro-tools.jar
+	 }
+
+
+ABI_ACCOUNT := eosio.nft.ft
+ABI_FILE := testdata/eosio.nft.ft-4.0.6-snapshot.abi
+TEST_AVRO_PATH := build/test-avro-generation
+test-avro-generation: build avro-tools.jar ## test avro generation from abi; check variables to override values like make ABI_FILE=folder/
+	mkdir -p $(TEST_AVRO_PATH)/in $(TEST_AVRO_PATH)/out
+	$(BINARY_PATH) cdc schemas -o $(TEST_AVRO_PATH)/in '$(ABI_ACCOUNT):$(ABI_FILE)'
+	for file in $$(ls $(TEST_AVRO_PATH)/in); do java -jar avro-tools.jar compile schema "$(TEST_AVRO_PATH)/in/$$file" $(TEST_AVRO_PATH)/out/; done

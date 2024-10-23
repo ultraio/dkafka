@@ -1,0 +1,3108 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT ",
+    "version": "eosio::abi/1.2",
+    "types": [
+        {
+            "new_type_name": "FLOAT32_VEC",
+            "type": "float32[]"
+        },
+        {
+            "new_type_name": "FLOAT64_VEC",
+            "type": "float64[]"
+        },
+        {
+            "new_type_name": "INT16_VEC",
+            "type": "int16[]"
+        },
+        {
+            "new_type_name": "INT32_VEC",
+            "type": "int32[]"
+        },
+        {
+            "new_type_name": "INT64_VEC",
+            "type": "int64[]"
+        },
+        {
+            "new_type_name": "INT8_VEC",
+            "type": "bytes"
+        },
+        {
+            "new_type_name": "STRING_VEC",
+            "type": "string[]"
+        },
+        {
+            "new_type_name": "UINT16_VEC",
+            "type": "uint16[]"
+        },
+        {
+            "new_type_name": "UINT32_VEC",
+            "type": "uint32[]"
+        },
+        {
+            "new_type_name": "UINT64_VEC",
+            "type": "uint64[]"
+        },
+        {
+            "new_type_name": "UINT8_VEC",
+            "type": "bytes"
+        },
+        {
+            "new_type_name": "asset_vector",
+            "type": "asset[]"
+        },
+        {
+            "new_type_name": "issue_token_config_vector",
+            "type": "issue_token_config[]"
+        },
+        {
+            "new_type_name": "issue_token_metadata_vector",
+            "type": "issue_token_metadata[]"
+        },
+        {
+            "new_type_name": "key_value_action_vec",
+            "type": "key_value_action[]"
+        },
+        {
+            "new_type_name": "key_value_store",
+            "type": "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC"
+        },
+        {
+            "new_type_name": "key_value_vec",
+            "type": "key_value_pair[]"
+        },
+        {
+            "new_type_name": "minter_authorization_vector",
+            "type": "minter_authorization_info[]"
+        },
+        {
+            "new_type_name": "name_vector",
+            "type": "name[]"
+        },
+        {
+            "new_type_name": "resale_share_vector",
+            "type": "resale_share[]"
+        },
+        {
+            "new_type_name": "string_vector",
+            "type": "string[]"
+        },
+        {
+            "new_type_name": "time_since_mint",
+            "type": "uint32"
+        },
+        {
+            "new_type_name": "uint64_t_vector",
+            "type": "uint64[]"
+        }
+    ],
+    "structs": [
+        {
+            "name": "accept_factory_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "promoter_id",
+                    "type": "name?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "accept_nft_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "promoter_id",
+                    "type": "name?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "activers",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "add_factory_keys_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "key_defs",
+                    "type": "key_def_action[]"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "addgrpfcts",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "factories",
+                    "type": "uint64[]"
+                }
+            ]
+        },
+        {
+            "name": "auction_config_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "min_starting_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "min_duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "max_duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "min_bid_increment_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "min_bid_increment_uos",
+                    "type": "asset"
+                },
+                {
+                    "name": "auction_extension_threshold",
+                    "type": "uint32"
+                },
+                {
+                    "name": "auction_extension_step",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "authminter",
+            "base": "",
+            "fields": [
+                {
+                    "name": "authorizer",
+                    "type": "name"
+                },
+                {
+                    "name": "authorized_minter",
+                    "type": "name"
+                },
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quantity",
+                    "type": "uint32"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "authminter_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "authorizer",
+                    "type": "name"
+                },
+                {
+                    "name": "authorized_minter",
+                    "type": "name"
+                },
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "quantity",
+                    "type": "uint32"
+                },
+                {
+                    "name": "maximum_uos_payment",
+                    "type": "asset?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "authorized_minters_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "authorized_minter",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "bid_auction_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "bid",
+                    "type": "bid_auction_wrap_v0"
+                }
+            ]
+        },
+        {
+            "name": "bid_auction_wrap_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "bidder",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "bid",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_id",
+                    "type": "name?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "burn",
+            "base": "",
+            "fields": [
+                {
+                    "name": "burn",
+                    "type": "burn_wrap"
+                }
+            ]
+        },
+        {
+            "name": "burn_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_ids",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "buy",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buy",
+                    "type": "buy_wrap"
+                }
+            ]
+        },
+        {
+            "name": "buy_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_ids",
+                    "type": "uint64[]"
+                },
+                {
+                    "name": "factory_ids",
+                    "type": "uint64[]"
+                }
+            ]
+        },
+        {
+            "name": "buy_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buyer",
+                    "type": "name?"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "max_price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "promoter_id",
+                    "type": "name?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "cancel_auction_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "canceler",
+                    "type": "name"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "cancel_factory_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "canceler",
+                    "type": "name"
+                },
+                {
+                    "name": "factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "cancel_nft_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "canceler",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "cancelresell",
+            "base": "",
+            "fields": [
+                {
+                    "name": "cancelresell",
+                    "type": "cancelresell_wrap"
+                }
+            ]
+        },
+        {
+            "name": "cancelresell_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "cleanresell",
+            "base": "",
+            "fields": [
+                {
+                    "name": "start_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "total_number",
+                    "type": "uint64?"
+                }
+            ]
+        },
+        {
+            "name": "clrmintst",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "no_of_entries",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "create",
+            "base": "",
+            "fields": [
+                {
+                    "name": "create",
+                    "type": "create_wrap"
+                }
+            ]
+        },
+        {
+            "name": "create_auction_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "create",
+                    "type": "create_auction_wrap_v0"
+                }
+            ]
+        },
+        {
+            "name": "create_auction_wrap_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "starting_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "start_date",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "expiry_date",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "create_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "create",
+                    "type": "create_wrap_v1"
+                }
+            ]
+        },
+        {
+            "name": "create_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "memo",
+                    "type": "string?"
+                },
+                {
+                    "name": "version",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "asset_manager",
+                    "type": "name?"
+                },
+                {
+                    "name": "asset_creator",
+                    "type": "name?"
+                },
+                {
+                    "name": "conversion_rate_oracle_contract",
+                    "type": "name?"
+                },
+                {
+                    "name": "chosen_rate",
+                    "type": "asset_vector?"
+                },
+                {
+                    "name": "minimum_resell_price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "resale_shares",
+                    "type": "resale_share_vector?"
+                },
+                {
+                    "name": "mintable_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "mintable_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "trading_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "trading_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "recall_window_start",
+                    "type": "time_since_mint?"
+                },
+                {
+                    "name": "recall_window_end",
+                    "type": "time_since_mint?"
+                },
+                {
+                    "name": "max_mintable_tokens",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "lockup_time",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name_vector?"
+                },
+                {
+                    "name": "stat",
+                    "type": "uint8?"
+                },
+                {
+                    "name": "meta_uris",
+                    "type": "string_vector?"
+                },
+                {
+                    "name": "meta_hash",
+                    "type": "checksum256?"
+                },
+                {
+                    "name": "authorized_minters",
+                    "type": "minter_authorization_vector$"
+                },
+                {
+                    "name": "account_minting_limit",
+                    "type": "uint32$"
+                }
+            ]
+        },
+        {
+            "name": "create_wrap_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "asset_manager",
+                    "type": "name"
+                },
+                {
+                    "name": "asset_creator",
+                    "type": "name"
+                },
+                {
+                    "name": "minimum_resell_price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "resale_shares",
+                    "type": "resale_share_vector?"
+                },
+                {
+                    "name": "mintable_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "mintable_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "trading_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "trading_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "recall_window_start",
+                    "type": "time_since_mint?"
+                },
+                {
+                    "name": "recall_window_end",
+                    "type": "time_since_mint?"
+                },
+                {
+                    "name": "max_mintable_tokens",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "lockup_time",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name_vector?"
+                },
+                {
+                    "name": "stat",
+                    "type": "uint8?"
+                },
+                {
+                    "name": "factory_uri",
+                    "type": "string?"
+                },
+                {
+                    "name": "factory_hash",
+                    "type": "checksum256?"
+                },
+                {
+                    "name": "authorized_minters",
+                    "type": "minter_authorization_vector?"
+                },
+                {
+                    "name": "account_minting_limit",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "transfer_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "transfer_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "maximum_uos_payment",
+                    "type": "asset?"
+                },
+                {
+                    "name": "default_token_uri",
+                    "type": "string?"
+                },
+                {
+                    "name": "default_token_hash",
+                    "type": "checksum256?"
+                },
+                {
+                    "name": "lock_hash",
+                    "type": "bool?"
+                }
+            ]
+        },
+        {
+            "name": "creategrp",
+            "base": "",
+            "fields": [
+                {
+                    "name": "manager",
+                    "type": "name"
+                },
+                {
+                    "name": "uri",
+                    "type": "string"
+                },
+                {
+                    "name": "hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "factories",
+                    "type": "uint64[]"
+                },
+                {
+                    "name": "max_uos_payment",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "deletegrp",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "delprchsreq",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "index",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "factory_group_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "manager",
+                    "type": "name"
+                },
+                {
+                    "name": "uri",
+                    "type": "string"
+                },
+                {
+                    "name": "hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "factories",
+                    "type": "uint64[]"
+                },
+                {
+                    "name": "uos_payment",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "factory_keys",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key_defs",
+                    "type": "key_def_table[]"
+                },
+                {
+                    "name": "total_key_def_ram_payment_size",
+                    "type": "int64"
+                },
+                {
+                    "name": "total_key_value_ram_payment_size",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "factory_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "expiry_date",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "factory_sale_share_limit_config",
+            "base": "",
+            "fields": [
+                {
+                    "name": "max_ultra_share_bp",
+                    "type": "uint16"
+                },
+                {
+                    "name": "max_factory_share_bp",
+                    "type": "uint16"
+                },
+                {
+                    "name": "min_promoter_share_bp",
+                    "type": "uint16"
+                },
+                {
+                    "name": "max_promoter_share_bp",
+                    "type": "uint16"
+                },
+                {
+                    "name": "default_promoter",
+                    "type": "name?"
+                },
+                {
+                    "name": "promoter_payments_enabled",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "fhglobalshr",
+            "base": "",
+            "fields": [
+                {
+                    "name": "share",
+                    "type": "uint16"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                }
+            ]
+        },
+        {
+            "name": "fixauthmint",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "global_resale_share",
+            "base": "",
+            "fields": [
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "basis_point",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "globalshare",
+            "base": "",
+            "fields": [
+                {
+                    "name": "share",
+                    "type": "uint16"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                }
+            ]
+        },
+        {
+            "name": "issue",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issue",
+                    "type": "issue_wrap"
+                }
+            ]
+        },
+        {
+            "name": "issue_token_config",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "amount",
+                    "type": "uint32"
+                },
+                {
+                    "name": "custom_data",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "issue_token_metadata",
+            "base": "",
+            "fields": [
+                {
+                    "name": "meta_uri",
+                    "type": "string?"
+                },
+                {
+                    "name": "meta_hash",
+                    "type": "checksum256?"
+                }
+            ]
+        },
+        {
+            "name": "issue_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "issue",
+                    "type": "issue_wrap_v1"
+                }
+            ]
+        },
+        {
+            "name": "issue_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "to",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_configs",
+                    "type": "issue_token_config_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                },
+                {
+                    "name": "authorizer",
+                    "type": "name?$"
+                }
+            ]
+        },
+        {
+            "name": "issue_wrap_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "to",
+                    "type": "name"
+                },
+                {
+                    "name": "token_configs",
+                    "type": "issue_token_config_vector"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "authorizer",
+                    "type": "name?"
+                },
+                {
+                    "name": "maximum_uos_payment",
+                    "type": "asset?"
+                },
+                {
+                    "name": "token_metadata",
+                    "type": "issue_token_metadata_vector?$"
+                }
+            ]
+        },
+        {
+            "name": "key_def_action",
+            "base": "",
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
+                    "type": "string"
+                },
+                {
+                    "name": "edit_rights",
+                    "type": "uint8"
+                },
+                {
+                    "name": "editors",
+                    "type": "name[]"
+                },
+                {
+                    "name": "default_value",
+                    "type": "key_value_store?"
+                }
+            ]
+        },
+        {
+            "name": "key_def_table",
+            "base": "",
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "name": "type_index",
+                    "type": "uint8"
+                },
+                {
+                    "name": "edit_rights",
+                    "type": "uint8"
+                },
+                {
+                    "name": "editors",
+                    "type": "name[]"
+                },
+                {
+                    "name": "default_value",
+                    "type": "key_value_store?"
+                }
+            ]
+        },
+        {
+            "name": "key_payment",
+            "base": "",
+            "fields": [
+                {
+                    "name": "uos_payment",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "key_type_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key_type",
+                    "type": "string"
+                },
+                {
+                    "name": "element_number_limit",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "key_value_action",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key_name",
+                    "type": "string"
+                },
+                {
+                    "name": "key_value",
+                    "type": "key_value_store"
+                }
+            ]
+        },
+        {
+            "name": "key_value_pair",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key_index",
+                    "type": "uint8"
+                },
+                {
+                    "name": "key_value",
+                    "type": "key_value_store"
+                }
+            ]
+        },
+        {
+            "name": "lckfactory",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "limitmint",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "account_minting_limit",
+                    "type": "uint32"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "make_factory_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "make_nft_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "nft_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "migrate_factories",
+            "base": "",
+            "fields": [
+                {
+                    "name": "total_no",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "migrate_tokens",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owners",
+                    "type": "name_vector"
+                },
+                {
+                    "name": "total_no",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "migration",
+            "base": "",
+            "fields": [
+                {
+                    "name": "active_nft_version",
+                    "type": "uint64"
+                },
+                {
+                    "name": "table_migration_stats",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "minter_authorization_info",
+            "base": "",
+            "fields": [
+                {
+                    "name": "authorized_minter",
+                    "type": "name"
+                },
+                {
+                    "name": "quantity",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "mintstat_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "minted",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "next_factory_offer_number",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "next_fct_group_id",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "next_nft_auction_number",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "next_nft_offer_number",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "next_token_factory_number",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "next_token_number",
+            "base": "",
+            "fields": [
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "nft_auction_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "auction_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "bid",
+                    "type": "asset"
+                },
+                {
+                    "name": "bidder",
+                    "type": "name?"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "promoter_id",
+                    "type": "name?"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "start_date",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "expiry_date",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "nft_offer_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "offer_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name?"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "expiry_date",
+                    "type": "time_point_sec"
+                }
+            ]
+        },
+        {
+            "name": "offer_config_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "min_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "min_duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "max_duration",
+                    "type": "uint32"
+                },
+                {
+                    "name": "max_active_offer_per_user",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "provided_user_uniqs",
+            "base": "",
+            "fields": [
+                {
+                    "name": "tokens",
+                    "type": "uniqs_count_internal[]"
+                }
+            ]
+        },
+        {
+            "name": "purchase",
+            "base": "",
+            "fields": [
+                {
+                    "name": "purchase",
+                    "type": "purchase_wrap"
+                }
+            ]
+        },
+        {
+            "name": "purchase_requirement_with_uniqs",
+            "base": "",
+            "fields": [
+                {
+                    "name": "transfer_tokens_receiver_account",
+                    "type": "name?"
+                },
+                {
+                    "name": "factories",
+                    "type": "uniqs_count[]"
+                }
+            ]
+        },
+        {
+            "name": "purchase_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "index",
+                    "type": "uint64"
+                },
+                {
+                    "name": "max_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "buyer",
+                    "type": "name"
+                },
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "promoter_id",
+                    "type": "name?"
+                },
+                {
+                    "name": "user_uniqs",
+                    "type": "provided_user_uniqs?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "ramvault_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "usage",
+                    "type": "int64"
+                },
+                {
+                    "name": "payment",
+                    "type": "int64"
+                }
+            ]
+        },
+        {
+            "name": "recall",
+            "base": "",
+            "fields": [
+                {
+                    "name": "recall",
+                    "type": "recall_wrap"
+                }
+            ]
+        },
+        {
+            "name": "recall_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_ids",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "resale_share",
+            "base": "",
+            "fields": [
+                {
+                    "name": "receiver",
+                    "type": "name"
+                },
+                {
+                    "name": "basis_point",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "resale_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                }
+            ]
+        },
+        {
+            "name": "resell",
+            "base": "",
+            "fields": [
+                {
+                    "name": "resell",
+                    "type": "resell_wrap"
+                }
+            ]
+        },
+        {
+            "name": "resell_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "seller",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint64?"
+                },
+                {
+                    "name": "price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "rmgrpfcts",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "factories",
+                    "type": "uint64[]"
+                }
+            ]
+        },
+        {
+            "name": "set_auction_config_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "config",
+                    "type": "set_auction_config_wrap_v0"
+                }
+            ]
+        },
+        {
+            "name": "set_auction_config_wrap_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "min_starting_price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "min_duration",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "max_duration",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "min_bid_increment_basis_point",
+                    "type": "uint16?"
+                },
+                {
+                    "name": "min_bid_increment_uos",
+                    "type": "asset?"
+                },
+                {
+                    "name": "auction_extension_threshold",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "auction_extension_step",
+                    "type": "uint32?"
+                }
+            ]
+        },
+        {
+            "name": "set_key_types",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key_types",
+                    "type": "key_type_info[]"
+                }
+            ]
+        },
+        {
+            "name": "set_offer_config_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "min_price",
+                    "type": "asset?"
+                },
+                {
+                    "name": "min_duration",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "max_duration",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "max_active_offer_per_user",
+                    "type": "uint32?"
+                }
+            ]
+        },
+        {
+            "name": "set_purchase_requirements_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "index",
+                    "type": "uint64"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "purchase_limit",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "purchase_option_with_uniqs",
+                    "type": "purchase_requirement_with_uniqs?"
+                },
+                {
+                    "name": "sale_shares",
+                    "type": "resale_share[]"
+                },
+                {
+                    "name": "maximum_uos_payment",
+                    "type": "asset?"
+                },
+                {
+                    "name": "group_restriction",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "purchase_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "purchase_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "set_purchase_requirements_wrap_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "index",
+                    "type": "uint64"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "purchase_limit",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "purchase_option_with_uniqs",
+                    "type": "purchase_requirement_with_uniqs?"
+                },
+                {
+                    "name": "sale_shares",
+                    "type": "resale_share[]"
+                },
+                {
+                    "name": "maximum_uos_payment",
+                    "type": "asset?"
+                },
+                {
+                    "name": "group_restriction",
+                    "type": "string"
+                },
+                {
+                    "name": "purchase_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "purchase_window_end",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "set_trade_window",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "trading_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "trading_window_end",
+                    "type": "time_point_sec?"
+                }
+            ]
+        },
+        {
+            "name": "set_transfer_window",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "transfer_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "transfer_window_end",
+                    "type": "time_point_sec?"
+                }
+            ]
+        },
+        {
+            "name": "set_uniq_value_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "editor",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "key_values",
+                    "type": "key_value_action_vec"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "setconrecv",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name_vector"
+                }
+            ]
+        },
+        {
+            "name": "setdflttkn",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "uri",
+                    "type": "string"
+                },
+                {
+                    "name": "hash",
+                    "type": "checksum256?"
+                }
+            ]
+        },
+        {
+            "name": "setmeta",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "meta_uris",
+                    "type": "string_vector"
+                },
+                {
+                    "name": "meta_hash",
+                    "type": "checksum256"
+                }
+            ]
+        },
+        {
+            "name": "setmeta_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "factory_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "factory_hash",
+                    "type": "checksum256"
+                }
+            ]
+        },
+        {
+            "name": "setnftmgrflg",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "setprchsreq",
+            "base": "",
+            "fields": [
+                {
+                    "name": "purchase_option",
+                    "type": "set_purchase_requirements_wrap"
+                }
+            ]
+        },
+        {
+            "name": "setprchsreq_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "purchase_option",
+                    "type": "set_purchase_requirements_wrap_v1"
+                }
+            ]
+        },
+        {
+            "name": "setsharelim",
+            "base": "",
+            "fields": [
+                {
+                    "name": "type",
+                    "type": "uint8"
+                },
+                {
+                    "name": "config",
+                    "type": "factory_sale_share_limit_config"
+                }
+            ]
+        },
+        {
+            "name": "setstatus",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "status",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "settfflag",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "settknmeta",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "owner",
+                    "type": "name"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                },
+                {
+                    "name": "uri",
+                    "type": "string?"
+                },
+                {
+                    "name": "hash",
+                    "type": "checksum256?"
+                }
+            ]
+        },
+        {
+            "name": "settle_auction_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "executer",
+                    "type": "name"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "supported_key_types",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key_types",
+                    "type": "key_type_info[]"
+                }
+            ]
+        },
+        {
+            "name": "tf_create_flags_type",
+            "base": "",
+            "fields": [
+                {
+                    "name": "require_ultra",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "token_factory_purchase_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "price",
+                    "type": "asset"
+                },
+                {
+                    "name": "purchase_limit",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "purchased_tokens_no",
+                    "type": "uint32"
+                },
+                {
+                    "name": "promoter_basis_point",
+                    "type": "uint16"
+                },
+                {
+                    "name": "purchase_option_with_uniqs",
+                    "type": "purchase_requirement_with_uniqs?"
+                },
+                {
+                    "name": "sale_shares",
+                    "type": "resale_share[]"
+                },
+                {
+                    "name": "uos_payment",
+                    "type": "int64"
+                },
+                {
+                    "name": "group_restriction",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "purchase_window_start",
+                    "type": "time_point_sec?"
+                },
+                {
+                    "name": "purchase_window_end",
+                    "type": "time_point_sec?"
+                }
+            ]
+        },
+        {
+            "name": "token_factory_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "asset_manager",
+                    "type": "name"
+                },
+                {
+                    "name": "asset_creator",
+                    "type": "name"
+                },
+                {
+                    "name": "conversion_rate_oracle_contract",
+                    "type": "name"
+                },
+                {
+                    "name": "chosen_rate",
+                    "type": "asset[]"
+                },
+                {
+                    "name": "minimum_resell_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "resale_shares",
+                    "type": "resale_share[]"
+                },
+                {
+                    "name": "mintable_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "mintable_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "trading_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "trading_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "recall_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "recall_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "lockup_time",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name[]"
+                },
+                {
+                    "name": "stat",
+                    "type": "uint8"
+                },
+                {
+                    "name": "meta_uris",
+                    "type": "string[]"
+                },
+                {
+                    "name": "meta_hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "max_mintable_tokens",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "minted_tokens_no",
+                    "type": "uint32"
+                },
+                {
+                    "name": "existing_tokens_no",
+                    "type": "uint32"
+                },
+                {
+                    "name": "authorized_tokens_no",
+                    "type": "uint32?$"
+                },
+                {
+                    "name": "account_minting_limit",
+                    "type": "uint32?$"
+                }
+            ]
+        },
+        {
+            "name": "token_factory_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "asset_manager",
+                    "type": "name"
+                },
+                {
+                    "name": "asset_creator",
+                    "type": "name"
+                },
+                {
+                    "name": "minimum_resell_price",
+                    "type": "asset"
+                },
+                {
+                    "name": "resale_shares",
+                    "type": "resale_share[]"
+                },
+                {
+                    "name": "mintable_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "mintable_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "trading_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "trading_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "recall_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "recall_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "lockup_time",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "conditionless_receivers",
+                    "type": "name[]"
+                },
+                {
+                    "name": "stat",
+                    "type": "uint8"
+                },
+                {
+                    "name": "factory_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "factory_hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "max_mintable_tokens",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "minted_tokens_no",
+                    "type": "uint32"
+                },
+                {
+                    "name": "existing_tokens_no",
+                    "type": "uint32"
+                },
+                {
+                    "name": "authorized_tokens_no",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "account_minting_limit",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "transfer_window_start",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "transfer_window_end",
+                    "type": "uint32?"
+                },
+                {
+                    "name": "default_token_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "default_token_hash",
+                    "type": "checksum256?"
+                },
+                {
+                    "name": "lock_hash",
+                    "type": "bool"
+                },
+                {
+                    "name": "keys",
+                    "type": "factory_keys?$"
+                }
+            ]
+        },
+        {
+            "name": "token_v0",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "mint_date",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "serial_number",
+                    "type": "uint32"
+                }
+            ]
+        },
+        {
+            "name": "token_v1",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "mint_date",
+                    "type": "time_point_sec"
+                },
+                {
+                    "name": "serial_number",
+                    "type": "uint32"
+                },
+                {
+                    "name": "uos_payment",
+                    "type": "int64"
+                },
+                {
+                    "name": "uri",
+                    "type": "string?"
+                },
+                {
+                    "name": "hash",
+                    "type": "checksum256?"
+                },
+                {
+                    "name": "key_values",
+                    "type": "key_value_vec?$"
+                }
+            ]
+        },
+        {
+            "name": "transfer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "transfer",
+                    "type": "transfer_wrap"
+                }
+            ]
+        },
+        {
+            "name": "transfer_wrap",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name?"
+                },
+                {
+                    "name": "to",
+                    "type": "name?"
+                },
+                {
+                    "name": "token_ids",
+                    "type": "uint64_t_vector?"
+                },
+                {
+                    "name": "memo",
+                    "type": "string?"
+                }
+            ]
+        },
+        {
+            "name": "uniqs_count",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_factory_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "count",
+                    "type": "uint32"
+                },
+                {
+                    "name": "strategy",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "uniqs_count_internal",
+            "base": "",
+            "fields": [
+                {
+                    "name": "token_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "strategy",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "updategrp",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "uri",
+                    "type": "string?"
+                },
+                {
+                    "name": "hash",
+                    "type": "checksum256?"
+                },
+                {
+                    "name": "factories",
+                    "type": "uint64_t_vector?"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "acptfctofr.a",
+            "type": "accept_factory_offer_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Accept the buy offer on a NFT (token) of the NFT factory\nsummary: 'Accept the buy offer on a NFT (token) of the NFT factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{owner}} accepts the buy offer specified by {{offer_id}} on the NFT specified by {{nft_id}}. Reason: {{ memo }}. {{owner}} can specify {{promoter_id}}. The offer should have been made to any NFT on a factory and {{ower]] accepts one NFT from the factory."
+        },
+        {
+            "name": "acptnftofr.a",
+            "type": "accept_nft_offer_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Accept the buy offer on a NFT (token)\nsummary: 'Accept the buy offer on a NFT (token).'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{owner}} accepts the buy offer specified by {{offer_id}} on the NFT specified by {{nft_id}}. Reason: {{ memo }}. {{owner}} can specify {{promoter_id}}."
+        },
+        {
+            "name": "activers",
+            "type": "activers",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: activate the new nft version\nsummary: 'activate the new nft version to migrate to'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\non-the-fly migration is activated and continuous migration will be allowed. v1 business logic becomes active."
+        },
+        {
+            "name": "addgrpfcts",
+            "type": "addgrpfcts",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Adds factories to a factory group\nsummary: 'Adds factories to a factory group'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nExtends group {{id}} with {{factories}}."
+        },
+        {
+            "name": "addkeys.a",
+            "type": "add_factory_keys_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Add factory keys\nsummary: 'Add factory keys'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nAdd {{ key_defs }} to factory with ID {{ factory_id }}. Reason: {{ memo }}"
+        },
+        {
+            "name": "authmint.b",
+            "type": "authminter_v1",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Authorize another account to mint v1 tokens\nsummary: 'Authorize another account to mint a limited quantity of tokens or to delegate minting to yet another account.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{authorizer}} authorizes {{authorized_minter}} to mint {{quantity}} of tokens or to delegate minting of up {{quantity}} tokens to some other account. Reason: {{memo}}."
+        },
+        {
+            "name": "authminter",
+            "type": "authminter",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Authorize another account to mint tokens\nsummary: 'Authorize another account to mint a limited quantity of tokens or to delegate minting to yet another account.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{authorizer}} authorizes {{authorized_minter}} to mint {{quantity}} of tokens or to delegate minting of up {{quantity}} tokens to some other account. Reason: {{memo}}."
+        },
+        {
+            "name": "bidauction.a",
+            "type": "bid_auction_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Place a bid on a NFT auction\nsummary: 'Place a bid on a NFT auction.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nBidder places a UOS bid on an existing NFT auction and optionally specifies the receiver and promoter accounts."
+        },
+        {
+            "name": "burn",
+            "type": "burn",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Burn Tokens\nsummary: 'Erase the provided list of tokens from existence.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{owner}} will burn the following tokens {{ token_ids }} from existence. Reason: {{ memo }}."
+        },
+        {
+            "name": "buy",
+            "type": "buy",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Buy Token\nsummary: 'Buy a single token listed for a sale'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{buyer}} will buy the token {{ token_id }} for a listed price and if specified a promoter {{promoter_id}} will participate in the sale share distribution. Reason: {{ memo }}."
+        },
+        {
+            "name": "cancelauct.a",
+            "type": "cancel_auction_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Cancel a NFT auction\nsummary: 'Cancel a NFT action that has no bids.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{canceler}} cancels an auction for the NFT with ID {{token_id}} that has no active bids. Reason: {{ memo }}."
+        },
+        {
+            "name": "cancelresell",
+            "type": "cancelresell",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Cancel Token Resell\nsummary: 'Cancel an existing token resell opertaion'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nresell operation of the token {{token_id}} will be cancelled and it will no longer be listed for a sale. Reason: {{ memo }}."
+        },
+        {
+            "name": "cleanresell",
+            "type": "cleanresell",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle:clean invalid resell entries\nsummary: 'scan given number of resales and clean the entry where owner doesnot own the token anymore'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nStarting from the token with id {{start_id}} scan up to {{total_number}} tokens and remove any entry where its owner does not own the token anymore."
+        },
+        {
+            "name": "clrmintst",
+            "type": "clrmintst",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Clean mint stat\nsummary: 'Clean the existing minting status table of token factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nclean {{no_of_entries}}, or all entries (if {{no_of_entries}} is not specified) of the existing minting status table of token factory of id {{token_factory_id}}. Reason: {{memo}}."
+        },
+        {
+            "name": "create",
+            "type": "create",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create a version 0 Token Factory\nsummary: 'Create a new token factory.a.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_creator}} will create new token factory which will be managed by {{asset_manager}}. Reason: {{ memo }}."
+        },
+        {
+            "name": "create.b",
+            "type": "create_v1",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create a version 1 Token Factory\nsummary: 'Create a new token factory.b.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_creator}} will create new token factory which will be managed by {{asset_manager}}. Reason: {{ memo }}."
+        },
+        {
+            "name": "createauct.a",
+            "type": "create_auction_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create an auction for a NFT\nsummary: 'Create an auction for a NFT.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nOwner of a NFT creates an auction with a specified starting price and expiry date."
+        },
+        {
+            "name": "creategrp",
+            "type": "creategrp",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Create a token factory Group\nsummary: 'Create a new token factory group'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{manager}} creates a new token factory group with {{uri}}, {{hash}}, {{factories}} and {{max_uos_payment}}."
+        },
+        {
+            "name": "deletegrp",
+            "type": "deletegrp",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Delete a token factory Group\nsummary: 'Delete a new token factory group'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nDeletes a factory group {{id}}."
+        },
+        {
+            "name": "delprchsreq.a",
+            "type": "delprchsreq",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Delete purchase requirements\nsummary: 'Delete purchase requirements'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n{{asset_manager}} will be able to update purchase requirements for a token factory."
+        },
+        {
+            "name": "fhglobalshr",
+            "type": "fhglobalshr",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set global first-hand purchase share\nsummary: 'Set or update global NFT token first-hand purchase share'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nEach NFT token direct purchase will additionally send a share of {{share}} basis points to the existing global share account or {{receiver}} (if specified)"
+        },
+        {
+            "name": "fixauthmint",
+            "type": "fixauthmint",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Fix a fault tokenn factory\nsummary: 'Fix a token factory with inconsistent number of minted tokens and reserved tokens for authminters.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nFix a token factory of id {{token_factory_id}} with inconsistent number of minted tokens and reserved tokens for authminters."
+        },
+        {
+            "name": "globalshare",
+            "type": "globalshare",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set global resale share\nsummary: 'Set or update global NFT token resale share'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\neach NFT token resale will additionally send a share of {{share}} basis points to the existing global share account or {{receiver}} (if specified)"
+        },
+        {
+            "name": "issue",
+            "type": "issue",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Issue/Mint v0 Tokens\nsummary: 'Mints a new token.a'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{to}} will receive the following tokens {{ token_configs }}. Memo: {{ memo }}."
+        },
+        {
+            "name": "issue.b",
+            "type": "issue_v1",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Issue/Mint v1 Tokens\nsummary: 'Mints a new token.b'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{to}} will receive the following tokens {{ token_configs }}. Memo: {{ memo }}."
+        },
+        {
+            "name": "lckfactory",
+            "type": "lckfactory",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Lock factory\nsummary: 'Lock a factory and prevent changing the hash.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nSet a token factory status with id {{token_factory_id}} to not allow any more changes to hashes and URIs."
+        },
+        {
+            "name": "limitmint",
+            "type": "limitmint",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set minting limit\nsummary: 'Set the number of minting limit per account for the token factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nset {{account_minting_limit}} as the minting limit per account for token factory of id {{token_factory_id}}. Reason: {{memo}}."
+        },
+        {
+            "name": "mgrfactories",
+            "type": "migrate_factories",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Migrate factories\nsummary: 'Migrate token factory table entries.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nMigrate {{total_no}} of token factory table entries, or all the remaining entries if they are less than {{total_no}}."
+        },
+        {
+            "name": "mgrnfts",
+            "type": "migrate_tokens",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Migrate tokens\nsummary: 'Migrate token table entries.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nMigrate {{total_no}} of {{owners}}' token table entries, or all the remaining entries if they are less than {{total_no}}."
+        },
+        {
+            "name": "mkfctofr.a",
+            "type": "make_factory_offer_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Make a buy offer on any NFT (token) of a NFT factory\nsummary: 'Make a buy offer on any NFT (token) of a NFT factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{buyer}} makes a buy offer on any NFT of a NFT factory specified by {{factory_id}} with {{price}}, {{promoter_basis_point}}, and {{duration}}. Reason: {{ memo }}. {{buyer}} can specify another {{receiver}} to receive the NFT."
+        },
+        {
+            "name": "mknftofr.a",
+            "type": "make_nft_offer_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Make a buy offer on a NFT (token)\nsummary: 'Make a buy offer on a NFT (token).'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{buyer}} makes a buy offer on a NFT specified by {{nft_id}} of {{owner}} with {{price}}, {{promoter_basis_point}}, and {{duration}}. Reason: {{ memo }}. {{buyer}} can specify another {{receiver}} to receive the NFT."
+        },
+        {
+            "name": "purchase.a",
+            "type": "purchase",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Purchase a Uniq onchain\nsummary: 'Allows a user to purchase a Uniq onchain'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\nUsers will be able to directly purchase a uniq from a token factory."
+        },
+        {
+            "name": "recall",
+            "type": "recall",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Recall Tokens\nsummary: 'Recall tokens from user to token factory manager.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_manager}} will recall following tokens {{ token_ids }} from users. Reason: {{ memo }}."
+        },
+        {
+            "name": "resell",
+            "type": "resell",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Resell Token\nsummary: 'List a single token for a sale'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{seller}} will list the token {{ token_id }} for a price of {{price}} and a promoter basis point of {{promoter_basis_point}} percent. Reason: {{ memo }}."
+        },
+        {
+            "name": "rmfctofr.a",
+            "type": "cancel_factory_offer_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Cancel the buy offer on a NFT\nsummary: 'Cancel the buy offer on a NFT.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{canceler}} cancels the buy offer specified by {{offer_id}} on the NFT factory specified by {{factory_id}}. Reason: {{ memo }}."
+        },
+        {
+            "name": "rmgrpfcts",
+            "type": "rmgrpfcts",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Remove factories from token factory Group\nsummary: 'Removes factories from a factory group'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nRemoves a list of {{factories}} from a group {{id}}."
+        },
+        {
+            "name": "rmnftofr.a",
+            "type": "cancel_nft_offer_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Cancel the buy offer on a NFT (token)\nsummary: 'Cancel the buy offer on a NFT (token).'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{canceler}} cancels the buy offer specified by {{offer_id}} on the NFT specified by {{nft_id}}. Reason: {{ memo }}."
+        },
+        {
+            "name": "setconrecv",
+            "type": "setconrecv",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set conditionless receivers\nsummary: 'Set conditionless receivers for a token factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_manager}} will set conditionless receivers for a factory. Reason: {{ memo }}."
+        },
+        {
+            "name": "setdflttkn",
+            "type": "setdflttkn",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set default token data\nsummary: 'Set a URI and hash for default token metadata.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nUpdate default token metadata information for factory with id {{token_factory_id}} to change URI and/or hash. Reson: {{memo}}."
+        },
+        {
+            "name": "setktypes",
+            "type": "set_key_types",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set supported key types\nsummary: 'Set supported types for factory data keys.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nSet supported {{ key_types }} for factory data keys."
+        },
+        {
+            "name": "setmeta",
+            "type": "setmeta",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set meta\nsummary: 'Set metadata uris and metadata hash for a token factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_manager}} will set metadata uri and metadata hash for a factory. Reason: {{ memo }}."
+        },
+        {
+            "name": "setmeta.b",
+            "type": "setmeta_v1",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set meta\nsummary: 'Set metadata uris and metadata hash for a token factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_manager}} will set metadata uri and metadata hash for a factory. Reason: {{ memo }}."
+        },
+        {
+            "name": "setnftmgrflg",
+            "type": "setnftmgrflg",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set token migration done flag\nsummary: 'Set token migration done flag.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nSet token migration done flag in migration table."
+        },
+        {
+            "name": "setprchsreq.a",
+            "type": "setprchsreq",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set purchase requirements\nsummary: 'Create/Update purchase requirements'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n{{asset_manager}} will be able to update purchase requirements for a token factory."
+        },
+        {
+            "name": "setprchsreq.b",
+            "type": "setprchsreq_v1",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "setsharelim",
+            "type": "setsharelim",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set factory sale share limits\nsummary: 'Set global limit on all sales done from a factory for ultra, promoter and factory itself'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nSets limits for NFT token sales which will limit any possible share for Ultra to {{max_ultra_share_bp}}, for factory beneficiaries to {{max_factory_share_bp}} and for promoter to {{max_promoter_share_bp}}. Additionally the lowest share promoter can receive is {{max_promoter_share_bp}} and in case no promoter is specified the following promoter will be used {{default_promoter}}"
+        },
+        {
+            "name": "setstatus",
+            "type": "setstatus",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set state\nsummary: 'Set state for a token factory.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{asset_manager}} will set state for a factory. Reason: {{ memo }}."
+        },
+        {
+            "name": "settfflag",
+            "type": "settfflag",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set token factory creation permission\nsummary: 'Sets token factory creation permission flag to allow any account to create token factories.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nSets token factory creation permission flag to allow any account to create token factories."
+        },
+        {
+            "name": "settknmeta",
+            "type": "settknmeta",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set token data\nsummary: 'Set a URI and hash for token metadata.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nUpdate token metadata information with id {{token_id}} of a user {{user}} to change URI and/or hash. Reson: {{memo}}."
+        },
+        {
+            "name": "settleauct.a",
+            "type": "settle_auction_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Settle a NFT auction\nsummary: 'Settle a NFT action that reached its expiration date.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\n{{executer}} concludes an auction for the NFT with ID {{token_id}}. {{token_id}} will be transferred to the highest bidder or receiver account and the bid will be shared between auction creator, promoter and factory resale shares. Reason: {{ memo }}."
+        },
+        {
+            "name": "settrdwin.a",
+            "type": "set_trade_window",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set trade window\nsummary: 'Update trading window of a token factory'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n{{asset_manager}} will update the {{trading_window_start}} and {{trading_window_end}} for a token factory."
+        },
+        {
+            "name": "settrnfwin.a",
+            "type": "set_transfer_window",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set transfer window\nsummary: 'Update transfer window of a token factory'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n{{asset_manager}} will update the {{transfer_window_start}} and {{transfer_window_end}} for a token factory."
+        },
+        {
+            "name": "setvals.a",
+            "type": "set_uniq_value_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set uniq value\nsummary: 'Set uniq value'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nUpdate uniq with id {{ token_id }} from {{ owner }} with {{ key_values }}. Reason: {{ memo }}"
+        },
+        {
+            "name": "stauctcfg.a",
+            "type": "set_auction_config_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set or update the version 0 NFT auction configurations\nsummary: 'Set or update NFT auction configurations in auctioncfg.a.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nultra sets or updates the NFT auction configurations including starting auction price, min/max duration of an auction, min bid increments and auction duration extension"
+        },
+        {
+            "name": "stofrcfg.a",
+            "type": "set_offer_config_v0",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Set or update the version 0 buy offer configurations\nsummary: 'Set or update buy offer configurations in stofrcfg.a.'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nultra sets or updates the buy offer configurations including min./max. durations and max. number of active offers per user"
+        },
+        {
+            "name": "transfer",
+            "type": "transfer",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Transfer Tokens\nsummary: 'Transfer multiple tokens between accounts'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nuser {{from}} will transfer the following tokens {{ token_ids }} to {{to}} account. Reason: {{ memo }}."
+        },
+        {
+            "name": "updategrp",
+            "type": "updategrp",
+            "ricardian_contract": "---\nspec_version: \"0.2.0\"\ntitle: Update a token factory Group\nsummary: 'Update a new token factory group'\nicon: https://raw.githubusercontent.com/AntelopeIO/reference-contracts/main/contracts/icons/account.png#3d55a2fc3a5c20b456f5657faf666bc25ffd06f4836c5e8256f741149b0b294f\n---\n\nAllows factory group {{id}} to be updated. At least one of {{uri}}, {{hash}}, {{factories}}\nshould be specified."
+        }
+    ],
+    "tables": [
+        {
+            "name": "auction.a",
+            "type": "nft_auction_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "auctioncfg.a",
+            "type": "auction_config_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "authmintrs.a",
+            "type": "authorized_minters_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "buyoffer.a",
+            "type": "buy_offer_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "factory.a",
+            "type": "token_factory_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "factory.b",
+            "type": "token_factory_v1",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "factorygrp.a",
+            "type": "factory_group_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "fctoffer.a",
+            "type": "factory_offer_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "fctrprchs.a",
+            "type": "token_factory_purchase_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "global.share",
+            "type": "global_resale_share",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "keypay.a",
+            "type": "key_payment",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "keytypes",
+            "type": "supported_key_types",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "migration",
+            "type": "migration",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "mintstat.a",
+            "type": "mintstat_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.factory",
+            "type": "next_token_factory_number",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.fct.grp",
+            "type": "next_fct_group_id",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.fctofr",
+            "type": "next_factory_offer_number",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.nftauc",
+            "type": "next_nft_auction_number",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.nftofr",
+            "type": "next_nft_offer_number",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "next.token",
+            "type": "next_token_number",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "nftoffer.a",
+            "type": "nft_offer_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "offercfg.a",
+            "type": "offer_config_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "ramvault.a",
+            "type": "ramvault_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "resale.a",
+            "type": "resale_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "saleshrlmcfg",
+            "type": "factory_sale_share_limit_config",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "tfcreateflag",
+            "type": "tf_create_flags_type",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "token.a",
+            "type": "token_v0",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "token.b",
+            "type": "token_v1",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [
+        {
+            "name": "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC",
+            "types": ["int8","int16","int32","int64","uint8","uint16","uint32","uint64","float32","float64","string","INT8_VEC","INT16_VEC","INT32_VEC","INT64_VEC","UINT8_VEC","UINT16_VEC","UINT32_VEC","UINT64_VEC","FLOAT32_VEC","FLOAT64_VEC","STRING_VEC"]
+        }
+    ],
+    "action_results": []
+}
