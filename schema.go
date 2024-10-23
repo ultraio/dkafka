@@ -230,7 +230,7 @@ func variantToUnion(abi *ABI, name string, visited map[string]string) (Schema, e
 	} else {
 		var union = make([]Schema, len(v.Types))
 		for i, aType := range v.Types {
-			if resolved, err := resolveType(abi, aType, visited); err != nil {
+			if resolved, err := resolveType(abi, aType, visited); err == nil {
 				union[i] = resolved
 			} else {
 				return nil, err
@@ -399,7 +399,8 @@ var schemaTypeConverters = map[string]goavro.ConvertBuild{
 	"eos.Symbol":    symbolConverter,
 }
 
-var avroPrimitiveTypeByBuiltInTypes map[string]interface{}
+var avroPrimitiveTypeByBuiltInTypes map[string]TypedSchema
+var avroDecimalLogicalTypeByBuiltInTypes map[string]DecimalLogicalType
 
 var assetSchema RecordSchema = RecordSchema{
 	Type:      "record",
@@ -468,33 +469,36 @@ var avroRecordTypeByBuiltInTypes map[string]RecordSchema
 // "extended_asset",
 
 func initBuiltInTypesForTables() {
-	avroPrimitiveTypeByBuiltInTypes = map[string]interface{}{
-		"bool":                 map[string]interface{}{"type": "boolean", "eos.type": "bool"},
-		"int8":                 map[string]interface{}{"type": "int", "eos.type": "int8"},
-		"uint8":                map[string]interface{}{"type": "int", "eos.type": "uint8"},
-		"int16":                map[string]interface{}{"type": "int", "eos.type": "int16"},
-		"uint16":               map[string]interface{}{"type": "int", "eos.type": "uint16"},
-		"int32":                map[string]interface{}{"type": "int", "eos.type": "int32"},
-		"uint32":               map[string]interface{}{"type": "long", "eos.type": "uint32"},
-		"int64":                map[string]interface{}{"type": "long", "eos.type": "int64"},
-		"uint64":               map[string]interface{}{"type": "long", "eos.type": "uint64", "logicalType": "eos.uint64"}, // FIXME maybe use Decimal here see goavro or FIXED
-		"int128":               NewInt128Type(),
-		"uint128":              NewUint128Type(),
-		"varint32":             map[string]interface{}{"type": "int", "eos.type": "varint32"},
-		"varuint32":            map[string]interface{}{"type": "long", "eos.type": "varuint32"},
-		"float32":              map[string]interface{}{"type": "float", "eos.type": "float32"},
-		"float64":              map[string]interface{}{"type": "double", "eos.type": "float64"},
+	avroPrimitiveTypeByBuiltInTypes = map[string]TypedSchema{
+		"bool":   {Type: "boolean", EosType: "bool"},
+		"int8":   {Type: "int", EosType: "int8"},
+		"uint8":  {Type: "int", EosType: "uint8"},
+		"int16":  {Type: "int", EosType: "int16"},
+		"uint16": {Type: "int", EosType: "uint16"},
+		"int32":  {Type: "int", EosType: "int32"},
+		"uint32": {Type: "long", EosType: "uint32"},
+		"int64":  {Type: "long", EosType: "int64"},
+		// FIXME: remove the logicalType
+		"uint64":               {Type: "long", EosType: "uint64", LogicalType: "eos.uint64"}, // FIXME maybe use Decimal here see goavro or FIXED
+		"varint32":             {Type: "int", EosType: "varint32"},
+		"varuint32":            {Type: "long", EosType: "varuint32"},
+		"float32":              {Type: "float", EosType: "float32"},
+		"float64":              {Type: "double", EosType: "float64"},
 		"time_point":           NewTimestampMillisType("time_point"),           // fork/eos-go/abidecoder.go TODO add ABI.nativeTime bool to skip time to string conversion in abidecoder read method
 		"time_point_sec":       NewTimestampMillisType("time_point_sec"),       // fork/eos-go/abidecoder.go
 		"block_timestamp_type": NewTimestampMillisType("block_timestamp_type"), // fork/eos-go/abidecoder.go
-		"name":                 map[string]interface{}{"type": "string", "eos.type": "name"},
-		"bytes":                map[string]interface{}{"type": "bytes", "eos.type": "bytes"},
-		"string":               map[string]interface{}{"type": "string", "eos.type": "string"},
-		"checksum160":          map[string]interface{}{"type": "bytes", "eos.type": "checksum160"},
-		"checksum256":          map[string]interface{}{"type": "bytes", "eos.type": "checksum256"},
-		"checksum512":          map[string]interface{}{"type": "bytes", "eos.type": "checksum512"},
+		"name":                 {Type: "string", EosType: "name"},
+		"bytes":                {Type: "bytes", EosType: "bytes"},
+		"string":               {Type: "string", EosType: "string"},
+		"checksum160":          {Type: "bytes", EosType: "checksum160"},
+		"checksum256":          {Type: "bytes", EosType: "checksum256"},
+		"checksum512":          {Type: "bytes", EosType: "checksum512"},
 		"symbol":               NewSymbolType(),
-		"symbol_code":          map[string]interface{}{"type": "string", "eos.type": "symbol_code"}, // FIXME check with blockchain team
+		"symbol_code":          {Type: "string", EosType: "symbol_code"}, // FIXME check with blockchain team
+	}
+	avroDecimalLogicalTypeByBuiltInTypes = map[string]DecimalLogicalType{
+		"int128":  NewInt128Type(),
+		"uint128": NewUint128Type(),
 	}
 	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{
 		"asset":      assetSchema,
@@ -509,13 +513,13 @@ func initBuiltInTypesForTables() {
 // FIXME Can be fixed by using the raw_data of the action trace ;)
 func initBuiltInTypesForActions() {
 	initBuiltInTypesForTables()
-	avroPrimitiveTypeByBuiltInTypes["asset"] = "string"
-	avroPrimitiveTypeByBuiltInTypes["public_key"] = "string"
-	avroPrimitiveTypeByBuiltInTypes["signature"] = "string"
-	avroPrimitiveTypeByBuiltInTypes["time_point"] = "string"
-	avroPrimitiveTypeByBuiltInTypes["time_point_sec"] = "string"
-	avroPrimitiveTypeByBuiltInTypes["block_timestamp_type"] = "string"
-	avroPrimitiveTypeByBuiltInTypes["symbol"] = "string"
+	avroPrimitiveTypeByBuiltInTypes["asset"] = TypedSchema{Type: "string", EosType: "asset"}
+	avroPrimitiveTypeByBuiltInTypes["public_key"] = TypedSchema{Type: "string", EosType: "public_key"}
+	avroPrimitiveTypeByBuiltInTypes["signature"] = TypedSchema{Type: "string", EosType: "signature"}
+	avroPrimitiveTypeByBuiltInTypes["time_point"] = TypedSchema{Type: "string", EosType: "time_point"}
+	avroPrimitiveTypeByBuiltInTypes["time_point_sec"] = TypedSchema{Type: "string", EosType: "time_point_sec"}
+	avroPrimitiveTypeByBuiltInTypes["block_timestamp_type"] = TypedSchema{Type: "string", EosType: "block_timestamp_type"}
+	avroPrimitiveTypeByBuiltInTypes["symbol"] = TypedSchema{Type: "string", EosType: "symbol"}
 	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{}
 }
 
@@ -557,6 +561,9 @@ func resolveType(abi *ABI, name string, visited map[string]string) (Schema, erro
 	if primitive, found := avroPrimitiveTypeByBuiltInTypes[name]; found {
 		return primitive, nil
 	}
+	if decimal, found := avroDecimalLogicalTypeByBuiltInTypes[name]; found {
+		return decimal, nil
+	}
 	// resolve from types
 	if alias, found := abi.TypeNameForNewTypeName(name); found {
 		return resolveFieldTypeSchema(abi, alias, visited)
@@ -577,12 +584,12 @@ func resolveType(abi *ABI, name string, visited map[string]string) (Schema, erro
 		return union, er
 	}
 
-	if record, err := structToRecord(abi, name, visited); err != nil {
-		return nil, err
-	} else {
+	if record, err := structToRecord(abi, name, visited); err == nil {
 		visited[name] = reference(record)
 		return record, nil
 	}
+
+	return nil, fmt.Errorf("type not found: %s", name)
 }
 
 func reference(record RecordSchema) string {

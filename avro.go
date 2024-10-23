@@ -40,6 +40,13 @@ func checkNamespace(np string) (string, error) {
 // A JSON array, representing a union of embedded types.
 type Schema = interface{}
 
+type TypedSchema struct {
+	EosType     string `json:"eos.type"`
+	LogicalType string `json:"logicalType,omitempty"`
+	Type        string `json:"type"`
+	Convert     string `json:"convert,omitempty"`
+}
+
 type MetaSupplier interface {
 	GetVersion() string
 	GetSource() string
@@ -145,7 +152,12 @@ func NewOptionalField(n string, t Schema) FieldSchema {
 }
 
 func NewOptional(schema Schema) Union {
-	return []Schema{"null", schema}
+	switch typpedSchema := schema.(type) {
+	case []interface{}:
+		return append([]interface{}{"null"}, typpedSchema...)
+	default:
+		return []Schema{"null", schema}
+	}
 }
 
 func NewTimestampMillisField(name string) FieldSchema {
@@ -155,43 +167,57 @@ func NewTimestampMillisField(name string) FieldSchema {
 	}
 }
 
-func NewTimestampMillisType(eosType string) Schema {
-	return map[string]interface{}{
-		"type":        "long",
-		"logicalType": "timestamp-millis",
-		"eos.type":    eosType,
+func NewTimestampMillisType(eosType string) TypedSchema {
+	return TypedSchema{
+		Type:        "long",
+		LogicalType: "timestamp-millis",
+		EosType:     eosType,
 	}
 }
 
-func NewInt128Type() Schema {
-	return map[string]interface{}{
-		"type":        "bytes",
-		"logicalType": "decimal",
-		"precision":   39,
-		"scale":       0,
-		"convert":     "eos.Int128",
-		"eos.type":    "int128",
+type DecimalLogicalType struct {
+	TypedSchema
+
+	Precision int    `json:"precision"`
+	Scale     int    `json:"scale"`
+	Convert   string `json:"convert,omitempty"`
+}
+
+func NewInt128Type() DecimalLogicalType {
+	return DecimalLogicalType{
+		TypedSchema: TypedSchema{
+			Type:        "bytes",
+			LogicalType: "decimal",
+			EosType:     "int128",
+		},
+		Scale:     0,
+		Precision: 39,
+		Convert:   "eos.Int128",
 	}
 }
 
-func NewUint64Type() Schema {
-	return map[string]interface{}{
-		"type":        "bytes",
-		"logicalType": "decimal",
-		"precision":   20,
-		"scale":       0,
-		"eos.type":    "uint64",
+func NewUint64Type() DecimalLogicalType {
+	return DecimalLogicalType{
+		TypedSchema: TypedSchema{
+			Type:        "bytes",
+			LogicalType: "decimal",
+			EosType:     "uint64",
+		},
+		Precision: 20,
+		Scale:     0,
 	}
 }
 
-func NewUint128Type() Schema {
-	return map[string]interface{}{
-		"type":        "bytes",
-		"logicalType": "decimal",
-		"precision":   39,
-		"scale":       0,
-		"convert":     "eos.Uint128",
-		"eos.type":    "uint128",
+func NewUint128Type() DecimalLogicalType {
+	return DecimalLogicalType{
+		TypedSchema: TypedSchema{
+			Type:        "bytes",
+			LogicalType: "decimal",
+			EosType:     "uint128",
+		},
+		Precision: 39,
+		Scale:     0,
+		Convert:   "eos.Uint128",
 	}
 }
 
@@ -202,10 +228,10 @@ func NewIntField(name string) FieldSchema {
 	}
 }
 
-func NewSymbolType() Schema {
-	return map[string]interface{}{
-		"type":     "string",
-		"convert":  "eos.Symbol",
-		"eos.type": "symbol",
+func NewSymbolType() TypedSchema {
+	return TypedSchema{
+		Type:    "string",
+		Convert: "eos.Symbol",
+		EosType: "symbol",
 	}
 }

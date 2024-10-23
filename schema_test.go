@@ -25,7 +25,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		return test{
 			name:    fmt.Sprintf("%s->%s", eosType, want),
 			args:    args{eosType, nil},
-			want:    map[string]interface{}{"type": want, "eos.type": eosType},
+			want:    TypedSchema{Type: want, EosType: eosType},
 			wantErr: wantErr,
 		}
 	}
@@ -63,31 +63,31 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		{
 			name:    "int32[]->[]int",
 			args:    args{"int32[]", nil},
-			want:    NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+			want:    NewArray(TypedSchema{Type: "int", EosType: "int32"}),
 			wantErr: false,
 		},
 		{
 			name:    "int32$->['null', 'int']",
 			args:    args{"int32$", nil},
-			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+			want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
 			wantErr: false,
 		},
 		{
 			name:    "int32?$->['null','int']",
 			args:    args{"int32?$", nil},
-			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+			want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
 			wantErr: false,
 		},
 		{
 			name:    "int32[]?->['null',[]int]",
 			args:    args{"int32[]?$", nil},
-			want:    NewOptional(NewArray(map[string]interface{}{"type": "int", "eos.type": "int32"})),
+			want:    NewOptional(NewArray(TypedSchema{Type: "int", EosType: "int32"})),
 			wantErr: false,
 		},
 		{
 			name:    "int32?->['null','int']",
 			args:    args{"int32?", nil},
-			want:    NewOptional(map[string]interface{}{"type": "int", "eos.type": "int32"}),
+			want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
 			wantErr: false,
 		},
 		newTest(
@@ -103,7 +103,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		{
 			name:    "uint64->long",
 			args:    args{"uint64", nil},
-			want:    map[string]interface{}{"type": "long", "eos.type": "uint64", "logicalType": "eos.uint64"},
+			want:    TypedSchema{Type: "long", EosType: "uint64", LogicalType: "eos.uint64"},
 			wantErr: false,
 		},
 		newTest(
@@ -195,11 +195,11 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "fieldA",
-						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
+						Type: TypedSchema{Type: "long", EosType: "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
+						Type: TypedSchema{Type: "long", EosType: "int64"},
 					},
 				},
 			},
@@ -248,19 +248,55 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "parentfieldA",
-						Type: map[string]interface{}{"type": "string", "eos.type": "string"},
+						Type: TypedSchema{Type: "string", EosType: "string"},
 					},
 					{
 						Name: "parentFieldB",
-						Type: map[string]interface{}{"type": "int", "eos.type": "int32"},
+						Type: TypedSchema{Type: "int", EosType: "int32"},
 					},
 					{
 						Name: "fieldA",
-						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
+						Type: TypedSchema{Type: "long", EosType: "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
+						Type: TypedSchema{Type: "long", EosType: "int64"},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "union-multiple-types-nullable",
+			args: args{"nullable_union_record", &ABI{&eos.ABI{
+				Types: []eos.ABIType{{
+					NewTypeName: "nullable_union",
+					Type:        "variant_nullable_union",
+				}},
+				Structs: []eos.StructDef{{
+					Name: "nullable_union_record",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "nullable_union_field",
+							Type: "nullable_union?",
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_nullable_union",
+					Types: []string{"string", "int8"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "NullableUnionRecord",
+				Fields: []FieldSchema{
+					{
+						Name:    "nullable_union_field",
+						Type:    []interface{}{"null", TypedSchema{Type: "string", EosType: "string"}, TypedSchema{Type: "int", EosType: "int8"}},
+						Default: _defaultNull,
 					},
 				},
 			},
@@ -337,10 +373,64 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 							Fields: []FieldSchema{
 								{
 									Name: "threshold",
-									Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
+									Type: TypedSchema{Type: "long", EosType: "uint32"},
 								},
 							},
 						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "variant->union multiple types",
+			args: args{"pair_string_key_value_store", &ABI{&eos.ABI{
+				Types: []eos.ABIType{
+					{
+						NewTypeName: "key_value_store",
+						Type:        "variant_int8_string",
+					},
+				},
+				Structs: []eos.StructDef{{
+					Name: "pair_string_key_value_store",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "first",
+							Type: "string",
+						},
+						{
+							Name: "second",
+							Type: "key_value_store",
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_int8_string",
+					Types: []string{"int8", "string"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "PairStringKeyValueStore",
+				Fields: []FieldSchema{
+					{
+						Type: TypedSchema{Type: "string", EosType: "string"},
+						Name: "first",
+					},
+					{
+						Type: []interface{}{
+							TypedSchema{
+								EosType: "int8",
+								Type:    "int",
+							},
+							TypedSchema{
+								EosType: "string",
+								Type:    "string",
+							},
+						},
+						Name: "second",
 					},
 				},
 			},
@@ -409,11 +499,11 @@ func TestActionToRecord(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "fieldA",
-						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
+						Type: TypedSchema{Type: "long", EosType: "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
+						Type: TypedSchema{Type: "long", EosType: "int64"},
 					},
 				},
 			},
@@ -492,11 +582,11 @@ func TestTableToRecord(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "fieldA",
-						Type: map[string]interface{}{"type": "long", "eos.type": "uint32"},
+						Type: TypedSchema{Type: "long", EosType: "uint32"},
 					},
 					{
 						Name: "fieldB",
-						Type: map[string]interface{}{"type": "long", "eos.type": "int64"},
+						Type: TypedSchema{Type: "long", EosType: "int64"},
 					},
 				},
 			},
