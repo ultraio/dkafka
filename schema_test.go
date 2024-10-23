@@ -356,7 +356,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 					},
 					{
 						NewTypeName: "key_value_store",
-						Type:        HardcodedVariantDynamicProperty,
+						Type:        HardcodedUberVariant,
 					},
 				},
 				Structs: []eos.StructDef{{
@@ -365,13 +365,13 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 					Fields: []eos.FieldDef{
 						{
 							Name: "default_value",
-							Type: HardcodedVariantDynamicProperty,
+							Type: HardcodedUberVariant,
 						},
 					},
 				},
 				},
 				Variants: []eos.VariantDef{{
-					Name:  HardcodedVariantDynamicProperty,
+					Name:  HardcodedUberVariant,
 					Types: []string{"int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float32", "float64", "string", "boolean", "INT8_VEC", "INT16_VEC", "INT32_VEC", "INT64_VEC", "UINT8_VEC", "UINT16_VEC", "UINT32_VEC", "UINT64_VEC", "FLOAT32_VEC", "FLOAT64_VEC", "STRING_VEC", "BOOL_VEC"},
 				}},
 			}, 42}},
@@ -381,7 +381,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 				Fields: []FieldSchema{
 					{
 						Name: "default_value",
-						Type: hardcodedVariantType[HardcodedVariantDynamicProperty],
+						Type: hardcodedVariantType[HardcodedUberVariant],
 					},
 				},
 			},
@@ -713,15 +713,15 @@ func TestTableToRecord(t *testing.T) {
 			},
 			false,
 		},
-		// {
-		// 	"unknown table",
-		// 	args{
-		// 		&ABI{&actionABI, 42},
-		// 		"unknown.table",
-		// 	},
-		// 	RecordSchema{},
-		// 	true,
-		// },
+		{
+			"unknown table",
+			args{
+				&ABI{&actionABI, 42},
+				"unknown.table",
+			},
+			RecordSchema{},
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

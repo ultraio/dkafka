@@ -468,7 +468,7 @@ var signatureSchema RecordSchema = RecordSchema{
 var avroRecordTypeByBuiltInTypes map[string]RecordSchema
 
 const (
-	HardcodedVariantDynamicProperty = "dynamic_property"
+	HardcodedUberVariant = "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC"
 )
 
 var hardcodedVariantType map[string]interface{}
@@ -547,7 +547,7 @@ func initBuiltInTypesForTables() {
 		"signature":  signatureSchema,
 	}
 	hardcodedVariantType = map[string]interface{}{
-		HardcodedVariantDynamicProperty: append(convertAllPrimitiveTypeToInterface(), NewArray(allPrimitiveTypes)),
+		HardcodedUberVariant: append(convertAllPrimitiveTypeToInterface(), NewArray(allPrimitiveTypes)),
 	}
 }
 
