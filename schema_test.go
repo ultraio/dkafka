@@ -1,6 +1,7 @@
 package dkafka
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -20,287 +21,287 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		wantErr bool
 	}
 
-	// newTest := func(eosType string, want string, wantErr bool) test {
-	// 	return test{
-	// 		name:    fmt.Sprintf("%s->%s", eosType, want),
-	// 		args:    args{eosType, nil},
-	// 		want:    TypedSchema{Type: want, EosType: eosType},
-	// 		wantErr: wantErr,
-	// 	}
-	// }
+	newTest := func(eosType string, want string, wantErr bool) test {
+		return test{
+			name:    fmt.Sprintf("%s->%s", eosType, want),
+			args:    args{eosType, nil},
+			want:    TypedSchema{Type: want, EosType: eosType},
+			wantErr: wantErr,
+		}
+	}
 
 	tests := []test{
-		// newTest(
-		// 	"bool",
-		// 	"boolean",
-		// 	false),
-		// newTest(
-		// 	"int8",
-		// 	"int",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"uint8",
-		// 	"int",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"int16",
-		// 	"int",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"uint16",
-		// 	"int",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"int32",
-		// 	"int",
-		// 	false,
-		// ),
-		// {
-		// 	name:    "int32[]->[]int",
-		// 	args:    args{"int32[]", nil},
-		// 	want:    NewArray(TypedSchema{Type: "int", EosType: "int32"}),
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name:    "int32$->['null', 'int']",
-		// 	args:    args{"int32$", nil},
-		// 	want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name:    "int32?$->['null','int']",
-		// 	args:    args{"int32?$", nil},
-		// 	want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name:    "int32[]?->['null',[]int]",
-		// 	args:    args{"int32[]?$", nil},
-		// 	want:    NewOptional(NewArray(TypedSchema{Type: "int", EosType: "int32"})),
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name:    "int32?->['null','int']",
-		// 	args:    args{"int32?", nil},
-		// 	want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
-		// 	wantErr: false,
-		// },
-		// newTest(
-		// 	"uint32",
-		// 	"long",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"int64",
-		// 	"long",
-		// 	false,
-		// ),
-		// {
-		// 	name:    "uint64->long",
-		// 	args:    args{"uint64", nil},
-		// 	want:    TypedSchema{Type: "long", EosType: "uint64", LogicalType: "eos.uint64"},
-		// 	wantErr: false,
-		// },
-		// newTest(
-		// 	"varint32",
-		// 	"int",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"varuint32",
-		// 	"long",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"float32",
-		// 	"float",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"float64",
-		// 	"double",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"name",
-		// 	"string",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"bytes",
-		// 	"bytes",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"string",
-		// 	"string",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"checksum160",
-		// 	"bytes",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"checksum256",
-		// 	"bytes",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"checksum512",
-		// 	"bytes",
-		// 	false,
-		// ),
-		// newTest(
-		// 	"symbol_code",
-		// 	"string",
-		// 	false,
-		// ),
-		// {
-		// 	name:    "unknown->error",
-		// 	args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
-		// 	want:    nil,
-		// 	wantErr: true,
-		// },
-		// {
-		// 	name: "struct->record",
-		// 	args: args{"my_struct", &ABI{&eos.ABI{
-		// 		Types: []eos.ABIType{{
-		// 			NewTypeName: "int64_alias",
-		// 			Type:        "int64",
-		// 		}},
-		// 		Structs: []eos.StructDef{{
-		// 			Name: "my_struct",
-		// 			Base: "",
-		// 			Fields: []eos.FieldDef{
-		// 				{
-		// 					Name: "fieldA",
-		// 					Type: "uint32",
-		// 				},
-		// 				{
-		// 					Name: "fieldB",
-		// 					Type: "int64_alias",
-		// 				},
-		// 			},
-		// 		}},
-		// 	}, 42}},
-		// 	want: RecordSchema{
-		// 		Type: "record",
-		// 		Name: "MyStruct",
-		// 		Fields: []FieldSchema{
-		// 			{
-		// 				Name: "fieldA",
-		// 				Type: TypedSchema{Type: "long", EosType: "uint32"},
-		// 			},
-		// 			{
-		// 				Name: "fieldB",
-		// 				Type: TypedSchema{Type: "long", EosType: "int64"},
-		// 			},
-		// 		},
-		// 	},
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name: "struct-inheritance",
-		// 	args: args{"my_struct", &ABI{&eos.ABI{
-		// 		Types: []eos.ABIType{{
-		// 			NewTypeName: "int64_alias",
-		// 			Type:        "int64",
-		// 		}},
-		// 		Structs: []eos.StructDef{
-		// 			{
-		// 				Name: "parent",
-		// 				Base: "",
-		// 				Fields: []eos.FieldDef{
-		// 					{
-		// 						Name: "parentfieldA",
-		// 						Type: "string",
-		// 					},
-		// 					{
-		// 						Name: "parentFieldB",
-		// 						Type: "int32",
-		// 					},
-		// 				},
-		// 			},
-		// 			{
-		// 				Name: "my_struct",
-		// 				Base: "parent",
-		// 				Fields: []eos.FieldDef{
-		// 					{
-		// 						Name: "fieldA",
-		// 						Type: "uint32",
-		// 					},
-		// 					{
-		// 						Name: "fieldB",
-		// 						Type: "int64_alias",
-		// 					},
-		// 				},
-		// 			}},
-		// 	}, 42}},
-		// 	want: RecordSchema{
-		// 		Type: "record",
-		// 		Name: "MyStruct",
-		// 		Fields: []FieldSchema{
-		// 			{
-		// 				Name: "parentfieldA",
-		// 				Type: TypedSchema{Type: "string", EosType: "string"},
-		// 			},
-		// 			{
-		// 				Name: "parentFieldB",
-		// 				Type: TypedSchema{Type: "int", EosType: "int32"},
-		// 			},
-		// 			{
-		// 				Name: "fieldA",
-		// 				Type: TypedSchema{Type: "long", EosType: "uint32"},
-		// 			},
-		// 			{
-		// 				Name: "fieldB",
-		// 				Type: TypedSchema{Type: "long", EosType: "int64"},
-		// 			},
-		// 		},
-		// 	},
-		// 	wantErr: false,
-		// },
-		// {
-		// 	name: "union-multiple-types-nullable",
-		// 	args: args{"nullable_union_record", &ABI{&eos.ABI{
-		// 		Types: []eos.ABIType{{
-		// 			NewTypeName: "nullable_union",
-		// 			Type:        "variant_nullable_union",
-		// 		}},
-		// 		Structs: []eos.StructDef{{
-		// 			Name: "nullable_union_record",
-		// 			Base: "",
-		// 			Fields: []eos.FieldDef{
-		// 				{
-		// 					Name: "nullable_union_field",
-		// 					Type: "nullable_union?",
-		// 				},
-		// 			},
-		// 		},
-		// 		},
-		// 		Variants: []eos.VariantDef{{
-		// 			Name:  "variant_nullable_union",
-		// 			Types: []string{"string", "int8"},
-		// 		}},
-		// 	}, 42}},
-		// 	want: RecordSchema{
-		// 		Type: "record",
-		// 		Name: "NullableUnionRecord",
-		// 		Fields: []FieldSchema{
-		// 			{
-		// 				Name:    "nullable_union_field",
-		// 				Type:    []interface{}{"null", TypedSchema{Type: "string", EosType: "string"}, TypedSchema{Type: "int", EosType: "int8"}},
-		// 				Default: _defaultNull,
-		// 			},
-		// 		},
-		// 	},
-		// 	wantErr: false,
-		// },
+		newTest(
+			"bool",
+			"boolean",
+			false),
+		newTest(
+			"int8",
+			"int",
+			false,
+		),
+		newTest(
+			"uint8",
+			"int",
+			false,
+		),
+		newTest(
+			"int16",
+			"int",
+			false,
+		),
+		newTest(
+			"uint16",
+			"int",
+			false,
+		),
+		newTest(
+			"int32",
+			"int",
+			false,
+		),
+		{
+			name:    "int32[]->[]int",
+			args:    args{"int32[]", nil},
+			want:    NewArray(TypedSchema{Type: "int", EosType: "int32"}),
+			wantErr: false,
+		},
+		{
+			name:    "int32$->['null', 'int']",
+			args:    args{"int32$", nil},
+			want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
+			wantErr: false,
+		},
+		{
+			name:    "int32?$->['null','int']",
+			args:    args{"int32?$", nil},
+			want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
+			wantErr: false,
+		},
+		{
+			name:    "int32[]?->['null',[]int]",
+			args:    args{"int32[]?$", nil},
+			want:    NewOptional(NewArray(TypedSchema{Type: "int", EosType: "int32"})),
+			wantErr: false,
+		},
+		{
+			name:    "int32?->['null','int']",
+			args:    args{"int32?", nil},
+			want:    NewOptional(TypedSchema{Type: "int", EosType: "int32"}),
+			wantErr: false,
+		},
+		newTest(
+			"uint32",
+			"long",
+			false,
+		),
+		newTest(
+			"int64",
+			"long",
+			false,
+		),
+		{
+			name:    "uint64->long",
+			args:    args{"uint64", nil},
+			want:    TypedSchema{Type: "long", EosType: "uint64", LogicalType: "eos.uint64"},
+			wantErr: false,
+		},
+		newTest(
+			"varint32",
+			"int",
+			false,
+		),
+		newTest(
+			"varuint32",
+			"long",
+			false,
+		),
+		newTest(
+			"float32",
+			"float",
+			false,
+		),
+		newTest(
+			"float64",
+			"double",
+			false,
+		),
+		newTest(
+			"name",
+			"string",
+			false,
+		),
+		newTest(
+			"bytes",
+			"bytes",
+			false,
+		),
+		newTest(
+			"string",
+			"string",
+			false,
+		),
+		newTest(
+			"checksum160",
+			"bytes",
+			false,
+		),
+		newTest(
+			"checksum256",
+			"bytes",
+			false,
+		),
+		newTest(
+			"checksum512",
+			"bytes",
+			false,
+		),
+		newTest(
+			"symbol_code",
+			"string",
+			false,
+		),
+		{
+			name:    "unknown->error",
+			args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "struct->record",
+			args: args{"my_struct", &ABI{&eos.ABI{
+				Types: []eos.ABIType{{
+					NewTypeName: "int64_alias",
+					Type:        "int64",
+				}},
+				Structs: []eos.StructDef{{
+					Name: "my_struct",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "fieldA",
+							Type: "uint32",
+						},
+						{
+							Name: "fieldB",
+							Type: "int64_alias",
+						},
+					},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "MyStruct",
+				Fields: []FieldSchema{
+					{
+						Name: "fieldA",
+						Type: TypedSchema{Type: "long", EosType: "uint32"},
+					},
+					{
+						Name: "fieldB",
+						Type: TypedSchema{Type: "long", EosType: "int64"},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "struct-inheritance",
+			args: args{"my_struct", &ABI{&eos.ABI{
+				Types: []eos.ABIType{{
+					NewTypeName: "int64_alias",
+					Type:        "int64",
+				}},
+				Structs: []eos.StructDef{
+					{
+						Name: "parent",
+						Base: "",
+						Fields: []eos.FieldDef{
+							{
+								Name: "parentfieldA",
+								Type: "string",
+							},
+							{
+								Name: "parentFieldB",
+								Type: "int32",
+							},
+						},
+					},
+					{
+						Name: "my_struct",
+						Base: "parent",
+						Fields: []eos.FieldDef{
+							{
+								Name: "fieldA",
+								Type: "uint32",
+							},
+							{
+								Name: "fieldB",
+								Type: "int64_alias",
+							},
+						},
+					}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "MyStruct",
+				Fields: []FieldSchema{
+					{
+						Name: "parentfieldA",
+						Type: TypedSchema{Type: "string", EosType: "string"},
+					},
+					{
+						Name: "parentFieldB",
+						Type: TypedSchema{Type: "int", EosType: "int32"},
+					},
+					{
+						Name: "fieldA",
+						Type: TypedSchema{Type: "long", EosType: "uint32"},
+					},
+					{
+						Name: "fieldB",
+						Type: TypedSchema{Type: "long", EosType: "int64"},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "union-multiple-types-nullable",
+			args: args{"nullable_union_record", &ABI{&eos.ABI{
+				Types: []eos.ABIType{{
+					NewTypeName: "nullable_union",
+					Type:        "variant_nullable_union",
+				}},
+				Structs: []eos.StructDef{{
+					Name: "nullable_union_record",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "nullable_union_field",
+							Type: "nullable_union?",
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_nullable_union",
+					Types: []string{"string", "int8"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "NullableUnionRecord",
+				Fields: []FieldSchema{
+					{
+						Name:    "nullable_union_field",
+						Type:    []interface{}{"null", TypedSchema{Type: "string", EosType: "string"}, TypedSchema{Type: "int", EosType: "int8"}},
+						Default: _defaultNull,
+					},
+				},
+			},
+			wantErr: false,
+		},
 		{
 			name: "uber-variant",
 			args: args{"uber_variant", &ABI{&eos.ABI{
