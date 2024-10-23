@@ -43,5 +43,6 @@
         "varuint",
         "zlog",
         "zstd"
-    ]
+    ],
+    "nixEnvSelector.nixFile": "${workspaceFolder}/shell.nix"
 }
