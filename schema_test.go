@@ -628,15 +628,15 @@ func TestTableToRecord(t *testing.T) {
 			},
 			false,
 		},
-		// {
-		// 	"unknown table",
-		// 	args{
-		// 		&ABI{&actionABI, 42},
-		// 		"unknown.table",
-		// 	},
-		// 	RecordSchema{},
-		// 	true,
-		// },
+		{
+			"unknown table",
+			args{
+				&ABI{&actionABI, 42},
+				"unknown.table",
+			},
+			RecordSchema{},
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
