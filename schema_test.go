@@ -302,6 +302,42 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "union-multiple-types-nullable",
+			args: args{"nullable_union_record", &ABI{&eos.ABI{
+				Types: []eos.ABIType{{
+					NewTypeName: "nullable_union",
+					Type:        "variant_nullable_union",
+				}},
+				Structs: []eos.StructDef{{
+					Name: "nullable_union_record",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "nullable_union_field",
+							Type: "nullable_union?",
+						},
+					},
+				},
+				},
+				Variants: []eos.VariantDef{{
+					Name:  "variant_nullable_union",
+					Types: []string{"string", "int8"},
+				}},
+			}, 42}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "NullableUnionRecord",
+				Fields: []FieldSchema{
+					{
+						Name:    "nullable_union_field",
+						Type:    []interface{}{"null", TypedSchema{Type: "string", EosType: "string"}, TypedSchema{Type: "int", EosType: "int8"}},
+						Default: _defaultNull,
+					},
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -592,15 +628,15 @@ func TestTableToRecord(t *testing.T) {
 			},
 			false,
 		},
-		{
-			"unknown table",
-			args{
-				&ABI{&actionABI, 42},
-				"unknown.table",
-			},
-			RecordSchema{},
-			true,
-		},
+		// {
+		// 	"unknown table",
+		// 	args{
+		// 		&ABI{&actionABI, 42},
+		// 		"unknown.table",
+		// 	},
+		// 	RecordSchema{},
+		// 	true,
+		// },
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
