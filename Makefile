@@ -7,9 +7,9 @@ BINARY_PATH := $(BUILD_DIR)/$(PROJECT_NAME)
 COVERAGE_DIR := $(BUILD_DIR)
 ENV ?= prod-testnet
 KUBECONFIG ?= ~/.kube/dfuse.$(ENV).kube
-CODEC ?= "json"
+CODEC ?= "avro"
 TOPIC ?= "io.dkafka.test"
-CAPTURE ?= false
+CAPTURE ?= true
 
 MESSAGE_TYPE ?= '{"create" : "EosioNftFtCreatedNotification","update" : "EosioNftFtUpdatedNotification","issue" : "EosioNftFtIssuedNotification"}[action]'
 KEY_EXPRESSION ?= '"action"=="create" ? [data.create.memo] : [transaction_id]'
@@ -31,8 +31,8 @@ STREAM_ACT_START_BLOCK ?= 49608000
 ## CDC TABLES
 # CDC_TABLES_ACCOUNT ?= 'eosio.token'
 # CDC_TABLES_TABLE_NAMES ?= 'accounts:s+k'
-CDC_START_BLOCK ?= 43922490
-CDC_ACCOUNT ?= eosio.oracle
+CDC_START_BLOCK ?= 135283216
+CDC_ACCOUNT ?= eosio.nft.ft
 
 CDC_TABLES_START_BLOCK ?= $(CDC_START_BLOCK)
 CDC_TABLES_ACCOUNT ?= $(CDC_ACCOUNT)
@@ -103,6 +103,9 @@ bench-save: ## Save last benchmark as the new reference
 
 up: ## Launch docker compose
 	@docker-compose up -d
+
+down: ## Stop docker compose
+	@docker-compose down
 
 stream: ## stream expression based localy
 	$(BINARY_PATH) publish \

@@ -10,5 +10,6 @@ mkShell {
     # Use to test avro to POJO generation
     pkgs.wget
     pkgs.temurin-bin
+    pkgs.docker-compose
   ];
 }
