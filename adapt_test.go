@@ -144,20 +144,20 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 		table      string
 		nbMessages int
 	}{
-		// {
-		// 	"accounts",
-		// 	"testdata/block-49608395.pb.json",
-		// 	"testdata/eosio.token.abi",
-		// 	"accounts",
-		// 	2,
-		// },
-		// {
-		// 	"nft-factory",
-		// 	"testdata/block-50705256.pb.json",
-		// 	"testdata/eosio.nft.ft.abi",
-		// 	"factory.a",
-		// 	1,
-		// },
+		{
+			"accounts",
+			"testdata/block-49608395.pb.json",
+			"testdata/eosio.token.abi",
+			"accounts",
+			2,
+		},
+		{
+			"nft-factory",
+			"testdata/block-50705256.pb.json",
+			"testdata/eosio.nft.ft.abi",
+			"factory.a",
+			1,
+		},
 		{
 			"nft-factory-b",
 			"testdata/block-135283216.pb.json",
@@ -165,13 +165,13 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			"factory.b",
 			1,
 		},
-		// {
-		// 	"eosio.oracle",
-		// 	"testdata/block-43922498.pb.json",
-		// 	"testdata/eosio.oracle.abi",
-		// 	"*",
-		// 	4,
-		// },
+		{
+			"eosio.oracle",
+			"testdata/block-43922498.pb.json",
+			"testdata/eosio.oracle.abi",
+			"*",
+			4,
+		},
 	}
 
 	for _, tt := range tests {
