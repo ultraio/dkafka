@@ -77,6 +77,15 @@ func TestUnionWithMap(t *testing.T) {
 	testBinaryCodecPass(t, `["string",{"type":"array","items":"string"}]`, Union("string", "Helium"), []byte("\x00\x0cHelium"))
 }
 
+func TestUnionDynamicEncode(t *testing.T) {
+	testBinaryEncodePass(t, `["null","long"]`, 3, []byte("\x02\x06"))
+	// TODO add more test cases
+}
+
+func TestUnionEosEncode(t *testing.T) {
+	testBinaryEncodePass(t, `["null","int","long"]`, []interface{}{"unit32", uint32(3)}, []byte("\x02\x06"))
+}
+
 func TestUnionMapRecordFitsInRecord(t *testing.T) {
 	// union value may be either map or a record
 	codec, err := NewCodec(`["null",{"type":"map","values":"double"},{"type":"record","name":"com.example.record","fields":[{"name":"field1","type":"int"},{"name":"field2","type":"float"}]}]`)
