@@ -43,18 +43,18 @@ func (cr *codecInfo) nullable() bool {
 // Avro type name and the value is the datum's value. As a convenience, the
 // `Union` function wraps any datum value in a map as specified above.
 //
-//     func ExampleUnion() {
-//        codec, err := goavro.NewCodec(`["null","string","int"]`)
-//        if err != nil {
-//            fmt.Println(err)
-//        }
-//        buf, err := codec.TextualFromNative(nil, goavro.Union("string", "some string"))
-//        if err != nil {
-//            fmt.Println(err)
-//        }
-//        fmt.Println(string(buf))
-//        // Output: {"string":"some string"}
-//     }
+//	func ExampleUnion() {
+//	   codec, err := goavro.NewCodec(`["null","string","int"]`)
+//	   if err != nil {
+//	       fmt.Println(err)
+//	   }
+//	   buf, err := codec.TextualFromNative(nil, goavro.Union("string", "some string"))
+//	   if err != nil {
+//	       fmt.Println(err)
+//	   }
+//	   fmt.Println(string(buf))
+//	   // Output: {"string":"some string"}
+//	}
 func Union(name string, datum interface{}) interface{} {
 	if datum == nil && name == "null" {
 		return nil
@@ -146,6 +146,24 @@ func binaryFromNative(cr *codecInfo) func(buf []byte, datum interface{}) ([]byte
 					}
 				}
 			}
+		case []interface{}:
+			if len(v) == 2 {
+				// EOS specific variant serialization
+				if eosTypeName, ok := v[0].(string); ok {
+					value := v[1]
+					if avroTypeName, ok := eosToAvro[eosTypeName]; ok {
+						return binaryFromNative(cr)(buf, Union(avroTypeName, value))
+					} else {
+						err = fmt.Errorf("cannot encode binary union on eos input: the eos type is not supported %s; avro union definition: %v; received: %T", eosTypeName, cr.allowedTypes, datum)
+					}
+				} else {
+					err = fmt.Errorf("unable to cast eos type '%v' as string type", v[0])
+				}
+
+			} else {
+				err = fmt.Errorf("cannot encode binary union on eos input: the input must be an array of 2 entries where the first is a string that represents the eos type and the second the actual value, the value must be supported by the avro union definition: %v; received: %T", cr.allowedTypes, datum)
+			}
+
 		}
 		if cr.nullable() {
 			index := cr.indexFromName["null"]

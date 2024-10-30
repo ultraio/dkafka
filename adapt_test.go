@@ -159,6 +159,13 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			1,
 		},
 		{
+			"nft-factory-b",
+			"testdata/block-135283216.pb.json",
+			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+			"factory.b",
+			1,
+		},
+		{
 			"eosio.oracle",
 			"testdata/block-43922498.pb.json",
 			"testdata/eosio.oracle.abi",
