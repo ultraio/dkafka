@@ -83,7 +83,8 @@ func TestUnionDynamicEncode(t *testing.T) {
 }
 
 func TestUnionEosEncode(t *testing.T) {
-	testBinaryEncodePass(t, `["null","int","long"]`, []interface{}{"unit32", uint32(3)}, []byte("\x02\x06"))
+	// output first parameter is type position, second is value
+	testBinaryEncodePass(t, `["null","int","long"]`, []interface{}{"uint32", 3}, []byte("\x04\x06"))
 }
 
 func TestUnionMapRecordFitsInRecord(t *testing.T) {

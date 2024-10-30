@@ -149,12 +149,15 @@ func binaryFromNative(cr *codecInfo) func(buf []byte, datum interface{}) ([]byte
 		case []interface{}:
 			if len(v) == 2 {
 				// EOS specific variant serialization
-				eosTypeName := v[0]
-				value := v[1]
-				if avroTypeName, ok := eosTypeName[eosTypeName]; ok {
-					// TODO Olvier
+				if eosTypeName, ok := v[0].(string); ok {
+					value := v[1]
+					if avroTypeName, ok := eosToAvro[eosTypeName]; ok {
+						return binaryFromNative(cr)(buf, Union(avroTypeName, value))
+					} else {
+						err = fmt.Errorf("cannot encode binary union on eos input: the eos type is not supported %s; avro union definition: %v; received: %T", eosTypeName, cr.allowedTypes, datum)
+					}
 				} else {
-					err = fmt.Errorf("cannot encode binary union on eos input: the eos type is not supported %s; avro union definition: %v; received: %T", eosTypeName, cr.allowedTypes, datum)
+					err = fmt.Errorf("unable to cast eos type '%v' as string type", v[0])
 				}
 
 			} else {
