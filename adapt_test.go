@@ -249,7 +249,7 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 		nbMessages int
 	}{
 		{
-			"eosio.oracle",
+			"eosio.nft.ft",
 			"testdata/block-135283642.pb.json",
 			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
 			"*",
