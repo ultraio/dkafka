@@ -237,3 +237,91 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 		})
 	}
 }
+
+func TestCdCAdapter_Action_pb(t *testing.T) {
+	eos.NativeType = true
+
+	tests := []struct {
+		name       string
+		file       string
+		abi        string
+		action     string
+		nbMessages int
+	}{
+		{
+			"eosio.nft.ft",
+			"testdata/block-135283642.pb.json",
+			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+			"*",
+			1,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			block := &pbcodec.Block{}
+			err := jsonpb.UnmarshalString(string(readFileFromTestdata(t, tt.file)), block)
+			if err != nil {
+				t.Fatalf("jsonpb.UnmarshalString(): %v", err)
+			}
+
+			abiAccount := strings.TrimRight(path.Base(tt.abi), ".abi")
+			var localABIFiles = map[string]string{
+				abiAccount: tt.abi,
+			}
+			abiFiles, err := LoadABIFiles(localABIFiles)
+			if err != nil {
+				t.Fatalf("LoadABIFiles() error: %v", err)
+			}
+			abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
+			msg := MessageSchemaGenerator{
+				Namespace: "test.dkafka",
+				Version:   "1.2.3",
+				Account:   abiAccount,
+			}
+			// abi, _ := abiDecoder.abi(abiAccount, 0, false)
+			// schema, _ := msg.getTableSchema("accounts", abi)
+			// jsonSchema, err := json.Marshal(schema)
+			// fmt.Println(string(jsonSchema))
+
+			expression := fmt.Sprintf(`{"%s":"transaction_id"}`, tt.action)
+			actionKeyExpressions, err := createCdcKeyExpressions(expression)
+			if err != nil {
+				t.Fatalf("createCdcKeyExpressions() error: %v", err)
+			}
+			g := ActionGenerator2{
+				keyExtractors: actionKeyExpressions,
+				abiCodec: NewStreamedAbiCodec(&DfuseAbiRepository{
+					overrides:   abiDecoder.overrides,
+					abiCodecCli: abiDecoder.abiCodecCli,
+					context:     abiDecoder.context,
+				}, msg.getActionSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter"),
+			}
+			a := &CdCAdapter{
+				topic:     "test.topic",
+				saveBlock: saveBlockNoop,
+				generator: transaction2ActionsGenerator{
+					actionLevelGenerator: g,
+					topic:                "test.topic",
+					headers:              default_headers,
+				},
+				headers: default_headers,
+			}
+			blockStep := BlockStep{
+				blk:    block,
+				step:   pbbstream.ForkStep_STEP_NEW,
+				cursor: "123",
+			}
+			messages, err := a.Adapt(blockStep)
+			if err != nil {
+				t.Fatalf("Adapt() error: %v", err)
+			}
+			assert.Equal(t, len(messages), tt.nbMessages)
+			for _, m := range messages {
+				assert.Equal(t, findHeader("content-type", m.Headers), "application/avro")
+				assert.Equal(t, findHeader("ce_datacontenttype", m.Headers), "application/avro")
+				assert.Assert(t, findHeader("ce_dataschema", m.Headers) != "")
+			}
+		})
+	}
+}
