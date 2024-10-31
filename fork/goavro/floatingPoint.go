@@ -64,6 +64,13 @@ func doubleBinaryFromNative(buf []byte, datum interface{}) ([]byte, error) {
 		if value = float64(v); int32(value) != v {
 			return nil, fmt.Errorf("cannot encode binary double: provided Go int32 would lose precision: %d", v)
 		}
+	case string:
+		valuetmp, err := strconv.ParseFloat(v, 32)
+		if err != nil {
+			return nil, fmt.Errorf("cannot encode binary float: provided Go string would lose precision: %s", v)
+		} else {
+			value = valuetmp
+		}
 	default:
 		return nil, fmt.Errorf("cannot encode binary double: expected: Go numeric; received: %T", datum)
 	}
@@ -93,6 +100,13 @@ func floatBinaryFromNative(buf []byte, datum interface{}) ([]byte, error) {
 	case int32:
 		if value = float32(v); int32(value) != v {
 			return nil, fmt.Errorf("cannot encode binary float: provided Go int32 would lose precision: %d", v)
+		}
+	case string:
+		valuetmp, err := strconv.ParseFloat(v, 32)
+		if err != nil {
+			return nil, fmt.Errorf("cannot encode binary float: provided Go string would lose precision: %s", v)
+		} else {
+			value = float32(valuetmp)
 		}
 	default:
 		return nil, fmt.Errorf("cannot encode binary float: expected: Go numeric; received: %T", datum)

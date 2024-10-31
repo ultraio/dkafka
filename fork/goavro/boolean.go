@@ -14,6 +14,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"strconv"
 )
 
 func booleanNativeFromBinary(buf []byte) (interface{}, []byte, error) {
@@ -63,6 +64,17 @@ func booleanBinaryFromNative(buf []byte, datum interface{}) ([]byte, error) {
 		i = int(v)
 	case float64:
 		i = int(v)
+	case string:
+		res, err := strconv.ParseBool(v)
+		if err != nil {
+			return nil, fmt.Errorf("cannot encode string boolean %v: because off: %v", v, err)
+		} else {
+			if res {
+				i = 1
+			} else {
+				i = 0
+			}
+		}
 	default:
 		return nil, fmt.Errorf("cannot encode binary boolean: expected: Go bool; received: %T", datum)
 	}

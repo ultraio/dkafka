@@ -253,7 +253,7 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 			"testdata/block-135283642.pb.json",
 			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
 			"*",
-			4,
+			1,
 		},
 	}
 
