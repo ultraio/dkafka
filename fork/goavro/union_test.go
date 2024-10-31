@@ -116,22 +116,26 @@ func TestUnionEosEncode(t *testing.T) {
 
 	// Floating Point Types
 	testBinaryEncodePass(t, `["null","float"]`, []interface{}{"float32", "0.12300000339746475"}, []byte("\x02\x6d\xe7\xfb\x3d"))
-	testBinaryEncodePass(t, `["null","double"]`, []interface{}{"float64", "0.12300000339746475"}, []byte("\x02\x00\x00\x00\xa0\xed\x7c\xbf\x3f"))
 	testBinaryEncodePass(t, `["null","float"]`, []interface{}{"float32", float32(0.123)}, []byte("\x02\x6d\xe7\xfb\x3d"))
+	testBinaryEncodePass(t, `["null","double"]`, []interface{}{"float64", "0.12300000339746475"}, []byte("\x02\x00\x00\x00\xa0\xed\x7c\xbf\x3f"))
 	testBinaryEncodePass(t, `["null","double"]`, []interface{}{"float64", float64(0.123)}, []byte("\x02\xb0\x72\x68\x91\xed\x7c\xbf\x3f"))
 
 	// Time and Timestamp Types
-	// testBinaryEncodePass(t, `["null","long"]`, []interface{}{"time_point", int64(1609459200)}, []byte("\x02\x80\xea\xf0\x01"))
-	// testBinaryEncodePass(t, `["null","long"]`, []interface{}{"time_point_sec", int64(1609459200)}, []byte("\x02\x80\xea\xf0\x01"))
-	// testBinaryEncodePass(t, `["null","long"]`, []interface{}{"block_timestamp_type", int64(1609459200)}, []byte("\x02\x80\xea\xf0\x01"))
+	testBinaryEncodePass(t, `["null","long"]`, []interface{}{"time_point", int64(1609459200)}, []byte("\x02\x80\x98\xf3\xfe\x0b"))
+	testBinaryEncodePass(t, `["null","long"]`, []interface{}{"time_point", "1609459200"}, []byte("\x02\x80\x98\xf3\xfe\x0b"))
+	testBinaryEncodePass(t, `["null","long"]`, []interface{}{"time_point_sec", int64(1609459200)}, []byte("\x02\x80\x98\xf3\xfe\x0b"))
+	testBinaryEncodePass(t, `["null","long"]`, []interface{}{"time_point_sec", "1609459200"}, []byte("\x02\x80\x98\xf3\xfe\x0b"))
+	testBinaryEncodePass(t, `["null","long"]`, []interface{}{"block_timestamp_type", int64(1609459200)}, []byte("\x02\x80\x98\xf3\xfe\x0b"))
+	testBinaryEncodePass(t, `["null","long"]`, []interface{}{"block_timestamp_type", "1609459200"}, []byte("\x02\x80\x98\xf3\xfe\x0b"))
 
-	// // String Types
-	// testBinaryEncodePass(t, `["null","string"]`, []interface{}{"name", "ultra"}, []byte("\x00\x0a\x75\x6c\x74\x72\x61"))
-	// testBinaryEncodePass(t, `["null","string"]`, []interface{}{"string", "hello"}, []byte("\x00\x0a\x68\x65\x6c\x6c\x6f"))
-	// testBinaryEncodePass(t, `["null","string"]`, []interface{}{"symbol", "USD"}, []byte("\x00\x06\x55\x53\x44"))
-	// testBinaryEncodePass(t, `["null","string"]`, []interface{}{"symbol_code", "EUR"}, []byte("\x00\x06\x45\x55\x52"))
+	// String Types
+	testBinaryEncodePass(t, `["null","string"]`, []interface{}{"name", "ultra"}, []byte("\x02\x0a\x75\x6c\x74\x72\x61"))
+	testBinaryEncodePass(t, `["null","string"]`, []interface{}{"string", "hello"}, []byte("\x02\x0a\x68\x65\x6c\x6c\x6f"))
+	testBinaryEncodePass(t, `["null","string"]`, []interface{}{"symbol", "USD"}, []byte("\x02\x06\x55\x53\x44"))
+	testBinaryEncodePass(t, `["null","string"]`, []interface{}{"symbol_code", "EUR"}, []byte("\x02\x06\x45\x55\x52"))
 
-	// // Byte/Bytes Types
+	// Byte/Bytes Types
+	// If it happends; then GLHF
 	// testBinaryEncodePass(t, `["null","bytes"]`, []interface{}{"bytes", []byte{0x01, 0x02, 0x03}}, []byte("\x00\x06\x01\x02\x03"))
 	// testBinaryEncodePass(t, `["null","bytes"]`, []interface{}{"checksum160", []byte{0x01, 0x02, 0x03, 0x04, 0x05}}, []byte("\x00\x0a\x01\x02\x03\x04\x05"))
 	// testBinaryEncodePass(t, `["null","bytes"]`, []interface{}{"checksum256", []byte{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08}}, []byte("\x00\x10\x01\x02\x03\x04\x05\x06\x07\x08"))
