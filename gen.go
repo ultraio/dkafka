@@ -292,6 +292,10 @@ func actionInfoBasicMap(gc ActionContext) map[string]interface{} {
 		gc.actionTrace.Name(),
 		globalSeq,
 		authorizations,
+		gc.actionTrace.ActionOrdinal,
+		gc.actionTrace.CreatorActionOrdinal,
+		gc.actionTrace.ClosestUnnotifiedAncestorActionOrdinal,
+		gc.actionTrace.ExecutionIndex,
 	)
 }
 

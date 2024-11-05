@@ -109,13 +109,21 @@ func newActionInfoBasic(
 	name string,
 	globalSequence uint64,
 	authorization []string,
+	actionOrdinal uint32,
+	creatorActionOrdinal uint32,
+	closestUnnotifiedAncestorActionOrdinal uint32,
+	executionIndex uint32,
 ) map[string]interface{} {
 	return map[string]interface{}{
-		"account":        account,
-		"receiver":       receiver,
-		"name":           name,
-		"global_seq":     globalSequence,
-		"authorizations": authorization,
+		"account":                account,
+		"receiver":               receiver,
+		"name":                   name,
+		"global_seq":             globalSequence,
+		"authorizations":         authorization,
+		"action_ordinal":         actionOrdinal,
+		"creator_action_ordinal": creatorActionOrdinal,
+		"closest_unnotified_ancestor_action_ordinal": closestUnnotifiedAncestorActionOrdinal,
+		"execution_index": executionIndex,
 	}
 }
 
@@ -152,6 +160,22 @@ func newActionInfoBasicSchemaFQN(name string, np string) ActionInfoBasicSchema {
 			{
 				Name: "authorizations",
 				Type: NewArray("string"),
+			},
+			{
+				Name: "action_ordinal",
+				Type: "long",
+			},
+			{
+				Name: "creator_action_ordinal",
+				Type: "long",
+			},
+			{
+				Name: "closest_unnotified_ancestor_action_ordinal",
+				Type: "long",
+			},
+			{
+				Name: "execution_index",
+				Type: "long",
 			},
 		},
 	)
