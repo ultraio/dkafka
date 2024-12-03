@@ -1,0 +1,139 @@
+{
+   "version": "eosio::abi/1.2",
+   "structs": [
+      {
+         "name": "campaign",
+         "base": "",
+         "fields": [
+            {
+               "name": "name",
+               "type": "name"
+            },
+            {
+               "name": "quantity",
+               "type": "asset"
+            },
+            {
+               "name": "points",
+               "type": "uint64"
+            },
+            {
+               "name": "manager",
+               "type": "name"
+            },
+            {
+               "name": "deadline",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "claimrewards",
+         "base": "",
+         "fields": [
+            {
+               "name": "campaign",
+               "type": "name"
+            },
+            {
+               "name": "wallet_id",
+               "type": "bytes"
+            }
+         ]
+      },
+      {
+         "name": "closecampgn",
+         "base": "",
+         "fields": [
+            {
+               "name": "campaign",
+               "type": "name"
+            },
+            {
+               "name": "manager",
+               "type": "name"
+            },
+            {
+               "name": "limit",
+               "type": "uint32"
+            }
+         ]
+      },
+      {
+         "name": "createcampgn",
+         "base": "",
+         "fields": [
+            {
+               "name": "campaign",
+               "type": "name"
+            },
+            {
+               "name": "manager",
+               "type": "name"
+            }
+         ]
+      },
+      {
+         "name": "whitelist",
+         "base": "",
+         "fields": [
+            {
+               "name": "wallet_id",
+               "type": "bytes"
+            },
+            {
+               "name": "points",
+               "type": "uint64"
+            }
+         ]
+      },
+      {
+         "name": "whitelistusr",
+         "base": "",
+         "fields": [
+            {
+               "name": "campaign",
+               "type": "name"
+            },
+            {
+               "name": "wallets",
+               "type": "whitelist[]"
+            }
+         ]
+      }
+   ],
+   "actions": [
+      {
+         "name": "claimrewards",
+         "type": "claimrewards",
+         "ricardian_contract": ""
+      },
+      {
+         "name": "closecampgn",
+         "type": "closecampgn",
+         "ricardian_contract": ""
+      },
+      {
+         "name": "createcampgn",
+         "type": "createcampgn",
+         "ricardian_contract": ""
+      },
+      {
+         "name": "whitelistusr",
+         "type": "whitelistusr",
+         "ricardian_contract": ""
+      }
+   ],
+   "tables": [
+      {
+         "name": "campaign",
+         "index_type": "i64",
+         "type": "campaign"
+      },
+      {
+         "name": "whitelist",
+         "index_type": "i64",
+         "type": "whitelist"
+      }
+   ]
+}

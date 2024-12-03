@@ -39,6 +39,8 @@ CDC_TABLES_ACCOUNT ?= $(CDC_ACCOUNT)
 CDC_TABLES_TABLE_NAMES ?= *:s+k
 ## CDC ACTIONS
 CDC_ACTIONS_START_BLOCK ?= $(CDC_START_BLOCK)
+CDC_ACTIONS_STOP_BLOCK := $(CDC_START_BLOCK)
+
 CDC_ACTIONS_ACCOUNT ?= $(CDC_ACCOUNT)
 CDC_ACTIONS_EXPRESSION ?= {"*":"transaction_id"}
 ##
@@ -158,9 +160,11 @@ cdc-actions: build up ## CDC stream on tables
 		--kafka-compression-type=$(COMPRESSION_TYPE) \
 		--kafka-compression-level=$(COMPRESSION_LEVEL) \
 		--start-block-num=$(CDC_ACTIONS_START_BLOCK) \
+		--stop-block-num=$(CDC_ACTIONS_STOP_BLOCK) \
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--codec=$(CODEC) \
-		--actions-expr='$(CDC_ACTIONS_EXPRESSION)' '$(CDC_ACTIONS_ACCOUNT)'
+		--actions-expr='$(CDC_ACTIONS_EXPRESSION)' '$(CDC_ACTIONS_ACCOUNT)' \
+		--batch-mode=true
 
 cdc-transactions: build up ## CDC stream on tables
 	$(BINARY_PATH) cdc transactions \
