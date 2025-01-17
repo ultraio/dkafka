@@ -167,22 +167,6 @@ cdc-actions: ## CDC stream on tables
 		--batch-mode=$(BATCH_MODE) \
 		--actions-expr='$(CDC_ACTIONS_EXPRESSION)' '$(CDC_ACTIONS_ACCOUNT)'
 
-# --actions-expr='{"*":"first_auth_actor"}' 
-
-cdc-toto:
-	$(BINARY_PATH) cdc actions \
-		--actions-expr='{"*":"transaction_id"}' \
-		--dfuse-firehose-grpc-addr=localhost:9000 \
-		--abicodec-grpc-addr=localhost:9001 \
-		--kafka-topic=$(TOPIC) \
-		--start-block-num=224793790 \
-		--codec=avro \
-		--irreversible=true \
-		--executed=true \
-		--namespace=io.dkafka.data.eosio.token.actions.v2 \
-		--major-version=2 \
-		eosio.token
-
 cdc-transactions: build up ## CDC stream on tables
 	$(BINARY_PATH) cdc transactions \
 		--capture=$(CAPTURE) \
