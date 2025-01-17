@@ -355,3 +355,88 @@ func Benchmark_exprToCelProgram_activation(b *testing.B) {
 		})
 	}
 }
+
+func Test_getFirstAuthActor(t *testing.T) {
+	type args struct {
+		transaction *pbcodec.TransactionTrace
+		trace       *pbcodec.ActionTrace
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  string
+		panic bool
+	}{
+		{
+			"default",
+			args{
+				&pbcodec.TransactionTrace{},
+				&pbcodec.ActionTrace{
+					Action: &pbcodec.Action{
+						Authorization: []*pbcodec.PermissionLevel{{Actor: "vincent"}},
+					},
+				},
+			},
+			"vincent",
+			false,
+		},
+		{
+			"fallback",
+			args{
+				&pbcodec.TransactionTrace{
+					ActionTraces: []*pbcodec.ActionTrace{{
+						ActionOrdinal: 1,
+						Action: &pbcodec.Action{
+							Authorization: []*pbcodec.PermissionLevel{{Actor: "olivier"}},
+						},
+					}},
+				},
+				&pbcodec.ActionTrace{
+					ActionOrdinal:        2,
+					Action:               &pbcodec.Action{},
+					CreatorActionOrdinal: 1,
+				},
+			},
+			"olivier",
+			false,
+		},
+		{
+			"panic",
+			args{
+				&pbcodec.TransactionTrace{
+					ActionTraces: []*pbcodec.ActionTrace{{
+						ActionOrdinal: 1,
+					}},
+				},
+				&pbcodec.ActionTrace{
+					ActionOrdinal:        3,
+					Action:               &pbcodec.Action{},
+					CreatorActionOrdinal: 2,
+				},
+			},
+			"",
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.panic {
+				testPanic := func() {
+					getFirstAuthActor(tt.args.transaction, tt.args.trace)
+				}
+				assertPanic(t, testPanic)
+			} else if got := getFirstAuthActor(tt.args.transaction, tt.args.trace); got != tt.want {
+				t.Errorf("getFirstAuthActor() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func assertPanic(t *testing.T, f func()) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Errorf("The code did not panic")
+		}
+	}()
+	f()
+}

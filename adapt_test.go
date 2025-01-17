@@ -242,25 +242,32 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 	eos.NativeType = true
 
 	tests := []struct {
-		name       string
-		file       string
-		abi        string
-		action     string
-		nbMessages int
+		name             string
+		file             string
+		abi              string
+		actionExpression string
+		nbMessages       int
 	}{
 		{
 			"eosio.nft.ft",
 			"testdata/block-135283642.pb.json",
 			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
-			"*",
+			`{"*":"transaction_id"}`,
 			1,
 		},
 		{
 			"ultra.rgrab",
 			"testdata/block-220236206.pb.json",
 			"testdata/ultra.rgrab.abi",
-			"*",
+			`{"*":"transaction_id"}`,
 			1,
+		},
+		{
+			"eosio.token",
+			"testdata/block-224793793.pb.json",
+			"testdata/eosio.token-2.abi",
+			`{"*":"first_auth_actor"}`,
+			3,
 		},
 	}
 
@@ -290,9 +297,7 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 			// schema, _ := msg.getTableSchema("accounts", abi)
 			// jsonSchema, err := json.Marshal(schema)
 			// fmt.Println(string(jsonSchema))
-
-			expression := fmt.Sprintf(`{"%s":"transaction_id"}`, tt.action)
-			actionKeyExpressions, err := createCdcKeyExpressions(expression)
+			actionKeyExpressions, err := createCdcKeyExpressions(tt.actionExpression)
 			if err != nil {
 				t.Fatalf("createCdcKeyExpressions() error: %v", err)
 			}

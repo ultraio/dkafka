@@ -223,7 +223,7 @@ func (ag ActionGenerator2) doApply(gc ActionContext) ([]generation, error) {
 	}
 	key, err := evalString(extractor, activation)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("fail to extract action key: %w", err)
 	}
 	_, ceType := actionCeType(actionName)
 	ceId := hashString(fmt.Sprintf(

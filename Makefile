@@ -10,6 +10,7 @@ KUBECONFIG ?= ~/.kube/dfuse.$(ENV).kube
 CODEC ?= "avro"
 TOPIC ?= "io.dkafka.test"
 CAPTURE ?= true
+BATCH_MODE ?=true
 
 MESSAGE_TYPE ?= '{"create" : "EosioNftFtCreatedNotification","update" : "EosioNftFtUpdatedNotification","issue" : "EosioNftFtIssuedNotification"}[action]'
 KEY_EXPRESSION ?= '"action"=="create" ? [data.create.memo] : [transaction_id]'
@@ -151,7 +152,7 @@ cdc-tables: ## CDC stream on tables
 		--codec=$(CODEC) \
 		--table-name='$(CDC_TABLES_TABLE_NAMES)' '$(CDC_TABLES_ACCOUNT)'
 
-cdc-actions: build up ## CDC stream on tables
+cdc-actions: ## CDC stream on tables
 	$(BINARY_PATH) cdc actions \
 		--capture=$(CAPTURE) \
 		--dfuse-firehose-grpc-addr=localhost:9000 \
@@ -163,8 +164,8 @@ cdc-actions: build up ## CDC stream on tables
 		--stop-block-num=$(CDC_ACTIONS_STOP_BLOCK) \
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--codec=$(CODEC) \
-		--actions-expr='$(CDC_ACTIONS_EXPRESSION)' '$(CDC_ACTIONS_ACCOUNT)' \
-		--batch-mode=true
+		--batch-mode=$(BATCH_MODE) \
+		--actions-expr='$(CDC_ACTIONS_EXPRESSION)' '$(CDC_ACTIONS_ACCOUNT)'
 
 cdc-transactions: build up ## CDC stream on tables
 	$(BINARY_PATH) cdc transactions \

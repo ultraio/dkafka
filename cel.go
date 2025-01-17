@@ -224,10 +224,24 @@ func NewActionActivation(stepName string, transaction *pbcodec.TransactionTrace,
 			return jsonStringToMap(jsonData)
 		},
 		"first_auth_actor": func() interface{} {
-			return trace.Action.Authorization[0].Actor
+			return getFirstAuthActor(transaction, trace)
 		},
 	}
 	return interpreter.NewActivation(activationMap)
+}
+
+func getFirstAuthActor(transaction *pbcodec.TransactionTrace, trace *pbcodec.ActionTrace) string {
+	if len(trace.Action.Authorization) > 0 {
+		return trace.Action.Authorization[0].Actor
+	} else {
+		parentOrdinal := trace.CreatorActionOrdinal
+		for _, entry := range transaction.ActionTraces {
+			if entry.ActionOrdinal == parentOrdinal {
+				return entry.Action.Authorization[0].Actor
+			}
+		}
+		panic(fmt.Sprintf("fail the execute first_auth_actor cannot find the parent action with ordinal: %d", parentOrdinal))
+	}
 }
 
 func jsonStringToMap(jsonData string) (out map[string]interface{}) {

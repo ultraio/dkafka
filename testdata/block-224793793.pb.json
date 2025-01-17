@@ -1,0 +1,1357 @@
+{
+    "id": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+    "number": 224793793,
+    "version": 1,
+    "header": {
+        "timestamp": "2025-01-10T16:55:00Z",
+        "producer": "uoseouldotio",
+        "confirmed": 72,
+        "previous": "0d6614c0396f7ac5b8a94f560fb9717bd79a5c50130467c0e2478f69d3866eca",
+        "transactionMroot": "ampfmmtFjzDXLPk5yl6gB1mjRJhZ2kLGfBJBpsDnmW4=",
+        "actionMroot": "zXWTwzYzsq2bIMQ0k0DKciZRfLw7/w7wIdXVo/mI7Vw=",
+        "scheduleVersion": 19
+    },
+    "producerSignature": "SIG_K1_KdcEgWPMwdMg4w6ZSs4fhogSbVGe1tCedzXxDruMy6i9qWEnyaKLAAZKR59ZBHbcByYyTQqqzeQx64aaG2KWeqHj2zmyGK",
+    "dposProposedIrreversibleBlocknum": 224793756,
+    "dposIrreversibleBlocknum": 224793708,
+    "blockrootMerkle": {
+        "nodeCount": 224793792,
+        "activeNodes": [
+            "8d0Zr1Be8DhIg/Gyzkuv1cyaHYPjDyCsf1qRDOUUupc=",
+            "AdNFmAHX6dK0Q3Ghe+8xwIX4rUHYEnk4q5dcqra3kfs=",
+            "LUwUm/LunRfqRy34IuXfyqPGKQfxEnX3tL0r9KpQXo4=",
+            "jjvJmggI065wTGmD/yZy48RyjoJ6tRCL57147ExLc9E=",
+            "3Ot5qapPH4AWvVh4jDMGyASIKR8MvhHWX3oeXT1+gJ8=",
+            "20gooaM/sptXvZyE0qpVbzKO3K+FVnRiWw4fxozqDg0=",
+            "5hrRC88/TttFtrpgM5QZZWjIgPV5ud+v+Gjz8s1rTWA=",
+            "YzEwPxGINdf9rgIVVsUQXSkqbZX7rofPEv9UOxtp4Ws=",
+            "UyioFOAVc+G2ljacf97l9R2OMKFs1PyRAbbEJEP1xGY=",
+            "v2lXY2h8Gp4EFhhwCS/aHJ6HMHwrp4Tzv3DTBQR0b3I=",
+            "6wxQEY3S/RwkSVOtbgd70qou3/KL5/sKo/LzAAjVnno=",
+            "MjC0UATYpItPF7FFftaoVGP/DQFOZGk3HlznCwJDzlc="
+        ]
+    },
+    "producerToLastProduced": [
+        {
+            "name": "cryptolions1",
+            "lastBlockNumProduced": 224793744
+        },
+        {
+            "name": "eosioubisoft",
+            "lastBlockNumProduced": 224793756
+        },
+        {
+            "name": "eosnationftw",
+            "lastBlockNumProduced": 224793780
+        },
+        {
+            "name": "eosriobrazil",
+            "lastBlockNumProduced": 224793732
+        },
+        {
+            "name": "ivote4eosusa",
+            "lastBlockNumProduced": 224793792
+        },
+        {
+            "name": "uoseouldotio",
+            "lastBlockNumProduced": 224793793
+        },
+        {
+            "name": "uosswedenorg",
+            "lastBlockNumProduced": 224793768
+        }
+    ],
+    "producerToLastImpliedIrb": [
+        {
+            "name": "cryptolions1",
+            "lastBlockNumProduced": 224793696
+        },
+        {
+            "name": "eosioubisoft",
+            "lastBlockNumProduced": 224793708
+        },
+        {
+            "name": "eosnationftw",
+            "lastBlockNumProduced": 224793732
+        },
+        {
+            "name": "eosriobrazil",
+            "lastBlockNumProduced": 224793684
+        },
+        {
+            "name": "ivote4eosusa",
+            "lastBlockNumProduced": 224793744
+        },
+        {
+            "name": "uoseouldotio",
+            "lastBlockNumProduced": 224793744
+        },
+        {
+            "name": "uosswedenorg",
+            "lastBlockNumProduced": 224793720
+        }
+    ],
+    "confirmCount": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4
+    ],
+    "pendingSchedule": {
+        "scheduleLibNum": 146119709,
+        "scheduleHash": "AGsM1+BObSU5Qsy6ZKVw0LseKGWLAS24+YspBvloWbA=",
+        "scheduleV2": {
+            "version": 19
+        }
+    },
+    "activatedProtocolFeatures": {
+        "protocolFeatures": [
+            "DsfggBd7LAKyeNUIhhFoa0nXOZJaktm/ys1/xrdAU70=",
+            "D+GFuIMhUYZYxU8h6R14fymGnFvA3T/HgA95iDwUAw0=",
+            "GltEdlcoFG1xuRadzlKjHV+sIUO2GwCLfKkyj92LrEU=",
+            "GpmlnYfgbgnsWwKKnLt3SbSlrYgZAENl0C3EN5qLckE=",
+            "JlL1+WAGKUEJs90LveY2k/VTJK9FK3me4TeoGpBe7SU=",
+            "KZ3LavaSMkuJmznxbVpTCjMGKATkHwncl+nxVrRHZwc=",
+            "SpDADVVFTcWwWQVcohNXnG6oVpZ3EqVgF0h4hqTUzA8=",
+            "TnvzSNoAqUVImypoF0nrVvXeALkAAU4Tfdrjn0j2nWc=",
+            "T8qL2Cu9GB5xTig/g+G0XZXKWvQPuJrTl3tlPESPeMI=",
+            "aNyqNMBRfRlmbmszrdZzUdjF9p6ZnKHjeTG8QQopdCg=",
+            "hhD9I0EwDu2GzgKTqCX+51OHZNeQlH85Frjk0ANrxMQ=",
+            "i6Uv56OVbFzTplajF0uTHTuyq7RVeL78WfKD7NgWpAU=",
+            "rZ49j2UGh3Cf1o9LkLQffYJaNlsCwjpjbO+IrCrADEM=",
+            "rqJFf5Ud6QoTLRowexOsEnXI/CSQ0nQ53UVxU9wDr48=",
+            "sLrd2WfnkQuQVpYiShE0yoMsUcth2RpqIiZSqCcVxj8=",
+            "tUHVRFIr5UqAt+N9TvxkCLdTpxQ7oQ8XDlYCpPq4wbo=",
+            "tnweAOC5Pppk0GviuW23tvSufzPvZ1bV8sL+taeCqEM=",
+            "y3nUSfgZS/a0A+QP2jGaHi+dKyEI97bLmBZi5jk+1rk=",
+            "4PtksQhcxVOJcBWNBaAJwk4nb7lOGgv2pSi0j7xP9SY=",
+            "70MRLGVDuI2yKDouB3J4wxWuLIRxmosl8lzIhWX76pk=",
+            "8K9W0sWkjWCkpbXJA+37fbOnNqlO1YnQt5ffM/+dPh0=",
+            "/Si5iGxEafNAYqQZIy9NW4AH15C4HMxtZ1/slB59gLs="
+        ]
+    },
+    "rlimitOps": [
+        {
+            "operation": "OPERATION_UPDATE",
+            "state": {
+                "averageBlockNetUsage": {
+                    "lastOrdinal": 224793792,
+                    "valueEx": "28412747",
+                    "consumed": "37"
+                },
+                "averageBlockCpuUsage": {
+                    "lastOrdinal": 224793792,
+                    "valueEx": "8739392",
+                    "consumed": "10"
+                },
+                "pendingNetUsage": "4024",
+                "pendingCpuUsage": "1531",
+                "totalNetWeight": "11663000000",
+                "totalCpuWeight": "11663000000",
+                "totalRamBytes": "6888864805",
+                "virtualNetLimit": "1048576",
+                "virtualCpuLimit": "400000"
+            }
+        },
+        {
+            "operation": "OPERATION_UPDATE",
+            "state": {
+                "averageBlockNetUsage": {
+                    "lastOrdinal": 224793793,
+                    "valueEx": "61709308",
+                    "consumed": "4053"
+                },
+                "averageBlockCpuUsage": {
+                    "lastOrdinal": 224793793,
+                    "valueEx": "21424897",
+                    "consumed": "1540"
+                },
+                "totalNetWeight": "11663000000",
+                "totalCpuWeight": "11663000000",
+                "totalRamBytes": "6888864805",
+                "virtualNetLimit": "1048576",
+                "virtualCpuLimit": "400000"
+            }
+        }
+    ],
+    "filteredTransactions": [
+        {
+            "id": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+            "status": "TRANSACTIONSTATUS_EXECUTED",
+            "cpuUsageMicroSeconds": 1316,
+            "netUsageWords": 432,
+            "packedTransaction": {
+                "signatures": [
+                    "SIG_K1_JzoKW3XEUTem78fztFyGkjGEYC6XQZSt9YqjYTYHcgL1knGd381jwfxduLUNJkKxnzqkAgmmevaNGMqzsmVS8Nj2RCiHDu"
+                ],
+                "compression": 1,
+                "packedContextFreeData": "eJxjAAAAAQAB",
+                "packedTransaction": "eJyzDWxMTxAJ2HdNhwEIWBgOLNWQCuA9zuCwZMuqnCuujA5+Msu6zx92A8mueGtk5IMsAAIcof7BYMayJhPmVwahMHEWH083VyTxb853/om5zZSEye/gRtETrmtz9iyGbRpwAZi7Ts2yRraVPSW1IL84s4R0k3YtnYriTrhJMJsYPPyixYONMEyKYYT6AC6B5iZ0kxW8/v+X8fv/n+HlElNkdQfXtaGGFAgAAJV+bf8="
+            }
+        }
+    ],
+    "unfilteredTransactionCount": 2,
+    "filteredTransactionCount": 1,
+    "filteredTransactionTraces": [
+        {
+            "id": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+            "blockNum": "224793793",
+            "index": "1",
+            "blockTime": "2025-01-10T16:55:00Z",
+            "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+            "receipt": {
+                "status": "TRANSACTIONSTATUS_EXECUTED",
+                "cpuUsageMicroSeconds": 1316,
+                "netUsageWords": 432
+            },
+            "elapsed": "8147",
+            "netUsage": "3456",
+            "actionTraces": [
+                {
+                    "receiver": "swap.alcor",
+                    "receipt": {
+                        "receiver": "swap.alcor",
+                        "digest": "ce14429796fc28ea5915590bc481ccfbdef7f1c2b49aebd8b6d4c7abd5ed0812",
+                        "globalSequence": "408079743",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "73"
+                            }
+                        ],
+                        "recvSequence": "36",
+                        "codeSequence": "2",
+                        "abiSequence": "1"
+                    },
+                    "action": {
+                        "account": "swap.alcor",
+                        "name": "createpool",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"account\":\"cv1wz2xa3lb4\",\"fee\":3000,\"sqrtPriceX64\":\"1844582586964001782\",\"tokenA\":{\"quantity\":\"0.00000000 UOS\",\"contract\":\"eosio.token\"},\"tokenB\":{\"quantity\":\"0.0000 LIFE\",\"contract\":\"eosio.token\"}}",
+                        "rawData": "QE4cpovPw0YAAAAAAAAAAAhVT1MAAAAAAKaCNAPqMFUAAAAAAAAAAARMSUZFAAAAAKaCNAPqMFX2Q9z+FkaZGQAAAAAAAAAAuAsAAA=="
+                    },
+                    "elapsed": "5323",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "accountRamDeltas": [
+                        {
+                            "account": "cv1wz2xa3lb4",
+                            "delta": "702"
+                        }
+                    ],
+                    "actionOrdinal": 1
+                },
+                {
+                    "receiver": "swap.alcor",
+                    "receipt": {
+                        "receiver": "swap.alcor",
+                        "digest": "f666d4c4c8fba0eaeeacdd81f1031ae76d8fddc2d27b7dd32a3887c4580d2702",
+                        "globalSequence": "408079744",
+                        "authSequence": [
+                            {
+                                "accountName": "swap.alcor",
+                                "sequence": "41"
+                            }
+                        ],
+                        "recvSequence": "37",
+                        "codeSequence": "2",
+                        "abiSequence": "1"
+                    },
+                    "action": {
+                        "account": "swap.alcor",
+                        "name": "logpool",
+                        "authorization": [
+                            {
+                                "actor": "swap.alcor",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"fee\":3000,\"feeProtocol\":0,\"poolId\":1,\"sqrtPriceX64\":\"1844582586964001782\",\"tick\":-46055,\"tickSpacing\":60,\"tokenA\":{\"quantity\":\"0.00000000 UOS\",\"contract\":\"eosio.token\"},\"tokenB\":{\"quantity\":\"0.0000 LIFE\",\"contract\":\"eosio.token\"}}",
+                        "rawData": "AQAAAAAAAAAAAAAAAAAAAAhVT1MAAAAAAKaCNAPqMFUAAAAAAAAAAARMSUZFAAAAAKaCNAPqMFW4CwAAADwAAAD2Q9z+FkaZGQAAAAAAAAAAGUz//w=="
+                    },
+                    "elapsed": "25",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "actionOrdinal": 5,
+                    "creatorActionOrdinal": 1,
+                    "closestUnnotifiedAncestorActionOrdinal": 1,
+                    "executionIndex": 1
+                },
+                {
+                    "receiver": "eosio.token",
+                    "receipt": {
+                        "receiver": "eosio.token",
+                        "digest": "60a1058ba0d815d3a7ee4d109e2e720c65dbb272a85f75a0498f401a240ace34",
+                        "globalSequence": "408079745",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "74"
+                            }
+                        ],
+                        "recvSequence": "195071",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"cv1wz2xa3lb4\",\"to\":\"swap.alcor\",\"quantity\":\"10.00000000 UOS\",\"memo\":\"deposit\"}",
+                        "rawData": "QE4cpovPw0YAwKUoGlANxwDKmjsAAAAACFVPUwAAAAAHZGVwb3NpdA=="
+                    },
+                    "elapsed": "1256",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "actionOrdinal": 2,
+                    "executionIndex": 2,
+                    "filteringMatched": true
+                },
+                {
+                    "receiver": "cv1wz2xa3lb4",
+                    "receipt": {
+                        "receiver": "cv1wz2xa3lb4",
+                        "digest": "60a1058ba0d815d3a7ee4d109e2e720c65dbb272a85f75a0498f401a240ace34",
+                        "globalSequence": "408079746",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "75"
+                            }
+                        ],
+                        "recvSequence": "28",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"cv1wz2xa3lb4\",\"to\":\"swap.alcor\",\"quantity\":\"10.00000000 UOS\",\"memo\":\"deposit\"}",
+                        "rawData": "QE4cpovPw0YAwKUoGlANxwDKmjsAAAAACFVPUwAAAAAHZGVwb3NpdA=="
+                    },
+                    "elapsed": "3",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "actionOrdinal": 6,
+                    "creatorActionOrdinal": 2,
+                    "closestUnnotifiedAncestorActionOrdinal": 2,
+                    "executionIndex": 3
+                },
+                {
+                    "receiver": "swap.alcor",
+                    "receipt": {
+                        "receiver": "swap.alcor",
+                        "digest": "60a1058ba0d815d3a7ee4d109e2e720c65dbb272a85f75a0498f401a240ace34",
+                        "globalSequence": "408079747",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "76"
+                            }
+                        ],
+                        "recvSequence": "38",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"cv1wz2xa3lb4\",\"to\":\"swap.alcor\",\"quantity\":\"10.00000000 UOS\",\"memo\":\"deposit\"}",
+                        "rawData": "QE4cpovPw0YAwKUoGlANxwDKmjsAAAAACFVPUwAAAAAHZGVwb3NpdA=="
+                    },
+                    "elapsed": "116",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "accountRamDeltas": [
+                        {
+                            "account": "swap.alcor",
+                            "delta": "400"
+                        }
+                    ],
+                    "actionOrdinal": 7,
+                    "creatorActionOrdinal": 2,
+                    "closestUnnotifiedAncestorActionOrdinal": 2,
+                    "executionIndex": 4
+                },
+                {
+                    "receiver": "eosio.token",
+                    "receipt": {
+                        "receiver": "eosio.token",
+                        "digest": "9c78442f8a06499f3cb5517413ca140528bec8e1c474103b0363099d73190ab2",
+                        "globalSequence": "408079748",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "77"
+                            }
+                        ],
+                        "recvSequence": "195072",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"cv1wz2xa3lb4\",\"to\":\"swap.alcor\",\"quantity\":\"980.7290 LIFE\",\"memo\":\"deposit\"}",
+                        "rawData": "QE4cpovPw0YAwKUoGlANx7qllQAAAAAABExJRkUAAAAHZGVwb3NpdA=="
+                    },
+                    "elapsed": "251",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "accountRamDeltas": [
+                        {
+                            "account": "eosio.token",
+                            "delta": "128"
+                        }
+                    ],
+                    "actionOrdinal": 3,
+                    "executionIndex": 5,
+                    "filteringMatched": true
+                },
+                {
+                    "receiver": "cv1wz2xa3lb4",
+                    "receipt": {
+                        "receiver": "cv1wz2xa3lb4",
+                        "digest": "9c78442f8a06499f3cb5517413ca140528bec8e1c474103b0363099d73190ab2",
+                        "globalSequence": "408079749",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "78"
+                            }
+                        ],
+                        "recvSequence": "29",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"cv1wz2xa3lb4\",\"to\":\"swap.alcor\",\"quantity\":\"980.7290 LIFE\",\"memo\":\"deposit\"}",
+                        "rawData": "QE4cpovPw0YAwKUoGlANx7qllQAAAAAABExJRkUAAAAHZGVwb3NpdA=="
+                    },
+                    "elapsed": "2",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "actionOrdinal": 8,
+                    "creatorActionOrdinal": 3,
+                    "closestUnnotifiedAncestorActionOrdinal": 3,
+                    "executionIndex": 6
+                },
+                {
+                    "receiver": "swap.alcor",
+                    "receipt": {
+                        "receiver": "swap.alcor",
+                        "digest": "9c78442f8a06499f3cb5517413ca140528bec8e1c474103b0363099d73190ab2",
+                        "globalSequence": "408079750",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "79"
+                            }
+                        ],
+                        "recvSequence": "39",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"cv1wz2xa3lb4\",\"to\":\"swap.alcor\",\"quantity\":\"980.7290 LIFE\",\"memo\":\"deposit\"}",
+                        "rawData": "QE4cpovPw0YAwKUoGlANx7qllQAAAAAABExJRkUAAAAHZGVwb3NpdA=="
+                    },
+                    "elapsed": "73",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "accountRamDeltas": [
+                        {
+                            "account": "swap.alcor",
+                            "delta": "288"
+                        }
+                    ],
+                    "actionOrdinal": 9,
+                    "creatorActionOrdinal": 3,
+                    "closestUnnotifiedAncestorActionOrdinal": 3,
+                    "executionIndex": 7
+                },
+                {
+                    "receiver": "eosio.token",
+                    "receipt": {
+                        "receiver": "eosio.token",
+                        "digest": "81ddcb320c991ca60a8628ec69838209f593847c7e77405362af4402bbbe7ee4",
+                        "globalSequence": "408079751",
+                        "recvSequence": "195073",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "burn",
+                        "jsonData": "{\"amount\":\"0.0980 LIFE\"}",
+                        "rawData": "1AMAAAAAAAAETElGRQAAAA=="
+                    },
+                    "elapsed": "5",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "actionOrdinal": 10,
+                    "creatorActionOrdinal": 3,
+                    "closestUnnotifiedAncestorActionOrdinal": 3,
+                    "executionIndex": 8,
+                    "filteringMatched": true
+                },
+                {
+                    "receiver": "swap.alcor",
+                    "receipt": {
+                        "receiver": "swap.alcor",
+                        "digest": "6e13d07b760b7ceaecb26396c06fea8337d4c35e1a6c21ec74f35d0262908812",
+                        "globalSequence": "408079752",
+                        "authSequence": [
+                            {
+                                "accountName": "cv1wz2xa3lb4",
+                                "sequence": "80"
+                            }
+                        ],
+                        "recvSequence": "40",
+                        "codeSequence": "2",
+                        "abiSequence": "1"
+                    },
+                    "action": {
+                        "account": "swap.alcor",
+                        "name": "addliquid",
+                        "authorization": [
+                            {
+                                "actor": "cv1wz2xa3lb4",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"deadline\":0,\"owner\":\"cv1wz2xa3lb4\",\"poolId\":1,\"tickLower\":-46560,\"tickUpper\":-45540,\"tokenADesired\":\"10.00000000 UOS\",\"tokenAMin\":\"9.00000000 UOS\",\"tokenBDesired\":\"980.7290 LIFE\",\"tokenBMin\":\"882.6561 LIFE\"}",
+                        "rawData": "AQAAAAAAAABAThymi8/DRgDKmjsAAAAACFVPUwAAAAC6pZUAAAAAAARMSUZFAAAAIEr//xxO//8A6aQ1AAAAAAhVT1MAAAAAwa6GAAAAAAAETElGRQAAAAAAAAA="
+                    },
+                    "elapsed": "908",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "accountRamDeltas": [
+                        {
+                            "account": "cv1wz2xa3lb4",
+                            "delta": "1558"
+                        }
+                    ],
+                    "actionOrdinal": 4,
+                    "executionIndex": 9
+                },
+                {
+                    "receiver": "swap.alcor",
+                    "receipt": {
+                        "receiver": "swap.alcor",
+                        "digest": "5859b785a8dd3db010b81596c21c6589d98467a0f64c2596a3fd0dc10c6c143e",
+                        "globalSequence": "408079753",
+                        "authSequence": [
+                            {
+                                "accountName": "swap.alcor",
+                                "sequence": "42"
+                            }
+                        ],
+                        "recvSequence": "41",
+                        "codeSequence": "2",
+                        "abiSequence": "1"
+                    },
+                    "action": {
+                        "account": "swap.alcor",
+                        "name": "logmint",
+                        "authorization": [
+                            {
+                                "actor": "swap.alcor",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"liquidity\":3933708051,\"owner\":\"cv1wz2xa3lb4\",\"poolId\":1,\"posId\":2,\"reserveA\":\"9.99999995 UOS\",\"reserveB\":\"980.7290 LIFE\",\"sqrtPriceX64\":\"1844582586964001782\",\"tick\":-46055,\"tickLower\":-46560,\"tickUpper\":-45540,\"tokenA\":\"9.99999995 UOS\",\"tokenB\":\"980.7290 LIFE\"}",
+                        "rawData": "AQAAAAAAAAACAAAAAAAAAEBOHKaLz8NGIEr//xxO//8Tn3fqAAAAAPvJmjsAAAAACFVPUwAAAAC6pZUAAAAAAARMSUZFAAAA+8maOwAAAAAIVU9TAAAAALqllQAAAAAABExJRkUAAAD2Q9z+FkaZGQAAAAAAAAAAGUz//w=="
+                    },
+                    "elapsed": "21",
+                    "transactionId": "9dce5c8bee1a990d6affc11dbd7d2b473ddbea0c172ebacdff27d0b84808f4a8",
+                    "blockNum": "224793793",
+                    "producerBlockId": "0d6614c1b56ec48b755fc2c0c02f6657c16e75d21ceae8dd48e57dbe24d365e9",
+                    "blockTime": "2025-01-10T16:55:00Z",
+                    "actionOrdinal": 11,
+                    "creatorActionOrdinal": 4,
+                    "closestUnnotifiedAncestorActionOrdinal": 4,
+                    "executionIndex": 10
+                }
+            ],
+            "dbOps": [
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "code": "swap.alcor",
+                    "scope": "swap.alcor",
+                    "tableName": "system",
+                    "oldPayer": "swap.alcor",
+                    "newPayer": "swap.alcor",
+                    "oldData": "AAAAAAAAAAABAQAAAAAAAAACAAAAAAAAAAAAAAAAAAAACFVPUwAAAAAApoI0A+owVQ==",
+                    "newData": "AAAAAAAAAAABAgAAAAAAAAACAAAAAAAAAAAAAAAAAAAACFVPUwAAAAAApoI0A+owVQ=="
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "code": "swap.alcor",
+                    "scope": "swap.alcor",
+                    "tableName": "pools",
+                    "primaryKey": "............1",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "newData": "AQAAAAAAAAABAAAAAAAAAAAIVU9TAAAAAACmgjQD6jBVAAAAAAAAAAAETElGRQAAAACmgjQD6jBVuAsAAAA8AAAAdil3n5duBAD2Q9z+FkaZGQAAAAAAAAAAGUz//+RQgWcBAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIVU9TAAAAAAAAAAAAAAAABExJRkUAAAAAAAAAAAAAAA=="
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "observations",
+                    "primaryKey": "......3bk5ci4",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "newData": "5FCBZwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 2,
+                    "code": "eosio.token",
+                    "scope": "cv1wz2xa3lb4",
+                    "tableName": "accounts",
+                    "primaryKey": "........ehbp5",
+                    "oldPayer": "ultra.eosio",
+                    "newPayer": "ultra.eosio",
+                    "oldData": "hX0xWiIAAAAIVU9TAAAAAA==",
+                    "newData": "hbOWHiIAAAAIVU9TAAAAAA=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 2,
+                    "code": "eosio.token",
+                    "scope": "swap.alcor",
+                    "tableName": "accounts",
+                    "primaryKey": "........ehbp5",
+                    "oldPayer": "eosio.token",
+                    "newPayer": "eosio.token",
+                    "oldData": "Y2IMEgAAAAAIVU9TAAAAAA==",
+                    "newData": "YyynTQAAAAAIVU9TAAAAAA=="
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 4,
+                    "code": "swap.alcor",
+                    "scope": "cv1wz2xa3lb4",
+                    "tableName": "balances",
+                    "newPayer": "swap.alcor",
+                    "newData": "AAAAAAAAAAAAypo7AAAAAAhVT1MAAAAAAKaCNAPqMFU="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 5,
+                    "code": "eosio.token",
+                    "scope": "......25ct4og",
+                    "tableName": "stat",
+                    "primaryKey": "......25ct4og",
+                    "oldPayer": "eosio.token",
+                    "newPayer": "eosio.token",
+                    "oldData": "AIDGpH6NAwAETElGRQAAAACAxqR+jQMABExJRkUAAAAAwFSQZqCWiw==",
+                    "newData": "LHzGpH6NAwAETElGRQAAAACAxqR+jQMABExJRkUAAAAAwFSQZqCWiw=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 5,
+                    "code": "eosio.token",
+                    "scope": "cv1wz2xa3lb4",
+                    "tableName": "accounts",
+                    "primaryKey": "......25ct4og",
+                    "oldPayer": "eosio.token",
+                    "newPayer": "eosio.token",
+                    "oldData": "AOH1BQAAAAAETElGRQAAAA==",
+                    "newData": "RjtgBQAAAAAETElGRQAAAA=="
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 5,
+                    "code": "eosio.token",
+                    "scope": "swap.alcor",
+                    "tableName": "accounts",
+                    "primaryKey": "......25ct4og",
+                    "newPayer": "eosio.token",
+                    "newData": "5qGVAAAAAAAETElGRQAAAA=="
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 7,
+                    "code": "swap.alcor",
+                    "scope": "cv1wz2xa3lb4",
+                    "tableName": "balances",
+                    "primaryKey": "............1",
+                    "newPayer": "swap.alcor",
+                    "newData": "AQAAAAAAAAC6pZUAAAAAAARMSUZFAAAAAKaCNAPqMFU="
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "ticks",
+                    "primaryKey": "......bzzx52",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "newData": "IEr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAORQgWcA"
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "ticks",
+                    "primaryKey": "......bzzx52",
+                    "oldPayer": "cv1wz2xa3lb4",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "oldData": "IEr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAORQgWcA",
+                    "newData": "IEr//xOfd+oAAAAAE5936gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAORQgWcB"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "ticks",
+                    "primaryKey": "......bzzxb1g",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "newData": "HE7//xOfd+oAAAAA7WCIFf////8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "bitmaps",
+                    "primaryKey": ".........3zzd",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "newData": "+f8AAAAAAAAAAAAAAAAAAAAB"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "bitmaps",
+                    "primaryKey": ".........3zze",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "newData": "+v8AAgAAAAAAAAAAAAAAAAAA"
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "swap.alcor",
+                    "tableName": "system",
+                    "oldPayer": "swap.alcor",
+                    "newPayer": "swap.alcor",
+                    "oldData": "AAAAAAAAAAABAgAAAAAAAAACAAAAAAAAAAAAAAAAAAAACFVPUwAAAAAApoI0A+owVQ==",
+                    "newData": "AAAAAAAAAAABAgAAAAAAAAADAAAAAAAAAAAAAAAAAAAACFVPUwAAAAAApoI0A+owVQ=="
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "positions",
+                    "primaryKey": "............2",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "newData": "AgAAAAAAAABAThymi8/DRiBK//8cTv//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "positions",
+                    "primaryKey": "............2",
+                    "oldPayer": "cv1wz2xa3lb4",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "oldData": "AgAAAAAAAABAThymi8/DRiBK//8cTv//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                    "newData": "AgAAAAAAAABAThymi8/DRiBK//8cTv//E5936gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "swap.alcor",
+                    "tableName": "pools",
+                    "primaryKey": "............1",
+                    "oldPayer": "cv1wz2xa3lb4",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "oldData": "AQAAAAAAAAABAAAAAAAAAAAIVU9TAAAAAACmgjQD6jBVAAAAAAAAAAAETElGRQAAAACmgjQD6jBVuAsAAAA8AAAAdil3n5duBAD2Q9z+FkaZGQAAAAAAAAAAGUz//+RQgWcBAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIVU9TAAAAAAAAAAAAAAAABExJRkUAAAAAAAAAAAAAAA==",
+                    "newData": "AQAAAAAAAAABAAAAAAAAAAAIVU9TAAAAAACmgjQD6jBVAAAAAAAAAAAETElGRQAAAACmgjQD6jBVuAsAAAA8AAAAdil3n5duBAD2Q9z+FkaZGQAAAAAAAAAAGUz//+RQgWcBAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIVU9TAAAAAAAAAAAAAAAABExJRkUAAAATn3fqAAAAAA=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "cv1wz2xa3lb4",
+                    "tableName": "balances",
+                    "oldPayer": "swap.alcor",
+                    "newPayer": "swap.alcor",
+                    "oldData": "AAAAAAAAAAAAypo7AAAAAAhVT1MAAAAAAKaCNAPqMFU=",
+                    "newData": "AAAAAAAAAAAFAAAAAAAAAAhVT1MAAAAAAKaCNAPqMFU="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "cv1wz2xa3lb4",
+                    "tableName": "balances",
+                    "primaryKey": "............1",
+                    "oldPayer": "swap.alcor",
+                    "newPayer": "swap.alcor",
+                    "oldData": "AQAAAAAAAAC6pZUAAAAAAARMSUZFAAAAAKaCNAPqMFU=",
+                    "newData": "AQAAAAAAAAAAAAAAAAAAAARMSUZFAAAAAKaCNAPqMFU="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 9,
+                    "code": "swap.alcor",
+                    "scope": "swap.alcor",
+                    "tableName": "pools",
+                    "primaryKey": "............1",
+                    "oldPayer": "cv1wz2xa3lb4",
+                    "newPayer": "cv1wz2xa3lb4",
+                    "oldData": "AQAAAAAAAAABAAAAAAAAAAAIVU9TAAAAAACmgjQD6jBVAAAAAAAAAAAETElGRQAAAACmgjQD6jBVuAsAAAA8AAAAdil3n5duBAD2Q9z+FkaZGQAAAAAAAAAAGUz//+RQgWcBAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIVU9TAAAAAAAAAAAAAAAABExJRkUAAAATn3fqAAAAAA==",
+                    "newData": "AQAAAAAAAAAB+8maOwAAAAAIVU9TAAAAAACmgjQD6jBVuqWVAAAAAAAETElGRQAAAACmgjQD6jBVuAsAAAA8AAAAdil3n5duBAD2Q9z+FkaZGQAAAAAAAAAAGUz//+RQgWcBAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIVU9TAAAAAAAAAAAAAAAABExJRkUAAAATn3fqAAAAAA=="
+                }
+            ],
+            "ramOps": [
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "290",
+                    "usage": "902",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:swap.alcor:pools:............1",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_SECONDARY_INDEX_ADD",
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "160",
+                    "usage": "1062",
+                    "namespace": "NAMESPACE_SECONDARY_INDEX",
+                    "uniqueKey": "swap.alcor:swap.alcor:pools:............1",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_CREATE_TABLE",
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "112",
+                    "usage": "1174",
+                    "namespace": "NAMESPACE_TABLE",
+                    "uniqueKey": "swap.alcor:............1:observations",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "140",
+                    "usage": "1314",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:............1:observations:......3bk5ci4",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_CREATE_TABLE",
+                    "actionIndex": 4,
+                    "payer": "swap.alcor",
+                    "delta": "112",
+                    "usage": "2415398",
+                    "namespace": "NAMESPACE_TABLE",
+                    "uniqueKey": "swap.alcor:cv1wz2xa3lb4:balances",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 4,
+                    "payer": "swap.alcor",
+                    "delta": "144",
+                    "usage": "2415542",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:cv1wz2xa3lb4:balances:",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_SECONDARY_INDEX_ADD",
+                    "actionIndex": 4,
+                    "payer": "swap.alcor",
+                    "delta": "144",
+                    "usage": "2415686",
+                    "namespace": "NAMESPACE_SECONDARY_INDEX",
+                    "uniqueKey": "swap.alcor:cv1wz2xa3lb4:balances:",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 5,
+                    "payer": "eosio.token",
+                    "delta": "128",
+                    "usage": "352035",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "eosio.token:swap.alcor:accounts:......25ct4og",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 7,
+                    "payer": "swap.alcor",
+                    "delta": "144",
+                    "usage": "2415830",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:cv1wz2xa3lb4:balances:............1",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_SECONDARY_INDEX_ADD",
+                    "actionIndex": 7,
+                    "payer": "swap.alcor",
+                    "delta": "144",
+                    "usage": "2415974",
+                    "namespace": "NAMESPACE_SECONDARY_INDEX",
+                    "uniqueKey": "swap.alcor:cv1wz2xa3lb4:balances:............1",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_CREATE_TABLE",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "112",
+                    "usage": "1426",
+                    "namespace": "NAMESPACE_TABLE",
+                    "uniqueKey": "swap.alcor:............1:ticks",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "193",
+                    "usage": "1619",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:............1:ticks:......bzzx52",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "193",
+                    "usage": "1812",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:............1:ticks:......bzzxb1g",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_CREATE_TABLE",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "112",
+                    "usage": "1924",
+                    "namespace": "NAMESPACE_TABLE",
+                    "uniqueKey": "swap.alcor:............1:bitmaps",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "130",
+                    "usage": "2054",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:............1:bitmaps:.........3zzd",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "130",
+                    "usage": "2184",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:............1:bitmaps:.........3zze",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_CREATE_TABLE",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "112",
+                    "usage": "2296",
+                    "namespace": "NAMESPACE_TABLE",
+                    "uniqueKey": "swap.alcor:............1:positions",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_PRIMARY_INDEX_ADD",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "192",
+                    "usage": "2488",
+                    "namespace": "NAMESPACE_TABLE_ROW",
+                    "uniqueKey": "swap.alcor:............1:positions:............2",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_SECONDARY_INDEX_ADD",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "144",
+                    "usage": "2632",
+                    "namespace": "NAMESPACE_SECONDARY_INDEX",
+                    "uniqueKey": "swap.alcor:............1:positions:............2",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_CREATE_TABLE",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "112",
+                    "usage": "2744",
+                    "namespace": "NAMESPACE_TABLE",
+                    "uniqueKey": "swap.alcor:............1:positions...1",
+                    "action": "ACTION_ADD"
+                },
+                {
+                    "operation": "OPERATION_SECONDARY_INDEX_ADD",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "delta": "128",
+                    "usage": "2872",
+                    "namespace": "NAMESPACE_SECONDARY_INDEX",
+                    "uniqueKey": "swap.alcor:............1:positions...1:............2",
+                    "action": "ACTION_ADD"
+                }
+            ],
+            "rlimitOps": [
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "accountUsage": {
+                        "owner": "cv1wz2xa3lb4",
+                        "netUsage": {
+                            "lastOrdinal": 1579686600,
+                            "valueEx": "25647",
+                            "consumed": "3457"
+                        },
+                        "cpuUsage": {
+                            "lastOrdinal": 1579686600,
+                            "valueEx": "9757",
+                            "consumed": "1317"
+                        },
+                        "ramUsage": "2872"
+                    }
+                }
+            ],
+            "tableOps": [
+                {
+                    "operation": "OPERATION_INSERT",
+                    "payer": "cv1wz2xa3lb4",
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "observations"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 4,
+                    "payer": "swap.alcor",
+                    "code": "swap.alcor",
+                    "scope": "cv1wz2xa3lb4",
+                    "tableName": "balances"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "ticks"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "bitmaps"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "positions"
+                },
+                {
+                    "operation": "OPERATION_INSERT",
+                    "actionIndex": 9,
+                    "payer": "cv1wz2xa3lb4",
+                    "code": "swap.alcor",
+                    "scope": "............1",
+                    "tableName": "positions...1"
+                }
+            ],
+            "creationTree": [
+                {
+                    "creatorActionIndex": -1
+                },
+                {
+                    "executionActionIndex": 1
+                },
+                {
+                    "creatorActionIndex": -1,
+                    "executionActionIndex": 2
+                },
+                {
+                    "creatorActionIndex": 2,
+                    "executionActionIndex": 3
+                },
+                {
+                    "creatorActionIndex": 2,
+                    "executionActionIndex": 4
+                },
+                {
+                    "creatorActionIndex": -1,
+                    "executionActionIndex": 5
+                },
+                {
+                    "creatorActionIndex": 5,
+                    "executionActionIndex": 6
+                },
+                {
+                    "creatorActionIndex": 5,
+                    "executionActionIndex": 7
+                },
+                {
+                    "creatorActionIndex": 5,
+                    "executionActionIndex": 8
+                },
+                {
+                    "creatorActionIndex": -1,
+                    "executionActionIndex": 9
+                },
+                {
+                    "creatorActionIndex": 9,
+                    "executionActionIndex": 10
+                }
+            ]
+        }
+    ],
+    "unfilteredTransactionTraceCount": 3,
+    "filteredTransactionTraceCount": 1,
+    "unfilteredExecutedInputActionCount": 7,
+    "filteredExecutedInputActionCount": 2,
+    "unfilteredExecutedTotalActionCount": 14,
+    "filteredExecutedTotalActionCount": 3,
+    "validBlockSigningAuthorityV2": {
+        "v0": {
+            "threshold": 1,
+            "keys": [
+                {
+                    "publicKey": "EOS57zSgkDgcj1XeMFqZes5Tz6fJNnCug8KYADJ1EY2Z9YGjs7Psx",
+                    "weight": 1
+                }
+            ]
+        }
+    },
+    "activeScheduleV2": {
+        "version": 19,
+        "producers": [
+            {
+                "accountName": "eosriobrazil",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS6e6CFvEtcCGTbj8YyVwmNRiQ7FRFjbuKfTSaJXvciaVYdW2W6B",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "cryptolions1",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS8KamrzrcGzKF7N5T8y44QwEwubHyJ7W6oeNehnmXTsEjQR8KYd",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "eosioubisoft",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS7rzTcsDq45H1o8BGVPQQoGCnWrsNrmqgUfLDmefVho4nvuM7Ka",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "uosswedenorg",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS7DjFq5FA3pyzUzXqLhA7qBSkmpZ57M6uYULTRA9E2Y4YRt7oWF",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "eosnationftw",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS5uMMtMvBp4pPEBiUsfdBR9LVnJnzUonGFvQtwnh1eoXzZZKN8U",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "ivote4eosusa",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS5gKJLRWxMgLWDsvKu7YaTweoQpqin5SSzJ4mDuaXnQ6tZb1F31",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "uoseouldotio",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS57zSgkDgcj1XeMFqZes5Tz6fJNnCug8KYADJ1EY2Z9YGjs7Psx",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "filteringApplied": true,
+    "filteringIncludeFilterExpr": "(account==\"eosio.token\" \u0026\u0026 receiver==\"eosio.token\") || (action==\"setabi\" \u0026\u0026 account==\"eosio\" \u0026\u0026 data.account==\"eosio.token\")"
+}
