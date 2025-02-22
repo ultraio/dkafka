@@ -36,6 +36,7 @@ CDC_START_BLOCK ?= 135283642
 CDC_ACCOUNT ?= eosio.nft.ft
 
 CDC_TABLES_START_BLOCK ?= $(CDC_START_BLOCK)
+CDC_TABLES_STOP_BLOCK := $(CDC_START_BLOCK)
 CDC_TABLES_ACCOUNT ?= $(CDC_ACCOUNT)
 CDC_TABLES_TABLE_NAMES ?= *:s+k
 ## CDC ACTIONS
@@ -149,6 +150,8 @@ cdc-tables: ## CDC stream on tables
 		--kafka-compression-level=$(COMPRESSION_LEVEL) \
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--start-block-num=$(CDC_TABLES_START_BLOCK) \
+		--stop-block-num=$(CDC_TABLES_STOP_BLOCK) \
+		--batch-mode=$(BATCH_MODE) \
 		--codec=$(CODEC) \
 		--table-name='$(CDC_TABLES_TABLE_NAMES)' '$(CDC_TABLES_ACCOUNT)'
 

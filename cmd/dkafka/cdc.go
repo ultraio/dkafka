@@ -21,7 +21,7 @@ type GenOptions struct {
 	namespace string
 	version   string
 	outputDir string
-	abiSpec   dkafka.AbiSpec
+	abiSpec   *dkafka.ABI
 }
 
 var CdCCmd = &cobra.Command{
@@ -193,14 +193,14 @@ func generateAllAvroSchema(cmd *cobra.Command, args []string) {
 	}
 	zlog.Info("generate all schemas for:", zap.String("account", opts.abiSpec.Account))
 	zlog.Info("generate all Actions")
-	for _, action := range opts.abiSpec.Abi.Actions {
+	for _, action := range opts.abiSpec.Actions {
 		err = doGenActionAvroSchema(action.Name.String(), opts)
 		if err != nil {
 			zlog.Fatal("doGenActionAvroSchema()", zap.Error(err))
 		}
 	}
 	zlog.Info("generate all Tables")
-	for _, table := range opts.abiSpec.Abi.Tables {
+	for _, table := range opts.abiSpec.Tables {
 		err = doGenTableAvroSchema(string(table.Name), opts)
 		if err != nil {
 			zlog.Fatal("doGenTableAvroSchema()", zap.Error(err))
@@ -308,13 +308,9 @@ func genOptions(cmd *cobra.Command, args []string) (opts GenOptions, err error) 
 		zap.String("abi", abiString),
 	)
 
-	abi, err := dkafka.LoadABIFile(abiFile)
+	abiSpec, err := dkafka.LoadABIFile(account, abiFile)
 	if err != nil {
 		return
-	}
-	abiSpec := dkafka.AbiSpec{
-		Account: account,
-		Abi:     abi,
 	}
 
 	return GenOptions{

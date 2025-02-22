@@ -221,3 +221,120 @@ func Test_createCdcKeyExpressions(t *testing.T) {
 		})
 	}
 }
+
+func Test_addExecutedFilter(t *testing.T) {
+	type args struct {
+		filter   string
+		executed bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "executed with filter",
+			args: args{
+				filter:   "filter",
+				executed: true,
+			},
+			want: "executed && filter",
+		},
+		{
+			name: "executed without filter",
+			args: args{
+				filter:   "",
+				executed: true,
+			},
+			want: "executed",
+		},
+		{
+			name: "not executed without filter",
+			args: args{
+				filter:   "",
+				executed: false,
+			},
+			want: "",
+		},
+		{
+			name: "not executed with filter",
+			args: args{
+				filter:   "filter",
+				executed: false,
+			},
+			want: "filter",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := addExecutedFilter(tt.args.filter, tt.args.executed); got != tt.want {
+				t.Errorf("addExecutedFilter() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMessageSchemaGenerator_namespace(t *testing.T) {
+	type fields struct {
+		Namespace    string
+		MajorVersion uint
+		Version      string
+		Account      string
+		Source       string
+	}
+	type args struct {
+		kind    string
+		account string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "actions",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.token",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "ultra.rgrab",
+			},
+			want: "io.dkafka.data.ultra.rgrab.actions.v1",
+		},
+		{
+			name: "tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.token",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "ultra.rgrab",
+			},
+			want: "io.dkafka.data.ultra.rgrab.tables.v1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			msg := MessageSchemaGenerator{
+				Namespace:    tt.fields.Namespace,
+				MajorVersion: tt.fields.MajorVersion,
+				Version:      tt.fields.Version,
+				Account:      tt.fields.Account,
+				Source:       tt.fields.Source,
+			}
+			if got := msg.namespace(tt.args.kind, tt.args.account); got != tt.want {
+				t.Errorf("MessageSchemaGenerator.namespace() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

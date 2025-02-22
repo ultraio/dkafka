@@ -54,5 +54,6 @@
           ]
         }
       },
-      "terminal.integrated.defaultProfile.linux": "BashWithStartup"
+      "terminal.integrated.defaultProfile.linux": "BashWithStartup",
+      "makefile.configureOnOpen": false
 }

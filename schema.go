@@ -16,32 +16,27 @@ import (
 
 const dkafkaNamespace = "io.dkafka"
 
-type AbiSpec struct {
-	Account string
-	Abi     *ABI
-}
-
 type AvroSchemaGenOptions struct {
 	Action    string
 	Table     string
 	Namespace string
 	Type      string
 	Version   string
-	AbiSpec   AbiSpec
+	AbiSpec   *ABI
 }
 
 type ActionSchemaGenOptions struct {
 	Action    string
 	Namespace string
 	Version   string
-	AbiSpec   AbiSpec
+	AbiSpec   *ABI
 }
 
 type NamedSchemaGenOptions struct {
 	Name      string
 	Namespace string
 	Version   string
-	AbiSpec   AbiSpec
+	AbiSpec   *ABI
 	Source    string
 	Domain    string
 }
@@ -62,7 +57,7 @@ func (o NamedSchemaGenOptions) GetType() string {
 	return "notification"
 }
 
-func getNamespace(namespace string, abi AbiSpec) (string, error) {
+func getNamespace(namespace string, abi *ABI) (string, error) {
 	if namespace == "" {
 		namespace = strcase.ToDelimited(abi.Account, '.')
 	}
@@ -86,7 +81,7 @@ func GenerateActionSchema(options NamedSchemaGenOptions) (MessageSchema, error) 
 		zap.String("actionParams", actionParamsRecordName),
 	)
 
-	actionParamsSchema, err := ActionToRecord(options.AbiSpec.Abi, eos.ActionName(options.Name))
+	actionParamsSchema, err := ActionToRecord(options.AbiSpec, eos.ActionName(options.Name))
 	if err != nil {
 		return MessageSchema{}, err
 	}
@@ -129,7 +124,7 @@ func GenerateTableSchema(options NamedSchemaGenOptions) (MessageSchema, error) {
 		zap.String("TableOp", dbOpRecordName),
 	)
 
-	dbOpSchema, err := TableToRecord(options.AbiSpec.Abi, eos.TableName(options.Name))
+	dbOpSchema, err := TableToRecord(options.AbiSpec, eos.TableName(options.Name))
 	if err != nil {
 		return MessageSchema{}, err
 	}
@@ -206,7 +201,7 @@ func abiFieldToRecordField(abi *ABI, fieldDef eos.FieldDef, visited map[string]s
 	zlog.Debug("convert field", zap.String("name", fieldDef.Name), zap.String("type", fieldDef.Type))
 	schema, err := resolveFieldTypeSchema(abi, fieldDef.Type, visited)
 	if err != nil {
-		return FieldSchema{}, fmt.Errorf("reslove Field type schema error: %v, on field: %s", err, fieldDef.Name)
+		return FieldSchema{}, fmt.Errorf("resolve Field type schema error: %v, on field: %s", err, fieldDef.Name)
 	}
 	if union, ok := schema.(Union); ok && union[0] == "null" {
 		return NewNullableField(fieldDef.Name, schema), nil

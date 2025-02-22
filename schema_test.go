@@ -163,13 +163,13 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		),
 		{
 			name:    "unknown->error",
-			args:    args{"unknown", &ABI{&eos.ABI{}, 0}},
+			args:    args{"unknown", &ABI{ABI: &eos.ABI{}}},
 			want:    nil,
 			wantErr: true,
 		},
 		{
 			name: "struct->record",
-			args: args{"my_struct", &ABI{&eos.ABI{
+			args: args{"my_struct", &ABI{ABI: &eos.ABI{
 				Types: []eos.ABIType{{
 					NewTypeName: "int64_alias",
 					Type:        "int64",
@@ -188,7 +188,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 						},
 					},
 				}},
-			}, 42}},
+			}}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "MyStruct",
@@ -207,7 +207,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		},
 		{
 			name: "struct-inheritance",
-			args: args{"my_struct", &ABI{&eos.ABI{
+			args: args{"my_struct", &ABI{ABI: &eos.ABI{
 				Types: []eos.ABIType{{
 					NewTypeName: "int64_alias",
 					Type:        "int64",
@@ -218,7 +218,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 						Base: "",
 						Fields: []eos.FieldDef{
 							{
-								Name: "parentfieldA",
+								Name: "parentFieldA",
 								Type: "string",
 							},
 							{
@@ -241,13 +241,13 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 							},
 						},
 					}},
-			}, 42}},
+			}}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "MyStruct",
 				Fields: []FieldSchema{
 					{
-						Name: "parentfieldA",
+						Name: "parentFieldA",
 						Type: TypedSchema{Type: "string", EosType: "string"},
 					},
 					{
@@ -268,7 +268,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		},
 		{
 			name: "union-multiple-types-nullable",
-			args: args{"nullable_union_record", &ABI{&eos.ABI{
+			args: args{"nullable_union_record", &ABI{ABI: &eos.ABI{
 				Types: []eos.ABIType{{
 					NewTypeName: "nullable_union",
 					Type:        "variant_nullable_union",
@@ -288,7 +288,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 					Name:  "variant_nullable_union",
 					Types: []string{"string", "int8"},
 				}},
-			}, 42}},
+			}}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "NullableUnionRecord",
@@ -304,7 +304,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		},
 		{
 			name: "uber-variant",
-			args: args{"uber_variant", &ABI{&eos.ABI{
+			args: args{"uber_variant", &ABI{ABI: &eos.ABI{
 				Types: []eos.ABIType{
 					{
 						NewTypeName: "INT8_VEC",
@@ -374,7 +374,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 					Name:  HardcodedUberVariant,
 					Types: []string{"int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float32", "float64", "string", "boolean", "INT8_VEC", "INT16_VEC", "INT32_VEC", "INT64_VEC", "UINT8_VEC", "UINT16_VEC", "UINT32_VEC", "UINT64_VEC", "FLOAT32_VEC", "FLOAT64_VEC", "STRING_VEC", "BOOL_VEC"},
 				}},
-			}, 42}},
+			}}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "UberVariant",
@@ -389,7 +389,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 		},
 		{
 			name: "union-multiple-types-nullable",
-			args: args{"nullable_union_record", &ABI{&eos.ABI{
+			args: args{"nullable_union_record", &ABI{ABI: &eos.ABI{
 				Types: []eos.ABIType{{
 					NewTypeName: "nullable_union",
 					Type:        "variant_nullable_union",
@@ -409,7 +409,7 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 					Name:  "variant_nullable_union",
 					Types: []string{"string", "int8"},
 				}},
-			}, 42}},
+			}}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "NullableUnionRecord",
@@ -452,7 +452,7 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 	}{
 		{
 			name: "variant->union",
-			args: args{"regproducer2", &ABI{&eos.ABI{
+			args: args{"regproducer2", &ABI{ABI: &eos.ABI{
 				Types: []eos.ABIType{{
 					NewTypeName: "block_signing_authority",
 					Type:        "variant_block_signing_authority_v0",
@@ -481,7 +481,7 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 					Name:  "variant_block_signing_authority_v0",
 					Types: []string{"block_signing_authority_v0"},
 				}},
-			}, 42}},
+			}}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "Regproducer2",
@@ -505,7 +505,7 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 		},
 		{
 			name: "variant->union multiple types",
-			args: args{"pair_string_key_value_store", &ABI{&eos.ABI{
+			args: args{"pair_string_key_value_store", &ABI{ABI: &eos.ABI{
 				Types: []eos.ABIType{
 					{
 						NewTypeName: "key_value_store",
@@ -531,7 +531,7 @@ func Test_variantResolveFieldTypeSchema(t *testing.T) {
 					Name:  "variant_int8_string",
 					Types: []string{"int8", "string"},
 				}},
-			}, 42}},
+			}}},
 			want: RecordSchema{
 				Type: "record",
 				Name: "PairStringKeyValueStore",
@@ -611,7 +611,7 @@ func TestActionToRecord(t *testing.T) {
 		{
 			"known_action",
 			args{
-				&ABI{&actionABI, 42},
+				&ABI{ABI: &actionABI},
 				"my_action",
 			},
 			RecordSchema{
@@ -633,7 +633,7 @@ func TestActionToRecord(t *testing.T) {
 		{
 			"unknown_action",
 			args{
-				&ABI{&actionABI, 42},
+				&ABI{ABI: &actionABI},
 				"unknown_action",
 			},
 			RecordSchema{},
@@ -694,7 +694,7 @@ func TestTableToRecord(t *testing.T) {
 		{
 			"known table",
 			args{
-				&ABI{&tableABI, 42},
+				&ABI{ABI: &tableABI},
 				"my.table",
 			},
 			RecordSchema{
@@ -716,7 +716,7 @@ func TestTableToRecord(t *testing.T) {
 		{
 			"unknown table",
 			args{
-				&ABI{&actionABI, 42},
+				&ABI{ABI: &actionABI},
 				"unknown.table",
 			},
 			RecordSchema{},

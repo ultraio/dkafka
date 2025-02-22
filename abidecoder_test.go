@@ -63,6 +63,7 @@ func TestParseABIFileSpec(t *testing.T) {
 
 func TestLoadABIFile(t *testing.T) {
 	type args struct {
+		account string
 		abiFile string
 	}
 	tests := []struct {
@@ -74,6 +75,7 @@ func TestLoadABIFile(t *testing.T) {
 		{
 			name: "default",
 			args: args{
+				account: "eosio.nft.ft",
 				abiFile: "testdata/eosio.nft.ft.abi",
 			},
 			wantABIBlockNum: uint32(0),
@@ -82,6 +84,7 @@ func TestLoadABIFile(t *testing.T) {
 		{
 			name: "with-block-number",
 			args: args{
+				account: "eosio.nft.ft",
 				abiFile: "testdata/eosio.nft.ft.abi:1",
 			},
 			wantABIBlockNum: uint32(1),
@@ -97,7 +100,7 @@ func TestLoadABIFile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := LoadABIFile(tt.args.abiFile)
+			got, err := LoadABIFile(tt.args.account, tt.args.abiFile)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("LoadABIFile() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -52,6 +52,7 @@ type Generation2 struct { // TODO rename to Message
 type generation struct {
 	EntityType EntityType  `json:"entityType,omitempty"`
 	EntityName string      `json:"entityName,omitempty"`
+	Account    string      `json:"account,omitempty"`
 	CeType     string      `json:"ce_type,omitempty"`
 	CeId       []byte      `json:"ce_id,omitempty"`
 	Key        string      `json:"key,omitempty"`
@@ -61,6 +62,13 @@ type generation struct {
 type DecodeDBOp func(in *pbcodec.DBOp, blockNum uint32) (decodedDBOps *decodedDBOp, err error)
 
 type ExtractKey func(*pbcodec.DBOp) string
+
+func (g *generation) asCodecId() CodecId {
+	return CodecId{
+		Account: g.Account,
+		Name:    g.EntityName,
+	}
+}
 
 // normalizeName return a 13 dotted string when the name value is empty otherwise it returns the given name
 func normalizeName(name string) string {
@@ -105,7 +113,7 @@ func (tg TableGenerator) Apply(gc ActionContext) (generations []Generation2, err
 		return
 	}
 	for _, g := range gens {
-		codec, err := tg.abiCodec.GetCodec(g.EntityName, gc.block.Number)
+		codec, err := tg.abiCodec.GetCodec(g.asCodecId(), gc.block.Number)
 		if err != nil {
 			return nil, err
 		}
@@ -167,6 +175,7 @@ func (tg TableGenerator) doApply(gc ActionContext) ([]generation, error) {
 			Value:      value,
 			EntityType: Table,
 			EntityName: dbOp.TableName,
+			Account:    dbOp.Code,
 		}
 		zlog.Debug("generated table message", zap.Any("generation", generation))
 		generations = append(generations, generation)
@@ -187,7 +196,7 @@ func (ag ActionGenerator2) Apply(gc ActionContext) ([]Generation2, error) {
 	}
 	if len(gens) > 0 {
 		g := gens[0]
-		codec, err := ag.abiCodec.GetCodec(g.EntityName, gc.block.Number)
+		codec, err := ag.abiCodec.GetCodec(g.asCodecId(), gc.block.Number)
 		if err != nil {
 			return nil, err
 		}
@@ -256,6 +265,7 @@ func (ag ActionGenerator2) doApply(gc ActionContext) ([]generation, error) {
 		Value:      value,
 		EntityType: Action,
 		EntityName: actionName,
+		Account:    gc.actionTrace.Account(),
 	}}, nil
 }
 

@@ -284,6 +284,9 @@ $ make test-avro-generation
 ```
 If there is no error then your schema should be valid for a production integration ;)
 
+#### improvement 
+* Use testify: https://github.com/stretchr/testify
+
 ### Run
 There is several launcher in the `Makefile` and multiple variables can be overridden. 
 Please have look to the `Makefile` for more details.

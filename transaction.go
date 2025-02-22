@@ -313,15 +313,14 @@ type transactionGenerator struct {
 }
 
 func (t transactionGenerator) Apply(genContext TransactionContext) ([]*kafka.Message, error) {
-
 	transactionMap := newTransactionMap(genContext.transaction)
-	codec, err := t.abiCodec.GetCodec(transactionNotification, 0)
+	codec, err := t.abiCodec.GetCodec(transactionSchema.AsCodecId(), 0)
 	if err != nil {
 		return nil, fmt.Errorf("transactionGenerator.Apply() fail to get codec for %s: %w", transactionNotification, err)
 	}
 	value, err := codec.Marshal(nil, transactionMap)
 	if err != nil {
-		return nil, fmt.Errorf("transactionGenerator.Apply() fail to marshal %s: %w", dkafkaCheckpoint, err)
+		return nil, fmt.Errorf("transactionGenerator.Apply() fail to marshal %s: %w", transactionNotification, err)
 	}
 	transactionIdBytes := []byte(genContext.transaction.Id)
 	headers := append(t.headers,

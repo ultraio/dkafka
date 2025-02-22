@@ -79,7 +79,7 @@ func (s *FastKafkaSender) SaveCP(ctx context.Context, location location) error {
 		zap.Stringer("cursor_LIB", c.LIB),
 	)
 	checkpoint := newCheckpointMap(c, location.time())
-	codec, err := s.abiCodec.GetCodec(dkafkaCheckpoint, 0)
+	codec, err := s.abiCodec.GetCodec(CheckpointSchema.AsCodecId(), 0)
 	if err != nil {
 		return fmt.Errorf("SaveCP() fail to get codec for %s: %w", dkafkaCheckpoint, err)
 	}
