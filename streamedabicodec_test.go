@@ -8,6 +8,7 @@ import (
 
 	pbabicodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/abicodec/v1"
 	"github.com/eoscanada/eos-go"
+	"github.com/go-test/deep"
 	"github.com/riferrei/srclient"
 	pbbstream "github.com/streamingfast/pbgo/dfuse/bstream/v1"
 	"google.golang.org/grpc"
@@ -128,8 +129,10 @@ func TestDfuseAbiRepository_GetAbi(t *testing.T) {
 				blockNum: 101,
 			},
 			want: &ABI{
-				ABI:         &eos.ABI{Version: "1.2.3"},
-				AbiBlockNum: 42,
+				ABI:          &eos.ABI{Version: "1.2.3"},
+				Account:      "test",
+				AbiBlockNum:  42,
+				Irreversible: true,
 			},
 			wantErr: false,
 		},
@@ -180,7 +183,7 @@ func TestDfuseAbiRepository_IsNOOP(t *testing.T) {
 
 func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 	type args struct {
-		abi      *eos.ABI
+		abi      ABI
 		blockNum uint32
 		step     pbbstream.ForkStep
 	}
@@ -192,296 +195,426 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 	}{
 		{
 			name: "empty-irreversible",
-			sut:  &StreamedAbiCodec{},
+			sut: &StreamedAbiCodec{
+				latestABIs:   make(map[string]*ABI),
+				abiHistories: make(map[string][]*ABI),
+				codecCache:   make(map[CodecId]Codec),
+			},
 			args: args{
-				abi:      &eos.ABI{Version: "123"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: true,
+				},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_IRREVERSIBLE,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "123"},
-					blockNum:     42,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: true,
 				},
+				},
+				abiHistories: make(map[string][]*ABI),
+				codecCache:   make(map[CodecId]Codec),
 			},
 		},
 		{
 			name: "empty-new",
-			sut:  &StreamedAbiCodec{},
+			sut: &StreamedAbiCodec{
+				latestABIs:   make(map[string]*ABI),
+				abiHistories: make(map[string][]*ABI),
+				codecCache:   make(map[CodecId]Codec),
+			},
 			args: args{
-				abi:      &eos.ABI{Version: "123"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
+				},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_NEW,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "123"},
-					blockNum:     42,
-					irreversible: false,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
 				},
+				},
+				abiHistories: make(map[string][]*ABI),
+				codecCache:   make(map[CodecId]Codec),
 			},
 		},
 		{
 			name: "not-empty-irreversible",
 			sut: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     42,
-					irreversible: false,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
 				},
-				abiHistory: []*AbiItem{{abi: &eos.ABI{Version: "123"},
-					blockNum:     1,
-					irreversible: true,
-				}},
+				},
+				abiHistories: map[string][]*ABI{"eosio": {{ABI: &eos.ABI{Version: "123"},
+					AbiBlockNum:  1,
+					Irreversible: true,
+					Account:      "eosio",
+				}}},
+				codecCache: make(map[CodecId]Codec),
 			},
 			args: args{
-				abi:      &eos.ABI{Version: "456"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: true,
+				},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_IRREVERSIBLE,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     42,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Irreversible: true,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {{
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  1,
+					Irreversible: true,
+					Account:      "eosio",
+				},
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
-					},
-					{
-						abi:          &eos.ABI{Version: "456"},
-						blockNum:     42,
-						irreversible: false,
+						ABI:          &eos.ABI{Version: "456"},
+						AbiBlockNum:  42,
+						Irreversible: false,
+						Account:      "eosio",
 					},
 				},
+				},
+				codecCache: make(map[CodecId]Codec),
 			},
 		},
 		{
 			name: "irreversible-compaction",
 			sut: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     42,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Irreversible: true,
+					Account:      "eosio",
+				}},
+				abiHistories: map[string][]*ABI{"eosio": {{
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  1,
+					Irreversible: true,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "456"},
+						AbiBlockNum:  42,
+						Irreversible: false,
+						Account:      "eosio",
 					},
-					{
-						abi:          &eos.ABI{Version: "456"},
-						blockNum:     42,
-						irreversible: false,
-					},
+				},
 				},
 			},
 			args: args{
-				abi:      &eos.ABI{Version: "789"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "789"},
+					AbiBlockNum:  64,
+					Account:      "eosio",
+					Irreversible: false,
+				},
 				blockNum: 64,
 				step:     pbbstream.ForkStep_STEP_NEW,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "789"},
-					blockNum:     64,
-					irreversible: false,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "789"},
+					AbiBlockNum:  64,
+					Irreversible: false,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {{
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  1,
+					Irreversible: true,
+					Account:      "eosio",
+				},
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "456"},
+						AbiBlockNum:  42,
+						Irreversible: true,
+						Account:      "eosio",
 					},
-					{
-						abi:          &eos.ABI{Version: "456"},
-						blockNum:     42,
-						irreversible: true,
-					},
+				},
 				},
 			},
 		},
 		{
 			name: "irreversible-only",
 			sut: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     42,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Irreversible: true,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
-					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
-					},
+				},
+				abiHistories: map[string][]*ABI{"eosio": {{
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  1,
+					Irreversible: true,
+					Account:      "eosio",
+				},
+				},
 				},
 			},
 			args: args{
-				abi:      &eos.ABI{Version: "789"},
+				// abi:      &eos.ABI{Version: "789"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "789"},
+					AbiBlockNum:  64,
+					Account:      "eosio",
+					Irreversible: true,
+				},
 				blockNum: 64,
 				step:     pbbstream.ForkStep_STEP_IRREVERSIBLE,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "789"},
-					blockNum:     64,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "789"},
+					AbiBlockNum:  64,
+					Irreversible: true,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "123"},
+						AbiBlockNum:  1,
+						Irreversible: true,
+						Account:      "eosio",
 					},
 					{
-						abi:          &eos.ABI{Version: "456"},
-						blockNum:     42,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "456"},
+						AbiBlockNum:  42,
+						Irreversible: true,
+						Account:      "eosio",
 					},
+				},
 				},
 			},
 		},
 		{
 			name: "undo",
 			sut: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     42,
-					irreversible: false,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Irreversible: false,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "123"},
+						AbiBlockNum:  1,
+						Irreversible: true,
+						Account:      "eosio",
 					},
+				},
 				},
 			},
 			args: args{
-				abi:      &eos.ABI{Version: "456"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
+				},
+
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNDO,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "123"},
-					blockNum:     1,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  1,
+					Irreversible: true,
+					Account:      "eosio",
 				},
+				},
+				abiHistories: make(map[string][]*ABI),
 			},
 		},
 		{
 			name: "unknown",
 			sut: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     42,
-					irreversible: false,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Irreversible: false,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "123"},
+						AbiBlockNum:  1,
+						Irreversible: true,
+						Account:      "eosio",
 					},
+				},
 				},
 			},
 			args: args{
-				abi:      &eos.ABI{Version: "456"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
+				},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNKNOWN,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     42,
-					irreversible: false,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Irreversible: false,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "123"},
+						AbiBlockNum:  1,
+						Irreversible: true,
+						Account:      "eosio",
 					},
+				},
 				},
 			},
 		},
 		{
 			name: "undo-empty",
-			sut:  &StreamedAbiCodec{},
-			args: args{
-				abi:      &eos.ABI{Version: "456"},
-				blockNum: 42,
-				step:     pbbstream.ForkStep_STEP_UNDO,
-			},
-			want: &StreamedAbiCodec{},
-		},
-		{
-			name: "undo-gt-latest",
 			sut: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "123"},
-					blockNum:     24,
-					irreversible: true,
-				},
+				latestABIs:   make(map[string]*ABI),
+				abiHistories: make(map[string][]*ABI),
 			},
 			args: args{
-				abi:      &eos.ABI{Version: "456"},
+				// abi:      &eos.ABI{Version: "456"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
+				},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNDO,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "123"},
-					blockNum:     24,
-					irreversible: true,
+				latestABIs:   make(map[string]*ABI),
+				abiHistories: make(map[string][]*ABI),
+			},
+		},
+		{
+			name: "undo-gt-latest",
+			sut: &StreamedAbiCodec{
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  24,
+					Irreversible: true,
+					Account:      "eosio",
 				},
+				},
+				abiHistories: make(map[string][]*ABI),
+			},
+			args: args{
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
+				},
+				blockNum: 42,
+				step:     pbbstream.ForkStep_STEP_UNDO,
+			},
+			want: &StreamedAbiCodec{
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "123"},
+					AbiBlockNum:  24,
+					Irreversible: true,
+					Account:      "eosio",
+				},
+				},
+				abiHistories: make(map[string][]*ABI),
 			},
 		},
 		{
 			name: "undo-long-history",
 			sut: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "789"},
-					blockNum:     42,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "789"},
+					AbiBlockNum:  42,
+					Irreversible: false,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "123"},
+						AbiBlockNum:  1,
+						Irreversible: true,
+						Account:      "eosio",
 					},
 					{
-						abi:          &eos.ABI{Version: "456"},
-						blockNum:     24,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "456"},
+						AbiBlockNum:  24,
+						Irreversible: true,
+						Account:      "eosio",
 					},
+				},
 				},
 			},
 			args: args{
-				abi:      &eos.ABI{Version: "789"},
+				// abi:      &eos.ABI{Version: "789"},
+				abi: ABI{
+					ABI:          &eos.ABI{Version: "789"},
+					AbiBlockNum:  42,
+					Account:      "eosio",
+					Irreversible: false,
+				},
 				blockNum: 42,
 				step:     pbbstream.ForkStep_STEP_UNDO,
 			},
 			want: &StreamedAbiCodec{
-				latestABI: &AbiItem{
-					abi:          &eos.ABI{Version: "456"},
-					blockNum:     24,
-					irreversible: true,
+				latestABIs: map[string]*ABI{"eosio": {
+					ABI:          &eos.ABI{Version: "456"},
+					AbiBlockNum:  24,
+					Irreversible: true,
+					Account:      "eosio",
 				},
-				abiHistory: []*AbiItem{
+				},
+				abiHistories: map[string][]*ABI{"eosio": {
 					{
-						abi:          &eos.ABI{Version: "123"},
-						blockNum:     1,
-						irreversible: true,
+						ABI:          &eos.ABI{Version: "123"},
+						AbiBlockNum:  1,
+						Irreversible: true,
+						Account:      "eosio",
 					},
+				},
 				},
 			},
 		},
@@ -489,30 +622,13 @@ func TestStreamedABICodec_doUpdateABI(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.sut.doUpdateABI(tt.args.abi, tt.args.blockNum, tt.args.step)
-			assertEqual(t, tt.sut, tt.want)
+			// assertEqual(t, tt.sut, tt.want)
+			deep.CompareUnexportedFields = true
+			if diff := deep.Equal(tt.sut, tt.want); diff != nil {
+				t.Error(diff)
+			}
 		})
 	}
-}
-
-func assertEqual(t *testing.T, actual, expected *StreamedAbiCodec) {
-	if !reflect.DeepEqual(actual, expected) {
-		equal := assertFieldsEqual(t, "abiHistory", actual.abiHistory, expected.abiHistory) &&
-			assertFieldsEqual(t, "latestABI.abi", actual.latestABI.abi, expected.latestABI.abi) &&
-			assertFieldsEqual(t, "latestABI.blockNum", actual.latestABI.blockNum, expected.latestABI.blockNum) &&
-			assertFieldsEqual(t, "latestABI.irreversible", actual.latestABI.irreversible, expected.latestABI.irreversible)
-		if equal {
-			// the test above did detect the diff use default solution
-			t.Errorf("doUpdateABI() = %v, want %v", actual, expected)
-		}
-	}
-}
-
-func assertFieldsEqual(t *testing.T, path string, actual, expected interface{}) bool {
-	if !reflect.DeepEqual(actual, expected) {
-		t.Errorf("%s:\nactual = %v\nwant   = %v", path, actual, expected)
-		return false
-	}
-	return true
 }
 
 type AbiRepositoryStub struct {
@@ -579,7 +695,7 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 		Source:    "test",
 	}
 	type args struct {
-		name     string
+		name     CodecId
 		blockNum uint32
 	}
 	tests := []struct {
@@ -593,18 +709,18 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 			name: "cached-codec",
 			sut: &StreamedAbiCodec{
 				bootstrapper: nil,
-				latestABI:    nil,
-				abiHistory:   nil,
+				latestABIs:   make(map[string]*ABI),
+				abiHistories: make(map[string][]*ABI),
 				getSchema: func(string, *ABI) (MessageSchema, error) {
 					return MessageSchema{}, nil
 				},
 				schemaRegistryClient: nil,
 				account:              "test",
-				codecCache:           map[string]Codec{"TestTable": dummyCodec},
+				codecCache:           map[CodecId]Codec{{"eosio.nft.ft", "TestTable"}: dummyCodec},
 				schemaRegistryURL:    "http://localhost:8083",
 			},
 			args: args{
-				name:     "TestTable",
+				name:     CodecId{"eosio.nft.ft", "TestTable"},
 				blockNum: 42,
 			},
 			want:    dummyCodec,
@@ -617,18 +733,18 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 					abi: nil,
 					err: fmt.Errorf("bootstrap-abi-error"),
 				},
-				latestABI:  nil,
-				abiHistory: nil,
+				latestABIs:   make(map[string]*ABI),
+				abiHistories: make(map[string][]*ABI),
 				getSchema: func(string, *ABI) (MessageSchema, error) {
 					return MessageSchema{}, nil
 				},
 				schemaRegistryClient: nil,
 				account:              "test",
-				codecCache:           map[string]Codec{},
+				codecCache:           map[CodecId]Codec{},
 				schemaRegistryURL:    "http://localhost:8083",
 			},
 			args: args{
-				name:     "TestTable",
+				name:     CodecId{"eosio.nft.ft", "TestTable"},
 				blockNum: 42,
 			},
 			want:    nil,
@@ -647,7 +763,7 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 				"mock://TestKafkaAvroABICodec_GetCodec",
 			),
 			args: args{
-				name:     dkafkaCheckpoint,
+				name:     CheckpointSchema.AsCodecId(),
 				blockNum: 42,
 			},
 			want: &KafkaAvroCodec{
@@ -674,14 +790,14 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 				"mock://TestKafkaAvroABICodec_GetCodec",
 			),
 			args: args{
-				name:     "factory.a",
+				name:     CodecId{"eosio.nft.ft", "factory.a"},
 				blockNum: 42,
 			},
 			want: &KafkaAvroCodec{
 				schemaURLTemplate: "mock://TestKafkaAvroABICodec_GetCodec/schemas/ids/%d",
 				schema: RegisteredSchema{
 					id:      2,
-					schema:  "{\"type\":\"record\",\"name\":\"FactoryATableNotification\",\"namespace\":\"test\",\"fields\":[{\"name\":\"context\",\"type\":{\"type\":\"record\",\"name\":\"NotificationContext\",\"namespace\":\"io.dkafka\",\"fields\":[{\"name\":\"block_num\",\"type\":\"long\"},{\"name\":\"block_id\",\"type\":\"string\"},{\"name\":\"status\",\"type\":\"string\"},{\"name\":\"executed\",\"type\":\"boolean\"},{\"name\":\"block_step\",\"type\":\"string\"},{\"name\":\"correlation\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"Correlation\",\"namespace\":\"io.dkafka\",\"fields\":[{\"name\":\"payer\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"string\"}]}],\"default\":null},{\"name\":\"trx_id\",\"type\":\"string\"},{\"name\":\"time\",\"type\":{\"eos.type\":\"block_timestamp_type\",\"logicalType\":\"timestamp-millis\",\"type\":\"long\"}},{\"name\":\"cursor\",\"type\":\"string\"}]}},{\"name\":\"action\",\"type\":{\"type\":\"record\",\"name\":\"ActionInfoBasic\",\"namespace\":\"io.dkafka\",\"fields\":[{\"name\":\"account\",\"type\":\"string\"},{\"name\":\"receiver\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"global_seq\",\"type\":\"long\"},{\"name\":\"authorizations\",\"type\":{\"type\":\"array\",\"items\":\"string\"}},{\"name\":\"action_ordinal\",\"type\":\"long\"},{\"name\":\"creator_action_ordinal\",\"type\":\"long\"},{\"name\":\"closest_unnotified_ancestor_action_ordinal\",\"type\":\"long\"},{\"name\":\"execution_index\",\"type\":\"long\"}]}},{\"name\":\"db_op\",\"type\":{\"type\":\"record\",\"name\":\"FactoryATableOpInfo\",\"fields\":[{\"name\":\"operation\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"action_index\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"index\",\"type\":\"int\"},{\"name\":\"code\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"scope\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"table_name\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"primary_key\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"old_payer\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"new_payer\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"old_data\",\"type\":[\"null\",\"bytes\"],\"default\":null},{\"name\":\"new_data\",\"type\":[\"null\",\"bytes\"],\"default\":null},{\"name\":\"old_json\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"FactoryATableOp\",\"fields\":[{\"name\":\"id\",\"type\":{\"eos.type\":\"uint64\",\"logicalType\":\"eos.uint64\",\"type\":\"long\"}},{\"name\":\"asset_manager\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"asset_creator\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"conversion_rate_oracle_contract\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"chosen_rate\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Asset\",\"namespace\":\"eosio\",\"convert\":\"eosio.Asset\",\"fields\":[{\"name\":\"amount\",\"type\":{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":32,\"scale\":8}},{\"name\":\"symbol\",\"type\":\"string\"},{\"name\":\"precision\",\"type\":\"int\"}]}}},{\"name\":\"minimum_resell_price\",\"type\":\"eosio.Asset\"},{\"name\":\"resale_shares\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"ResaleShare\",\"fields\":[{\"name\":\"receiver\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"basis_point\",\"type\":{\"eos.type\":\"uint16\",\"type\":\"int\"}}]}}},{\"name\":\"mintable_window_start\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"mintable_window_end\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"trading_window_start\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"trading_window_end\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"recall_window_start\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"recall_window_end\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"lockup_time\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"conditionless_receivers\",\"type\":{\"type\":\"array\",\"items\":{\"eos.type\":\"name\",\"type\":\"string\"}}},{\"name\":\"stat\",\"type\":{\"eos.type\":\"uint8\",\"type\":\"int\"}},{\"name\":\"meta_uris\",\"type\":{\"type\":\"array\",\"items\":{\"eos.type\":\"string\",\"type\":\"string\"}}},{\"name\":\"meta_hash\",\"type\":{\"eos.type\":\"checksum256\",\"type\":\"bytes\"}},{\"name\":\"max_mintable_tokens\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"minted_tokens_no\",\"type\":{\"eos.type\":\"uint32\",\"type\":\"long\"}},{\"name\":\"existing_tokens_no\",\"type\":{\"eos.type\":\"uint32\",\"type\":\"long\"}}]}],\"default\":null},{\"name\":\"new_json\",\"type\":[\"null\",\"FactoryATableOp\"],\"default\":null}]}}],\"meta\":{\"compatibility\":\"FORWARD\",\"type\":\"notification\",\"version\":\"0.1.0\",\"source\":\"test\",\"domain\":\"eosio.nft.ft\"}}",
+					schema:  "{\"type\":\"record\",\"name\":\"FactoryATableNotification\",\"namespace\":\"test.eosio.nft.ft.tables.v0\",\"fields\":[{\"name\":\"context\",\"type\":{\"type\":\"record\",\"name\":\"NotificationContext\",\"namespace\":\"io.dkafka\",\"fields\":[{\"name\":\"block_num\",\"type\":\"long\"},{\"name\":\"block_id\",\"type\":\"string\"},{\"name\":\"status\",\"type\":\"string\"},{\"name\":\"executed\",\"type\":\"boolean\"},{\"name\":\"block_step\",\"type\":\"string\"},{\"name\":\"correlation\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"Correlation\",\"namespace\":\"io.dkafka\",\"fields\":[{\"name\":\"payer\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"string\"}]}],\"default\":null},{\"name\":\"trx_id\",\"type\":\"string\"},{\"name\":\"time\",\"type\":{\"eos.type\":\"block_timestamp_type\",\"logicalType\":\"timestamp-millis\",\"type\":\"long\"}},{\"name\":\"cursor\",\"type\":\"string\"}]}},{\"name\":\"action\",\"type\":{\"type\":\"record\",\"name\":\"ActionInfoBasic\",\"namespace\":\"io.dkafka\",\"fields\":[{\"name\":\"account\",\"type\":\"string\"},{\"name\":\"receiver\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"global_seq\",\"type\":\"long\"},{\"name\":\"authorizations\",\"type\":{\"type\":\"array\",\"items\":\"string\"}},{\"name\":\"action_ordinal\",\"type\":\"long\"},{\"name\":\"creator_action_ordinal\",\"type\":\"long\"},{\"name\":\"closest_unnotified_ancestor_action_ordinal\",\"type\":\"long\"},{\"name\":\"execution_index\",\"type\":\"long\"}]}},{\"name\":\"db_op\",\"type\":{\"type\":\"record\",\"name\":\"FactoryATableOpInfo\",\"fields\":[{\"name\":\"operation\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"action_index\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"index\",\"type\":\"int\"},{\"name\":\"code\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"scope\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"table_name\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"primary_key\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"old_payer\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"new_payer\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"old_data\",\"type\":[\"null\",\"bytes\"],\"default\":null},{\"name\":\"new_data\",\"type\":[\"null\",\"bytes\"],\"default\":null},{\"name\":\"old_json\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"FactoryATableOp\",\"fields\":[{\"name\":\"id\",\"type\":{\"eos.type\":\"uint64\",\"logicalType\":\"eos.uint64\",\"type\":\"long\"}},{\"name\":\"asset_manager\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"asset_creator\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"conversion_rate_oracle_contract\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"chosen_rate\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Asset\",\"namespace\":\"eosio\",\"convert\":\"eosio.Asset\",\"fields\":[{\"name\":\"amount\",\"type\":{\"type\":\"bytes\",\"logicalType\":\"decimal\",\"precision\":32,\"scale\":8}},{\"name\":\"symbol\",\"type\":\"string\"},{\"name\":\"precision\",\"type\":\"int\"}]}}},{\"name\":\"minimum_resell_price\",\"type\":\"eosio.Asset\"},{\"name\":\"resale_shares\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"ResaleShare\",\"fields\":[{\"name\":\"receiver\",\"type\":{\"eos.type\":\"name\",\"type\":\"string\"}},{\"name\":\"basis_point\",\"type\":{\"eos.type\":\"uint16\",\"type\":\"int\"}}]}}},{\"name\":\"mintable_window_start\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"mintable_window_end\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"trading_window_start\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"trading_window_end\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"recall_window_start\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"recall_window_end\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"lockup_time\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"conditionless_receivers\",\"type\":{\"type\":\"array\",\"items\":{\"eos.type\":\"name\",\"type\":\"string\"}}},{\"name\":\"stat\",\"type\":{\"eos.type\":\"uint8\",\"type\":\"int\"}},{\"name\":\"meta_uris\",\"type\":{\"type\":\"array\",\"items\":{\"eos.type\":\"string\",\"type\":\"string\"}}},{\"name\":\"meta_hash\",\"type\":{\"eos.type\":\"checksum256\",\"type\":\"bytes\"}},{\"name\":\"max_mintable_tokens\",\"type\":[\"null\",{\"eos.type\":\"uint32\",\"type\":\"long\"}],\"default\":null},{\"name\":\"minted_tokens_no\",\"type\":{\"eos.type\":\"uint32\",\"type\":\"long\"}},{\"name\":\"existing_tokens_no\",\"type\":{\"eos.type\":\"uint32\",\"type\":\"long\"}}]}],\"default\":null},{\"name\":\"new_json\",\"type\":[\"null\",\"FactoryATableOp\"],\"default\":null}]}}],\"meta\":{\"compatibility\":\"FORWARD\",\"type\":\"notification\",\"version\":\"0.1.0\",\"source\":\"test\",\"domain\":\"eosio.nft.ft\"}}",
 					version: 1,
 				},
 			},
@@ -699,10 +815,10 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 			expectedAvroCodec, ok := tt.want.(*KafkaAvroCodec)
 			if ok {
 				actualAvroCodec := got.(KafkaAvroCodec)
-				assertFieldsEqual(t, "KafkaAvroCodec.schemaURLTemplate", actualAvroCodec.schemaURLTemplate, expectedAvroCodec.schemaURLTemplate)
-				assertFieldsEqual(t, "KafkaAvroCodec.schema.id", actualAvroCodec.schema.id, expectedAvroCodec.schema.id)
-				assertFieldsEqual(t, "KafkaAvroCodec.schema.schema", actualAvroCodec.schema.schema, expectedAvroCodec.schema.schema)
-				assertFieldsEqual(t, "KafkaAvroCodec.schema.version", actualAvroCodec.schema.version, expectedAvroCodec.schema.version)
+				deep.CompareUnexportedFields = true
+				if diff := deep.Equal(expectedAvroCodec, &actualAvroCodec); diff != nil {
+					t.Error(diff)
+				}
 				if actualAvroCodec.schema.codec == nil {
 					t.Error("KafkaAvroCodec.schema.codec should not be nil")
 				}

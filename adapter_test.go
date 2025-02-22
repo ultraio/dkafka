@@ -321,7 +321,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 				abiCodecCli: abiDecoder.abiCodecCli,
 				context:     abiDecoder.context,
 			}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), msg.Account, "mock://bench-adapter")
-			abiCodec.GetCodec("factory.a", 0)
+			abiCodec.GetCodec(CodecId{"eosio.nft.ft", "factory.a"}, 0)
 			finder, _ := buildTableKeyExtractorFinder([]string{"factory.a:k"})
 			adp = &CdCAdapter{
 				topic:     "test.topic",
@@ -353,7 +353,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 				abiCodecCli: abiDecoder.abiCodecCli,
 				context:     abiDecoder.context,
 			}, msg.getActionSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), msg.Account, "mock://bench-adapter")
-			abiCodec.GetCodec("create", 0)
+			abiCodec.GetCodec(CodecId{"eosio.nft.ft", "create"}, 0)
 			adp = &CdCAdapter{
 				topic:     "test.topic",
 				saveBlock: saveBlockNoop,

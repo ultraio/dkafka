@@ -48,7 +48,7 @@ func (a *DfuseAbiRepository) GetAbi(contract string, blockNum uint32) (*ABI, err
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode abi for contract %q: %w", contract, err)
 	}
-	var abi = ABI{eosAbi, resp.AbiBlockNum}
+	var abi = ABI{eosAbi, resp.AbiBlockNum, contract, true}
 	zlog.Info("new ABI loaded", zap.String("contract", contract), zap.Uint32("block_num", blockNum), zap.Uint32("abi_block_num", abi.AbiBlockNum))
 	return &abi, nil
 }
@@ -57,21 +57,18 @@ func (a *DfuseAbiRepository) IsNOOP() bool {
 	return a.overrides == nil && a.abiCodecCli == nil
 }
 
-// TODO converge AbiItem with dkafka.ABI
-type AbiItem struct {
-	abi          *eos.ABI
-	blockNum     uint32
-	irreversible bool
+func (a CodecId) String() string {
+	return fmt.Sprintf("%v::%v", a.Account, a.Name)
 }
 
 type StreamedAbiCodec struct {
 	bootstrapper         AbiRepository
-	latestABI            *AbiItem
-	abiHistory           []*AbiItem
+	latestABIs           map[string]*ABI
+	abiHistories         map[string][]*ABI
 	getSchema            MessageSchemaSupplier
 	schemaRegistryClient srclient.ISchemaRegistryClient
 	account              string
-	codecCache           map[string]Codec
+	codecCache           map[CodecId]Codec
 	schemaRegistryURL    string
 	staticSchemas        []MessageSchema
 }
@@ -132,6 +129,9 @@ func newStreamedAbiCodec(
 		account:              account,
 		schemaRegistryURL:    schemaRegistryURL,
 		staticSchemas:        staticSchemas,
+		latestABIs:           make(map[string]*ABI),
+		abiHistories:         make(map[string][]*ABI),
+		codecCache:           make(map[CodecId]Codec),
 	}
 	codec.resetCodecs()
 	return codec
@@ -141,41 +141,40 @@ func (s *StreamedAbiCodec) IsNOOP() bool {
 	return s.bootstrapper.IsNOOP()
 }
 
-func (s *StreamedAbiCodec) GetCodec(name string, blockNum uint32) (Codec, error) {
-	if codec, found := s.codecCache[name]; found {
+func (s *StreamedAbiCodec) GetCodec(codecId CodecId, blockNum uint32) (Codec, error) {
+
+	if codec, found := s.codecCache[codecId]; found {
 		return codec, nil
 	}
-	abi, err := s.getLatestAbi(blockNum)
+	abi, err := s.getLatestAbi(codecId.Account, blockNum)
 	if err != nil {
-		return nil, fmt.Errorf("cannot get ABI for codec: %s, error: %w", name, err)
+		return nil, fmt.Errorf("cannot get ABI for codec: %s, error: %w", codecId, err)
 	}
-	zlog.Debug("create schema from abi", zap.Uint32("block_num", blockNum), zap.Uint32("abi_block_num", abi.blockNum), zap.String("entry", name))
-	messageSchema, err := s.getSchema(name, &ABI{abi.abi, abi.blockNum})
+	zlog.Debug("create schema from abi", zap.Uint32("block_num", blockNum), zap.Uint32("abi_block_num", abi.AbiBlockNum), zap.Stringer("entry", codecId))
+	messageSchema, err := s.getSchema(codecId.Name, abi)
 	if err != nil {
-		return nil, fmt.Errorf("fail to generate schema: %s, from ABI at block: %d, abi_block: %d, error: %w", name, blockNum, abi.blockNum, err)
+		return nil, fmt.Errorf("fail to generate schema: %s, from ABI at block: %d, abi_block: %d, error: %w", codecId, blockNum, abi.AbiBlockNum, err)
 	}
 	codec, err := s.newCodec(messageSchema)
 	if err != nil {
-		return nil, fmt.Errorf("KafkaAvroABICodec.GetCodec fail to create codec for schema %s, error: %w", messageSchema.Name, err)
+		return nil, fmt.Errorf("StreamedAbiCodec.newCodec fail to create codec for schema %s, error: %w", messageSchema.Name, err)
 	}
-	zlog.Debug("register codec into cache", zap.String("name", name))
-	s.codecCache[name] = codec
+	zlog.Debug("register codec into cache", zap.Stringer("name", codecId))
+	s.codecCache[codecId] = codec
 	return codec, nil
 }
 
-func (s *StreamedAbiCodec) getLatestAbi(blockNum uint32) (*AbiItem, error) {
-	if s.latestABI == nil {
-		if bootstrapAbi, err := s.bootstrapper.GetAbi(s.account, blockNum); err != nil {
-			return nil, fmt.Errorf("fail to bootstrap ABI at block: %d, error: %w", blockNum, err)
+func (s *StreamedAbiCodec) getLatestAbi(account string, blockNum uint32) (latestAbi *ABI, err error) {
+	var found = false
+	if latestAbi, found = s.latestABIs[account]; !found {
+		if bootstrapAbi, er := s.bootstrapper.GetAbi(account, blockNum); er != nil {
+			err = fmt.Errorf("fail to bootstrap ABI at block: %d, error: %w", blockNum, err)
 		} else {
-			s.latestABI = &AbiItem{
-				abi:          bootstrapAbi.ABI,
-				blockNum:     bootstrapAbi.AbiBlockNum,
-				irreversible: true,
-			}
+			latestAbi = bootstrapAbi
+			s.latestABIs[account] = latestAbi
 		}
 	}
-	return s.latestABI, nil
+	return
 }
 
 func (s *StreamedAbiCodec) DecodeDBOp(in *pbcodec.DBOp, blockNum uint32) (decoded *decodedDBOp, err error) {
@@ -185,11 +184,11 @@ func (s *StreamedAbiCodec) DecodeDBOp(in *pbcodec.DBOp, blockNum uint32) (decode
 }
 
 func (s *StreamedAbiCodec) decodeDBOp(op *decodedDBOp, blockNum uint32) error {
-	latestAbi, err := s.getLatestAbi(blockNum)
+	latestAbi, err := s.getLatestAbi(op.Code, blockNum)
 	if err != nil {
 		return fmt.Errorf("fail to get ABI for decoding dbop in block: %d, error: %w", blockNum, err)
 	}
-	abi := latestAbi.abi
+	abi := latestAbi
 	tableDef := abi.TableForName(eos.TableName(op.TableName))
 	if tableDef == nil {
 		return fmt.Errorf("table %s not present in ABI for contract %s at block: %d", op.TableName, op.Code, blockNum)
@@ -219,59 +218,69 @@ func (s *StreamedAbiCodec) UpdateABI(blockNum uint32, step pbbstream.ForkStep, t
 		return fmt.Errorf("fail to decode abi error: %w", err)
 	}
 	s.resetCodecs()
-	s.doUpdateABI(abi, blockNum, step)
+
+	s.doUpdateABI(ABI{
+		ABI:          abi,
+		AbiBlockNum:  blockNum,
+		Account:      actionTrace.GetData("account").String(),
+		Irreversible: (step == pbbstream.ForkStep_STEP_UNDO),
+	}, blockNum, step)
 	return err
 }
 
-func (s *StreamedAbiCodec) doUpdateABI(abi *eos.ABI, blockNum uint32, step pbbstream.ForkStep) {
+func (s *StreamedAbiCodec) doUpdateABI(abi ABI, blockNum uint32, step pbbstream.ForkStep) {
 	if step == pbbstream.ForkStep_STEP_UNKNOWN {
 		zlog.Warn("skip ABI update on unknown step", zap.Uint32("block_num", blockNum), zap.Int32("step", int32(step)))
 		return
 	}
 	if step == pbbstream.ForkStep_STEP_UNDO {
-		if s.latestABI == nil { // invalid state maybe should fail here
+		if latestAbi, found := s.latestABIs[abi.Account]; found {
+			if blockNum > latestAbi.AbiBlockNum { // must have been replaced by a irreversible compaction
+				zlog.Info("undo skipped as undo block > latest abi block", zap.Uint32("undo_block_num", blockNum), zap.Uint32("latest_block_num", latestAbi.AbiBlockNum))
+				return
+			}
+			zlog.Info("undo actual/latest ABI", zap.Uint32("undo_block_num", blockNum), zap.Uint32("latest_block_num", latestAbi.AbiBlockNum))
+			delete(s.latestABIs, abi.Account)
+			if abiHistory, found := s.abiHistories[abi.Account]; found {
+				if len(abiHistory) > 0 {
+					// pop from history
+					previousAbi := abiHistory[len(abiHistory)-1]
+					zlog.Info("pop previous ABI from history on undo", zap.Uint32("undo_block_num", blockNum), zap.Uint32("previous_block_num", previousAbi.AbiBlockNum))
+					s.latestABIs[abi.Account] = previousAbi
+					s.abiHistories[abi.Account] = abiHistory[:len(abiHistory)-1]
+					if len(s.abiHistories[abi.Account]) == 0 { // fix a testing compare issue
+						delete(s.abiHistories, abi.Account)
+					}
+				}
+			} else {
+				zlog.Info("nothing pop from history (empty) on undo", zap.Uint32("undo_block_num", blockNum))
+			}
+		} else {
 			zlog.Warn("undo skipped no latest abi", zap.Uint32("undo_block_num", blockNum))
 			return
 		}
-		if blockNum > s.latestABI.blockNum { // must have been replaced by a irreversible compaction
-			zlog.Info("undo skipped as undo block > latest abi block", zap.Uint32("undo_block_num", blockNum), zap.Uint32("latest_block_num", s.latestABI.blockNum))
-			return
-		}
-		zlog.Info("undo actual/latest ABI", zap.Uint32("undo_block_num", blockNum), zap.Uint32("latest_block_num", s.latestABI.blockNum))
-		s.latestABI = nil
-		if len(s.abiHistory) > 0 {
-			// pop from history
-			previousAbi := s.abiHistory[len(s.abiHistory)-1]
-			zlog.Info("pop previous ABI from history on undo", zap.Uint32("undo_block_num", blockNum), zap.Uint32("previous_block_num", previousAbi.blockNum))
-			s.latestABI = previousAbi
-			s.abiHistory = s.abiHistory[:len(s.abiHistory)-1]
-			if len(s.abiHistory) == 0 { // fix a testing compare issue
-				s.abiHistory = nil
-			}
-		} else {
-			zlog.Info("nothing pop from history (empty) on undo", zap.Uint32("undo_block_num", blockNum))
-		}
 	} else {
-		newAbiItem := &AbiItem{abi, blockNum, step == pbbstream.ForkStep_STEP_IRREVERSIBLE}
-		abiHistory := s.abiHistory
-		if s.latestABI != nil {
-			if len(abiHistory) > 0 && abiHistory[len(abiHistory)-1].blockNum == s.latestABI.blockNum {
-				s.abiHistory[len(abiHistory)-1] = s.latestABI
+		newAbiItem := &abi
+		abiHistory := s.abiHistories[abi.Account]
+		latestABI := s.latestABIs[abi.Account]
+		if latestABI != nil {
+			if len(abiHistory) > 0 && abiHistory[len(abiHistory)-1].AbiBlockNum == latestABI.AbiBlockNum {
+				abiHistory[len(abiHistory)-1] = latestABI
 			} else {
-				s.abiHistory = append(s.abiHistory, s.latestABI)
+				abiHistory = append(abiHistory, latestABI)
 			}
-
+			s.abiHistories[abi.Account] = abiHistory
 		}
-		s.latestABI = newAbiItem
+		s.latestABIs[abi.Account] = newAbiItem
 	}
 }
 
 func (s *StreamedAbiCodec) resetCodecs() {
 	zlog.Info("reset schema cache on reload static schema")
-	s.codecCache = s.initStaticSchemas(make(map[string]Codec))
+	s.codecCache = s.initStaticSchemas(make(map[CodecId]Codec))
 }
 
-func (s *StreamedAbiCodec) initStaticSchemas(cache map[string]Codec) map[string]Codec {
+func (s *StreamedAbiCodec) initStaticSchemas(cache map[CodecId]Codec) map[CodecId]Codec {
 	for i, schema := range s.staticSchemas {
 		zlog.Info("register static schema", zap.Int("index", i), zap.String("name", schema.Name))
 		s.registerStaticSchema(cache, schema)
@@ -279,13 +288,13 @@ func (s *StreamedAbiCodec) initStaticSchemas(cache map[string]Codec) map[string]
 	return cache
 }
 
-func (s *StreamedAbiCodec) registerStaticSchema(cache map[string]Codec, schema MessageSchema) {
+func (s *StreamedAbiCodec) registerStaticSchema(cache map[CodecId]Codec, schema MessageSchema) {
 	codec, err := s.newCodec(schema)
 	if err != nil {
 		zlog.Error("initStaticSchemas fail to create codec", zap.String("schema", schema.Name), zap.Error(err))
 		panic(fmt.Sprintf("initStaticSchemas fail to create codec %s", schema.Name))
 	}
-	cache[schema.Name] = codec
+	cache[schema.AsCodecId()] = codec
 }
 
 func (s *StreamedAbiCodec) setSubjectCompatibilityToForward(subject string) error {

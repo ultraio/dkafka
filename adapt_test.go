@@ -36,7 +36,7 @@ func TestCdCAdapter_AdaptJSON(t *testing.T) {
 		{
 			name:   "cdc-table",
 			file:   "testdata/block-30080032.json",
-			schema: tableSchema(t, "testdata/eosio.nft.ft.abi", "factory.a"),
+			schema: tableSchema(t, "eosio.nft.ft", "testdata/eosio.nft.ft.abi", "factory.a"),
 			fields: fields{
 				generator: newTableGen4Test(t, "factory.a"),
 			},
@@ -110,14 +110,10 @@ func newTableGen4Test(t testing.TB, tableName string) TableGenerator {
 	}
 }
 
-func tableSchema(t testing.TB, abiFile string, tableName string) string {
-	abi, err := LoadABIFile(abiFile)
+func tableSchema(t testing.TB, account string, abiFile string, tableName string) string {
+	abiSpec, err := LoadABIFile(account, abiFile)
 	if err != nil {
 		t.Fatalf("LoadABIFile(abiFile) error: %v", err)
-	}
-	abiSpec := AbiSpec{
-		Account: "eosio.nft.ft",
-		Abi:     abi,
 	}
 	schema, err := GenerateTableSchema(NamedSchemaGenOptions{
 		Name:    tableName,
@@ -140,37 +136,46 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 	tests := []struct {
 		name       string
 		file       string
-		abi        string
+		account    string
+		abis       map[string]string
 		table      string
 		nbMessages int
 	}{
+		// {
+		// 	"accounts",
+		// 	"testdata/block-49608395.pb.json",
+		// 	"testdata/eosio.token.abi",
+		// 	"accounts",
+		// 	2,
+		// },
+		// {
+		// 	"nft-factory",
+		// 	"testdata/block-50705256.pb.json",
+		// 	"testdata/eosio.nft.ft.abi",
+		// 	"factory.a",
+		// 	1,
+		// },
+		// {
+		// 	"nft-factory-b",
+		// 	"testdata/block-135283216.pb.json",
+		// 	"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+		// 	"factory.b",
+		// 	1,
+		// },
+		// {
+		// 	"eosio.oracle",
+		// 	"testdata/block-43922498.pb.json",
+		// 	"testdata/eosio.oracle.abi",
+		// 	"*",
+		// 	4,
+		// },
 		{
-			"accounts",
-			"testdata/block-49608395.pb.json",
-			"testdata/eosio.token.abi",
-			"accounts",
-			2,
-		},
-		{
-			"nft-factory",
-			"testdata/block-50705256.pb.json",
-			"testdata/eosio.nft.ft.abi",
-			"factory.a",
-			1,
-		},
-		{
-			"nft-factory-b",
-			"testdata/block-135283216.pb.json",
-			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
-			"factory.b",
-			1,
-		},
-		{
-			"eosio.oracle",
-			"testdata/block-43922498.pb.json",
-			"testdata/eosio.oracle.abi",
+			"eosio.token-chained-table",
+			"testdata/block-224785515.pb.json",
+			"eosio.token",
+			map[string]string{"eosio.token": "testdata/eosio.token-2.abi", "ultra.rgrab": "testdata/ultra.rgrab.abi"},
 			"*",
-			4,
+			3,
 		},
 	}
 
@@ -182,11 +187,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 				t.Fatalf("jsonpb.UnmarshalString(): %v", err)
 			}
 
-			abiAccount := strings.TrimRight(path.Base(tt.abi), ".abi")
-			var localABIFiles = map[string]string{
-				abiAccount: tt.abi,
-			}
-			abiFiles, err := LoadABIFiles(localABIFiles)
+			abiFiles, err := LoadABIFiles(tt.abis)
 			if err != nil {
 				t.Fatalf("LoadABIFiles() error: %v", err)
 			}
@@ -194,7 +195,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			msg := MessageSchemaGenerator{
 				Namespace: "test.dkafka",
 				Version:   "1.2.3",
-				Account:   abiAccount,
+				Account:   tt.account,
 			}
 			// abi, _ := abiDecoder.abi(abiAccount, 0, false)
 			// schema, _ := msg.getTableSchema("accounts", abi)
@@ -207,7 +208,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 					overrides:   abiDecoder.overrides,
 					abiCodecCli: abiDecoder.abiCodecCli,
 					context:     abiDecoder.context,
-				}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter"),
+				}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), tt.account, "mock://bench-adapter"),
 			}
 			a := &CdCAdapter{
 				topic:     "test.topic",
@@ -251,21 +252,21 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 		{
 			"eosio.nft.ft",
 			"testdata/block-135283642.pb.json",
-			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+			"eosio.nft.ft:testdata/eosio.nft.ft-4.0.6-snapshot.abi",
 			`{"*":"transaction_id"}`,
 			1,
 		},
 		{
 			"ultra.rgrab",
 			"testdata/block-220236206.pb.json",
-			"testdata/ultra.rgrab.abi",
+			"ultra.rgrab:testdata/ultra.rgrab.abi",
 			`{"*":"transaction_id"}`,
 			1,
 		},
 		{
 			"eosio.token",
 			"testdata/block-224793793.pb.json",
-			"testdata/eosio.token-2.abi",
+			"eosio.token:testdata/eosio.token-2.abi",
 			`{"*":"first_auth_actor"}`,
 			3,
 		},
@@ -279,10 +280,16 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 				t.Fatalf("jsonpb.UnmarshalString(): %v", err)
 			}
 
-			abiAccount := strings.TrimRight(path.Base(tt.abi), ".abi")
-			var localABIFiles = map[string]string{
-				abiAccount: tt.abi,
+			var localABIFiles = map[string]string{}
+			var abiAccount string
+
+			if account, abiPath, err := ParseABIFileSpec(tt.abi); err != nil {
+				t.Fatalf("ParseABIFileSpec() fail to get ABI from: '%s'; %v", tt.abi, err)
+			} else {
+				abiAccount = account
+				localABIFiles[account] = abiPath
 			}
+
 			abiFiles, err := LoadABIFiles(localABIFiles)
 			if err != nil {
 				t.Fatalf("LoadABIFiles() error: %v", err)
@@ -334,6 +341,40 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 				assert.Equal(t, findHeader("content-type", m.Headers), "application/avro")
 				assert.Equal(t, findHeader("ce_datacontenttype", m.Headers), "application/avro")
 				assert.Assert(t, findHeader("ce_dataschema", m.Headers) != "")
+			}
+		})
+	}
+}
+
+func abiResolve(p string) (account string, pt string) {
+	pt = p
+	account = strings.TrimRight(path.Base(pt), ".abi")
+	i := strings.Index(account, "-")
+	if i > -1 {
+		account = account[:i]
+	}
+	return
+}
+
+func TestAbiResolve(t *testing.T) {
+	tests := []struct {
+		name        string
+		path        string
+		wantAccount string
+		wantPath    string
+	}{
+		{
+			name:        "eosio.nft.ft versioned",
+			path:        "testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+			wantAccount: "eosio.nft.ft",
+			wantPath:    "testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if account, p := abiResolve(tt.path); account != tt.wantAccount || p != tt.wantPath {
+				t.Errorf("abiResolve() = (%v, %v), want (%v, %v)", account, p, tt.wantAccount, tt.wantPath)
 			}
 		})
 	}

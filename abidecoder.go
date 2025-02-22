@@ -19,13 +19,20 @@ import (
 
 type ABI struct {
 	*eos.ABI
-	AbiBlockNum uint32
+	AbiBlockNum  uint32
+	Account      string
+	Irreversible bool
+}
+
+type CodecId struct {
+	Account string
+	Name    string
 }
 
 type ABICodec interface {
 	IsNOOP() bool
 	DecodeDBOp(in *pbcodec.DBOp, blockNum uint32) (*decodedDBOp, error)
-	GetCodec(name string, blockNum uint32) (Codec, error)
+	GetCodec(codecId CodecId, blockNum uint32) (Codec, error)
 	UpdateABI(blockNum uint32, step pbbstream.ForkStep, trxID string, actionTrace *pbcodec.ActionTrace) error
 }
 
@@ -35,7 +42,7 @@ type JsonABICodec struct {
 	account string
 }
 
-func (c *JsonABICodec) GetCodec(name string, blockNum uint32) (Codec, error) {
+func (c *JsonABICodec) GetCodec(codecId CodecId, blockNum uint32) (Codec, error) {
 	return c.codec, nil
 }
 
@@ -97,7 +104,7 @@ func ParseABIFileSpec(spec string) (account string, abiPath string, err error) {
 func LoadABIFiles(abiFiles map[string]string) (map[string]*ABI, error) {
 	out := make(map[string]*ABI)
 	for contract, abiFile := range abiFiles {
-		abi, err := LoadABIFile(abiFile)
+		abi, err := LoadABIFile(contract, abiFile)
 		if err != nil {
 			return nil, fmt.Errorf("reading abi file %s: %w", abiFile, err)
 		}
@@ -106,7 +113,7 @@ func LoadABIFiles(abiFiles map[string]string) (map[string]*ABI, error) {
 	return out, nil
 }
 
-func LoadABIFile(abiFile string) (*ABI, error) {
+func LoadABIFile(account string, abiFile string) (*ABI, error) {
 	kv := strings.SplitN(abiFile, ":", 2) //[abiFilePath] - [abiFilePath, abiNumber]
 	var abiPath = abiFile
 	var abiBlockNum = uint64(0)
@@ -122,7 +129,12 @@ func LoadABIFile(abiFile string) (*ABI, error) {
 	if err == nil {
 		defer f.Close()
 		eosAbi, err := eos.NewABI(f)
-		abi := &ABI{eosAbi, uint32(abiBlockNum)}
+		abi := &ABI{
+			ABI:          eosAbi,
+			AbiBlockNum:  uint32(abiBlockNum),
+			Account:      account,
+			Irreversible: true,
+		}
 		return abi, err
 	}
 	return nil, err
@@ -200,7 +212,7 @@ func (a *ABIDecoder) abi(contract string, blockNum uint32, forceRefresh bool) (*
 	if err != nil {
 		return nil, fmt.Errorf("unable to decode abi for contract %q: %w", contract, err)
 	}
-	var abi = ABI{eosAbi, resp.AbiBlockNum}
+	var abi = ABI{eosAbi, resp.AbiBlockNum, contract, true}
 	zlog.Info("new ABI loaded", zap.String("contract", contract), zap.Uint32("block_num", blockNum), zap.Uint32("abi_block_num", abi.AbiBlockNum))
 	// store abi in cache for late uses
 	a.abisCache[contract] = &abi

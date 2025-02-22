@@ -13,9 +13,12 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	pbabicodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/abicodec/v1"
 	pbcodec "github.com/dfuse-io/dfuse-eosio/pb/dfuse/eosio/codec/v1"
+	"github.com/dfuse-io/dkafka/action"
+	"github.com/dfuse-io/dkafka/table"
 	"github.com/eoscanada/eos-go"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/cel-go/cel"
+	"github.com/iancoleman/strcase"
 	"github.com/riferrei/srclient"
 	"github.com/streamingfast/bstream/forkable"
 	"github.com/streamingfast/dgrpc"
@@ -308,7 +311,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		if err != nil {
 			return appCtx, err
 		}
-		filter = createCdCFilter(a.config.Account, a.config.Executed)
+		filter = addAllABIFilter(table.Filter(a.config.Account))
 		var finder TableKeyExtractorFinder
 		if finder, err = buildTableKeyExtractorFinder(a.config.TableNames); err != nil {
 			return appCtx, err
@@ -324,7 +327,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			account:  a.config.Account,
 		}
 	case ACTIONS_CDC_TYPE:
-		filter = createCdCFilter(a.config.Account, a.config.Executed)
+		filter = addAccountABIFilter(action.Filter(a.config.Account), a.config.Account)
 		actionKeyExpressions, err := createCdcKeyExpressions(a.config.ActionExpressions)
 		if err != nil {
 			return appCtx, err
@@ -356,11 +359,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		}
 
 	case TRANSACTION_CDC_TYPE:
-		if a.config.Executed {
-			filter = "executed"
-		} else {
-			filter = ""
-		}
+		filter = ""
 		msg := MessageSchemaGenerator{
 			Namespace:    a.config.SchemaNamespace,
 			MajorVersion: a.config.SchemaMajorVersion,
@@ -393,7 +392,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 	}
 	appCtx.adapter = adapter
 	appCtx.cursor = cursor
-	appCtx.filter = filter
+	appCtx.filter = addExecutedFilter(filter, a.config.Executed)
 	appCtx.sender = NewFastSender(ctx, producer, a.config.KafkaTopic, headers, abiCodec)
 	return appCtx, nil
 }
@@ -713,10 +712,20 @@ func blockHandler(ctx context.Context, appCtx appCtx, in <-chan BlockStep, ticks
 	}
 }
 
-func createCdCFilter(account string, executed bool) string {
-	filter := fmt.Sprintf("(account==\"%s\" && receiver==\"%s\") || (action==\"setabi\" && account==\"eosio\" && data.account==\"%s\")", account, account, account)
+func addAllABIFilter(filter string) string {
+	return fmt.Sprintf("%s || (action==\"setabi\" && account==\"eosio\")", filter)
+}
+
+func addAccountABIFilter(filter string, account string) string {
+	return fmt.Sprintf("%s || (action==\"setabi\" && account==\"eosio\" && data.account==\"%s\")", filter, account)
+}
+
+func addExecutedFilter(filter string, executed bool) string {
+	if filter != "" && executed {
+		filter = fmt.Sprintf(" && %s", filter)
+	}
 	if executed {
-		filter = fmt.Sprintf("executed && %s", filter)
+		filter = fmt.Sprintf("executed%s", filter)
 	}
 	return filter
 }
@@ -808,29 +817,31 @@ type MessageSchemaGenerator struct {
 }
 
 func (msg MessageSchemaGenerator) getTableSchema(tableName string, abi *ABI) (MessageSchema, error) {
-	return GenerateTableSchema(msg.newNamedSchemaGenOptions(tableName, abi))
+	return GenerateTableSchema(msg.newNamedSchemaGenOptions(TABLES_CDC_TYPE, tableName, abi))
 }
 
 func (msg MessageSchemaGenerator) getActionSchema(actionName string, abi *ABI) (MessageSchema, error) {
-	return GenerateActionSchema(msg.newNamedSchemaGenOptions(actionName, abi))
+	return GenerateActionSchema(msg.newNamedSchemaGenOptions(ACTIONS_CDC_TYPE, actionName, abi))
 }
 
 func (msg MessageSchemaGenerator) getNoopSchema(name string, _ *ABI) (MessageSchema, error) {
 	return MessageSchema{}, fmt.Errorf("noop schema generator cannot produce schema for: %s", name)
 }
 
-func (msg MessageSchemaGenerator) newNamedSchemaGenOptions(name string, abi *ABI) NamedSchemaGenOptions {
+func (msg MessageSchemaGenerator) newNamedSchemaGenOptions(kind string, name string, abi *ABI) NamedSchemaGenOptions {
 	return NamedSchemaGenOptions{
 		Name:      name,
-		Namespace: msg.Namespace,
+		Namespace: msg.namespace(kind, abi.Account),
 		Version:   schemaVersion(msg.Version, msg.MajorVersion, abi.AbiBlockNum),
-		AbiSpec: AbiSpec{
-			Account: msg.Account,
-			Abi:     abi,
-		},
-		Source: msg.Source,
-		Domain: msg.Account,
+		AbiSpec:   abi,
+		Source:    msg.Source,
+		Domain:    msg.Account,
 	}
+}
+
+func (msg MessageSchemaGenerator) namespace(kind string, account string) string {
+	accountLowerNameSpace := strcase.ToDelimited(account, '.')
+	return fmt.Sprintf("%s.%s.%s.v%d", msg.Namespace, accountLowerNameSpace, kind, msg.MajorVersion)
 }
 
 func schemaVersion(version string, majorVersion uint, abiBlockNumber uint32) string {
