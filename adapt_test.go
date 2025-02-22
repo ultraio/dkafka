@@ -141,34 +141,38 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 		table      string
 		nbMessages int
 	}{
-		// {
-		// 	"accounts",
-		// 	"testdata/block-49608395.pb.json",
-		// 	"testdata/eosio.token.abi",
-		// 	"accounts",
-		// 	2,
-		// },
-		// {
-		// 	"nft-factory",
-		// 	"testdata/block-50705256.pb.json",
-		// 	"testdata/eosio.nft.ft.abi",
-		// 	"factory.a",
-		// 	1,
-		// },
-		// {
-		// 	"nft-factory-b",
-		// 	"testdata/block-135283216.pb.json",
-		// 	"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
-		// 	"factory.b",
-		// 	1,
-		// },
-		// {
-		// 	"eosio.oracle",
-		// 	"testdata/block-43922498.pb.json",
-		// 	"testdata/eosio.oracle.abi",
-		// 	"*",
-		// 	4,
-		// },
+		{
+			"accounts",
+			"testdata/block-49608395.pb.json",
+			"testdata/eosio.token.abi",
+			map[string]string{"eosio.token": "testdata/eosio.token.abi"},
+			"accounts",
+			2,
+		},
+		{
+			"nft-factory",
+			"testdata/block-50705256.pb.json",
+			"testdata/eosio.nft.ft.abi",
+			map[string]string{"eosio.nft.ft": "testdata/eosio.nft.ft.abi"},
+			"factory.a",
+			1,
+		},
+		{
+			"nft-factory-b",
+			"testdata/block-135283216.pb.json",
+			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+			map[string]string{"eosio.nft.ft": "testdata/eosio.nft.ft-4.0.6-snapshot.abi"},
+			"factory.b",
+			1,
+		},
+		{
+			"eosio.oracle",
+			"testdata/block-43922498.pb.json",
+			"testdata/eosio.oracle.abi",
+			map[string]string{"eosio.oracle": "testdata/eosio.oracle.abi"},
+			"*",
+			4,
+		},
 		{
 			"eosio.token-chained-table",
 			"testdata/block-224785515.pb.json",
