@@ -1,0 +1,554 @@
+{
+    "id": "0d65f46b04f618e62675c2d693c6a3594dca5b5f946d802f7bc44c85e86ba3ea",
+    "number": 224785515,
+    "version": 1,
+    "header": {
+        "timestamp": "2025-01-10T15:46:01Z",
+        "producer": "eosioubisoft",
+        "previous": "0d65f46a6c53954c4e1d4ce4643eded6d524ca2b0b65904541a4edcf86caa7bb",
+        "transactionMroot": "3mz9nlYC7GD06Ukx5nfJaiSVfTH9TpW+W5HvjnMNu5o=",
+        "actionMroot": "Kc2tA6FOHRafTCzU4fGxR9Qh3gDyMjt28QrfTknqdRc=",
+        "scheduleVersion": 19
+    },
+    "producerSignature": "SIG_K1_K9GibDvLX25vouHemh1yRPuU3N7RTSHWzQ5N4gGPo9vjHmfB5QLSu4GURDbJPaX33bVprYSj7J8KEQ8MWptzYbsL6Eb1wJ",
+    "dposProposedIrreversibleBlocknum": 224785476,
+    "dposIrreversibleBlocknum": 224785428,
+    "blockrootMerkle": {
+        "nodeCount": 224785514,
+        "activeNodes": [
+            "ynbJN4fpsJ0seMlwAe3NMhKo91yO/6W+3VNjTkKFFJY=",
+            "01fYjzvKVTT2W5pqlQC2xLmVT/mwzLpF+B4IwQ8NHQg=",
+            "0fOQJT/s4ADHGPRC+j6JxDoYIe6gYwfSKsZzgr/XIvQ=",
+            "0O/fFsW1+o8VJ0MQrOpE/jhuQfLc/sVQp8Ot4IY1Rn0=",
+            "6P5+EZof9ovqhTZTzlRw3cNimgjrre30cOOxmI6fYQY=",
+            "kuuUSzw4+akyjW/YacPuPatgKW8hhFLZf0PelcGSmsM=",
+            "tmn/3IiF+4GTJrw95q/4CGilNzNpzoWORyJOEQLtwOo=",
+            "vOaPbooTZj7CecjLOheP6C/r9Fkt5k7NulJnMz/YAYs=",
+            "dVYFxNk8xKCZT0k8MhwBw+msWS0gOjoQA6hCIbxbdlE=",
+            "Pp7uXqBchRnfVCobYwVDQ8BFsTL+Ty83uVWYVe1j4qk=",
+            "20gooaM/sptXvZyE0qpVbzKO3K+FVnRiWw4fxozqDg0=",
+            "5hrRC88/TttFtrpgM5QZZWjIgPV5ud+v+Gjz8s1rTWA=",
+            "YzEwPxGINdf9rgIVVsUQXSkqbZX7rofPEv9UOxtp4Ws=",
+            "UyioFOAVc+G2ljacf97l9R2OMKFs1PyRAbbEJEP1xGY=",
+            "v2lXY2h8Gp4EFhhwCS/aHJ6HMHwrp4Tzv3DTBQR0b3I=",
+            "6wxQEY3S/RwkSVOtbgd70qou3/KL5/sKo/LzAAjVnno=",
+            "w80kyMKG7R//Y3c7vRdR9CXmALCjU3BNSY7VAiYmMRo="
+        ]
+    },
+    "producerToLastProduced": [
+        {
+            "name": "cryptolions1",
+            "lastBlockNumProduced": 224785512
+        },
+        {
+            "name": "eosioubisoft",
+            "lastBlockNumProduced": 224785515
+        },
+        {
+            "name": "eosnationftw",
+            "lastBlockNumProduced": 224785464
+        },
+        {
+            "name": "eosriobrazil",
+            "lastBlockNumProduced": 224785500
+        },
+        {
+            "name": "ivote4eosusa",
+            "lastBlockNumProduced": 224785476
+        },
+        {
+            "name": "uoseouldotio",
+            "lastBlockNumProduced": 224785488
+        },
+        {
+            "name": "uosswedenorg",
+            "lastBlockNumProduced": 224785452
+        }
+    ],
+    "producerToLastImpliedIrb": [
+        {
+            "name": "cryptolions1",
+            "lastBlockNumProduced": 224785464
+        },
+        {
+            "name": "eosioubisoft",
+            "lastBlockNumProduced": 224785476
+        },
+        {
+            "name": "eosnationftw",
+            "lastBlockNumProduced": 224785416
+        },
+        {
+            "name": "eosriobrazil",
+            "lastBlockNumProduced": 224785452
+        },
+        {
+            "name": "ivote4eosusa",
+            "lastBlockNumProduced": 224785428
+        },
+        {
+            "name": "uoseouldotio",
+            "lastBlockNumProduced": 224785440
+        },
+        {
+            "name": "uosswedenorg",
+            "lastBlockNumProduced": 224785404
+        }
+    ],
+    "confirmCount": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4
+    ],
+    "pendingSchedule": {
+        "scheduleLibNum": 146119709,
+        "scheduleHash": "AGsM1+BObSU5Qsy6ZKVw0LseKGWLAS24+YspBvloWbA=",
+        "scheduleV2": {
+            "version": 19
+        }
+    },
+    "activatedProtocolFeatures": {
+        "protocolFeatures": [
+            "DsfggBd7LAKyeNUIhhFoa0nXOZJaktm/ys1/xrdAU70=",
+            "D+GFuIMhUYZYxU8h6R14fymGnFvA3T/HgA95iDwUAw0=",
+            "GltEdlcoFG1xuRadzlKjHV+sIUO2GwCLfKkyj92LrEU=",
+            "GpmlnYfgbgnsWwKKnLt3SbSlrYgZAENl0C3EN5qLckE=",
+            "JlL1+WAGKUEJs90LveY2k/VTJK9FK3me4TeoGpBe7SU=",
+            "KZ3LavaSMkuJmznxbVpTCjMGKATkHwncl+nxVrRHZwc=",
+            "SpDADVVFTcWwWQVcohNXnG6oVpZ3EqVgF0h4hqTUzA8=",
+            "TnvzSNoAqUVImypoF0nrVvXeALkAAU4Tfdrjn0j2nWc=",
+            "T8qL2Cu9GB5xTig/g+G0XZXKWvQPuJrTl3tlPESPeMI=",
+            "aNyqNMBRfRlmbmszrdZzUdjF9p6ZnKHjeTG8QQopdCg=",
+            "hhD9I0EwDu2GzgKTqCX+51OHZNeQlH85Frjk0ANrxMQ=",
+            "i6Uv56OVbFzTplajF0uTHTuyq7RVeL78WfKD7NgWpAU=",
+            "rZ49j2UGh3Cf1o9LkLQffYJaNlsCwjpjbO+IrCrADEM=",
+            "rqJFf5Ud6QoTLRowexOsEnXI/CSQ0nQ53UVxU9wDr48=",
+            "sLrd2WfnkQuQVpYiShE0yoMsUcth2RpqIiZSqCcVxj8=",
+            "tUHVRFIr5UqAt+N9TvxkCLdTpxQ7oQ8XDlYCpPq4wbo=",
+            "tnweAOC5Pppk0GviuW23tvSufzPvZ1bV8sL+taeCqEM=",
+            "y3nUSfgZS/a0A+QP2jGaHi+dKyEI97bLmBZi5jk+1rk=",
+            "4PtksQhcxVOJcBWNBaAJwk4nb7lOGgv2pSi0j7xP9SY=",
+            "70MRLGVDuI2yKDouB3J4wxWuLIRxmosl8lzIhWX76pk=",
+            "8K9W0sWkjWCkpbXJA+37fbOnNqlO1YnQt5ffM/+dPh0=",
+            "/Si5iGxEafNAYqQZIy9NW4AH15C4HMxtZ1/slB59gLs="
+        ]
+    },
+    "rlimitOps": [
+        {
+            "operation": "OPERATION_UPDATE",
+            "state": {
+                "averageBlockNetUsage": {
+                    "lastOrdinal": 224785514,
+                    "valueEx": "24481880",
+                    "consumed": "33"
+                },
+                "averageBlockCpuUsage": {
+                    "lastOrdinal": 224785514,
+                    "valueEx": "7263980",
+                    "consumed": "9"
+                },
+                "pendingNetUsage": "696",
+                "pendingCpuUsage": "262",
+                "totalNetWeight": "11663000000",
+                "totalCpuWeight": "11663000000",
+                "totalRamBytes": "6888821482",
+                "virtualNetLimit": "1048576",
+                "virtualCpuLimit": "400000"
+            }
+        },
+        {
+            "operation": "OPERATION_UPDATE",
+            "state": {
+                "averageBlockNetUsage": {
+                    "lastOrdinal": 224785515,
+                    "valueEx": "30077864",
+                    "consumed": "721"
+                },
+                "averageBlockCpuUsage": {
+                    "lastOrdinal": 224785515,
+                    "valueEx": "9386780",
+                    "consumed": "270"
+                },
+                "totalNetWeight": "11663000000",
+                "totalCpuWeight": "11663000000",
+                "totalRamBytes": "6888821482",
+                "virtualNetLimit": "1048576",
+                "virtualCpuLimit": "400000"
+            }
+        }
+    ],
+    "filteredTransactions": [
+        {
+            "id": "fb1f56096df0b076ad8429c6c3146092b9b03f290219ebe62f7b227d5f6689d3",
+            "status": "TRANSACTIONSTATUS_EXECUTED",
+            "cpuUsageMicroSeconds": 261,
+            "netUsageWords": 86,
+            "packedTransaction": {
+                "signatures": [
+                    "SIG_K1_KYFWhV8SQqv9u6jG6nnFbhkUUPrBicdjCYC81LiJFwfFX6gcYdbcwh6a78eG6pwGncU5dYdUsvTEukGLQz2DAzWTA8WMDx"
+                ],
+                "compression": 1,
+                "packedContextFreeData": "eJxjAAAAAQAB",
+                "packedTransaction": "eJwTcmxM5/gix346hAEIGBmWNZkwvzIIBbLDdW3OnmVkcJjKxlhcfAUku+KtkZEVXKBv5xsmIH2Are2pGVCSI9Q/GKRIMj05tbK4JL8qMUXHyNTYVMcISBoYW5hbMAAAoDgerQ=="
+            }
+        }
+    ],
+    "unfilteredTransactionCount": 1,
+    "filteredTransactionCount": 1,
+    "filteredTransactionTraces": [
+        {
+            "id": "fb1f56096df0b076ad8429c6c3146092b9b03f290219ebe62f7b227d5f6689d3",
+            "blockNum": "224785515",
+            "index": "1",
+            "blockTime": "2025-01-10T15:46:01Z",
+            "producerBlockId": "0d65f46b04f618e62675c2d693c6a3594dca5b5f946d802f7bc44c85e86ba3ea",
+            "receipt": {
+                "status": "TRANSACTIONSTATUS_EXECUTED",
+                "cpuUsageMicroSeconds": 261,
+                "netUsageWords": 86
+            },
+            "elapsed": "1828",
+            "netUsage": "688",
+            "actionTraces": [
+                {
+                    "receiver": "eosio.token",
+                    "receipt": {
+                        "receiver": "eosio.token",
+                        "digest": "35c73e7591a00b074998de84f054c64378f6daf989bedf45d9b2c99c204e9bc3",
+                        "globalSequence": "408070916",
+                        "authSequence": [
+                            {
+                                "accountName": "ultra.camp",
+                                "sequence": "3"
+                            }
+                        ],
+                        "recvSequence": "195062",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "ultra.camp",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"ultra.camp\",\"to\":\"ultra.rgrab\",\"quantity\":\"2357.79000000 UOS\",\"memo\":\"gceystozad,2535,225303878\"}",
+                        "rawData": "AECVBgFzc9QAjrnsAnNz1MAGhuU2AAAACFVPUwAAAAAZZ2NleXN0b3phZCwyNTM1LDIyNTMwMzg3OA=="
+                    },
+                    "elapsed": "1432",
+                    "transactionId": "fb1f56096df0b076ad8429c6c3146092b9b03f290219ebe62f7b227d5f6689d3",
+                    "blockNum": "224785515",
+                    "producerBlockId": "0d65f46b04f618e62675c2d693c6a3594dca5b5f946d802f7bc44c85e86ba3ea",
+                    "blockTime": "2025-01-10T15:46:01Z",
+                    "actionOrdinal": 1,
+                    "filteringMatched": true
+                },
+                {
+                    "receiver": "ultra.camp",
+                    "receipt": {
+                        "receiver": "ultra.camp",
+                        "digest": "35c73e7591a00b074998de84f054c64378f6daf989bedf45d9b2c99c204e9bc3",
+                        "globalSequence": "408070917",
+                        "authSequence": [
+                            {
+                                "accountName": "ultra.camp",
+                                "sequence": "4"
+                            }
+                        ],
+                        "recvSequence": "2",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "ultra.camp",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"ultra.camp\",\"to\":\"ultra.rgrab\",\"quantity\":\"2357.79000000 UOS\",\"memo\":\"gceystozad,2535,225303878\"}",
+                        "rawData": "AECVBgFzc9QAjrnsAnNz1MAGhuU2AAAACFVPUwAAAAAZZ2NleXN0b3phZCwyNTM1LDIyNTMwMzg3OA=="
+                    },
+                    "elapsed": "6",
+                    "transactionId": "fb1f56096df0b076ad8429c6c3146092b9b03f290219ebe62f7b227d5f6689d3",
+                    "blockNum": "224785515",
+                    "producerBlockId": "0d65f46b04f618e62675c2d693c6a3594dca5b5f946d802f7bc44c85e86ba3ea",
+                    "blockTime": "2025-01-10T15:46:01Z",
+                    "actionOrdinal": 2,
+                    "creatorActionOrdinal": 1,
+                    "closestUnnotifiedAncestorActionOrdinal": 1,
+                    "executionIndex": 1,
+                    "filteringMatched": true
+                },
+                {
+                    "receiver": "ultra.rgrab",
+                    "receipt": {
+                        "receiver": "ultra.rgrab",
+                        "digest": "35c73e7591a00b074998de84f054c64378f6daf989bedf45d9b2c99c204e9bc3",
+                        "globalSequence": "408070918",
+                        "authSequence": [
+                            {
+                                "accountName": "ultra.camp",
+                                "sequence": "5"
+                            }
+                        ],
+                        "recvSequence": "8",
+                        "codeSequence": "5",
+                        "abiSequence": "5"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "ultra.camp",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"ultra.camp\",\"to\":\"ultra.rgrab\",\"quantity\":\"2357.79000000 UOS\",\"memo\":\"gceystozad,2535,225303878\"}",
+                        "rawData": "AECVBgFzc9QAjrnsAnNz1MAGhuU2AAAACFVPUwAAAAAZZ2NleXN0b3phZCwyNTM1LDIyNTMwMzg3OA=="
+                    },
+                    "elapsed": "224",
+                    "transactionId": "fb1f56096df0b076ad8429c6c3146092b9b03f290219ebe62f7b227d5f6689d3",
+                    "blockNum": "224785515",
+                    "producerBlockId": "0d65f46b04f618e62675c2d693c6a3594dca5b5f946d802f7bc44c85e86ba3ea",
+                    "blockTime": "2025-01-10T15:46:01Z",
+                    "actionOrdinal": 3,
+                    "creatorActionOrdinal": 1,
+                    "closestUnnotifiedAncestorActionOrdinal": 1,
+                    "executionIndex": 2,
+                    "filteringMatched": true
+                }
+            ],
+            "dbOps": [
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "code": "eosio.token",
+                    "scope": "ultra.camp",
+                    "tableName": "accounts",
+                    "primaryKey": "........ehbp5",
+                    "oldPayer": "eosio.token",
+                    "newPayer": "eosio.token",
+                    "oldData": "AMAlyy4CAAAIVU9TAAAAAA==",
+                    "newData": "QLmf5fcBAAAIVU9TAAAAAA=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "code": "eosio.token",
+                    "scope": "ultra.rgrab",
+                    "tableName": "accounts",
+                    "primaryKey": "........ehbp5",
+                    "oldPayer": "eosio.token",
+                    "newPayer": "eosio.token",
+                    "oldData": "AAAAAAAAAAAIVU9TAAAAAA==",
+                    "newData": "wAaG5TYAAAAIVU9TAAAAAA=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 2,
+                    "code": "ultra.rgrab",
+                    "scope": "ultra.rgrab",
+                    "tableName": "campaign",
+                    "primaryKey": "gceystozad",
+                    "oldPayer": "ultra.rgrab",
+                    "newPayer": "ultra.rgrab",
+                    "oldData": "AEAyn2bsFWIAAAAAAAAAAAhVT1MAAAAA5wkAAAAAAAAAQJUGAXNz1AAAAAA=",
+                    "newData": "AEAyn2bsFWLABoblNgAAAAhVT1MAAAAA5wkAAAAAAAAAQJUGAXNz1EbdbQ0="
+                }
+            ],
+            "rlimitOps": [
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "accountUsage": {
+                        "owner": "ultra.camp",
+                        "netUsage": {
+                            "lastOrdinal": 1579678322,
+                            "valueEx": "34605",
+                            "consumed": "689"
+                        },
+                        "cpuUsage": {
+                            "lastOrdinal": 1579678322,
+                            "valueEx": "13185",
+                            "consumed": "262"
+                        },
+                        "ramUsage": "30214"
+                    }
+                }
+            ],
+            "creationTree": [
+                {
+                    "creatorActionIndex": -1
+                },
+                {
+                    "executionActionIndex": 1
+                },
+                {
+                    "executionActionIndex": 2
+                }
+            ]
+        }
+    ],
+    "unfilteredTransactionTraceCount": 2,
+    "filteredTransactionTraceCount": 1,
+    "unfilteredExecutedInputActionCount": 2,
+    "filteredExecutedInputActionCount": 1,
+    "unfilteredExecutedTotalActionCount": 4,
+    "filteredExecutedTotalActionCount": 3,
+    "validBlockSigningAuthorityV2": {
+        "v0": {
+            "threshold": 1,
+            "keys": [
+                {
+                    "publicKey": "EOS7rzTcsDq45H1o8BGVPQQoGCnWrsNrmqgUfLDmefVho4nvuM7Ka",
+                    "weight": 1
+                }
+            ]
+        }
+    },
+    "activeScheduleV2": {
+        "version": 19,
+        "producers": [
+            {
+                "accountName": "eosriobrazil",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS6e6CFvEtcCGTbj8YyVwmNRiQ7FRFjbuKfTSaJXvciaVYdW2W6B",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "cryptolions1",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS8KamrzrcGzKF7N5T8y44QwEwubHyJ7W6oeNehnmXTsEjQR8KYd",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "eosioubisoft",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS7rzTcsDq45H1o8BGVPQQoGCnWrsNrmqgUfLDmefVho4nvuM7Ka",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "uosswedenorg",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS7DjFq5FA3pyzUzXqLhA7qBSkmpZ57M6uYULTRA9E2Y4YRt7oWF",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "eosnationftw",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS5uMMtMvBp4pPEBiUsfdBR9LVnJnzUonGFvQtwnh1eoXzZZKN8U",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "ivote4eosusa",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS5gKJLRWxMgLWDsvKu7YaTweoQpqin5SSzJ4mDuaXnQ6tZb1F31",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "uoseouldotio",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS57zSgkDgcj1XeMFqZes5Tz6fJNnCug8KYADJ1EY2Z9YGjs7Psx",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "filteringApplied": true,
+    "filteringIncludeFilterExpr": "account==\"eosio.token\" || (action==\"setabi\" \u0026\u0026 account==\"eosio\" \u0026\u0026 data.account==\"eosio.token\")"
+}

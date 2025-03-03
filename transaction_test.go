@@ -270,7 +270,7 @@ func Test_transactionGenerator_Apply(t *testing.T) {
 		t.Run(tt.name, func(t1 *testing.T) {
 			abiCodec := NewStreamedAbiCodecWithTransaction(&DfuseAbiRepository{},
 				nil, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), "", "mock://bench-adapter")
-			codec, err := abiCodec.GetCodec(transactionNotification, 0)
+			codec, err := abiCodec.GetCodec(transactionSchema.AsCodecId(), 0)
 			if err != nil {
 				t.Fatalf("cannot load codec for %s", transactionNotification)
 			}

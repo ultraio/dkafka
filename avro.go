@@ -97,6 +97,13 @@ type RecordSchema struct {
 	Fields []FieldSchema `json:"fields"`
 }
 
+func (r *RecordSchema) AsCodecId() CodecId {
+	return CodecId{
+		Account: r.Namespace,
+		Name:    r.Name,
+	}
+}
+
 func newRecordS(name string, fields []FieldSchema) RecordSchema {
 	return newRecordFQN("", name, fields)
 }

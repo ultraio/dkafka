@@ -85,7 +85,7 @@ type RegisteredSchema struct {
 	id      uint32
 	schema  string
 	version int
-	codec   *goavro.Codec
+	codec   *goavro.Codec `deep:"-"`
 }
 
 type KafkaAvroCodec struct {
