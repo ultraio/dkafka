@@ -841,7 +841,11 @@ func (msg MessageSchemaGenerator) newNamedSchemaGenOptions(kind string, name str
 
 func (msg MessageSchemaGenerator) namespace(kind string, account string) string {
 	accountLowerNameSpace := strcase.ToDelimited(account, '.')
-	return fmt.Sprintf("%s.%s.%s.v%d", msg.Namespace, accountLowerNameSpace, kind, msg.MajorVersion)
+	if msg.Namespace == "" {
+		return fmt.Sprintf("%s.%s.v%d", accountLowerNameSpace, kind, msg.MajorVersion)
+	} else {
+		return fmt.Sprintf("%s.%s.%s.v%d", msg.Namespace, accountLowerNameSpace, kind, msg.MajorVersion)
+	}
 }
 
 func schemaVersion(version string, majorVersion uint, abiBlockNumber uint32) string {

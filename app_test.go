@@ -308,6 +308,21 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 			want: "io.dkafka.data.ultra.rgrab.actions.v1",
 		},
 		{
+			name: "empty-namespace-actions",
+			fields: fields{
+				Namespace:    "",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.token",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "ultra.rgrab",
+			},
+			want: "ultra.rgrab.actions.v1",
+		},
+		{
 			name: "tables",
 			fields: fields{
 				Namespace:    "io.dkafka.data",
@@ -321,6 +336,21 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				account: "ultra.rgrab",
 			},
 			want: "io.dkafka.data.ultra.rgrab.tables.v1",
+		},
+		{
+			name: "empty-namespace-tables",
+			fields: fields{
+				Namespace:    "",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.token",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "ultra.rgrab",
+			},
+			want: "ultra.rgrab.tables.v1",
 		},
 	}
 	for _, tt := range tests {
