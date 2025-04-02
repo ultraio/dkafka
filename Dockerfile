@@ -1,18 +1,20 @@
-FROM golang:1.21-bullseye AS build
+FROM golang:1.24-bookworm AS build
 
 WORKDIR /app
 
 COPY go.mod ./
 COPY go.sum ./
 COPY fork ./fork
-RUN go mod download
-
+COPY action ./action
+COPY table ./table
 COPY *.go ./
 COPY cmd ./cmd
 
+RUN go mod download
+
 RUN go build -o /dkafka -v ./cmd/dkafka
 
-FROM gcr.io/distroless/base-debian11
+FROM gcr.io/distroless/base-debian12
 
 WORKDIR /
 

@@ -7,3 +7,5 @@ new.txt
 .vscode
 *.pem
 avro-tools.jar
+.aider*
+.env

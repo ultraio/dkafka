@@ -16,7 +16,7 @@ stages:
 .golang_based:
   tags:
     - docker
-  image: golang:1.18-bullseye
+  image: golang:1.24-bookworm
 
 unit-tests:
   extends:
@@ -72,6 +72,20 @@ build:
     paths:
     - dkafka
 
+build-image:
+  tags:
+    - docker
+  stage: image
+  variables:
+    DOCKER_HOST: "tcp://localhost:2375"
+  image: docker:git
+  services:
+    - docker:19.03.12-dind
+  script:
+    - docker build --no-cache --tag "quay.io/ultraio/dkafka:latest" .
+  cache:
+    paths: []
+
 build-publish-docker:
   tags:
     - docker
@@ -94,3 +108,5 @@ build-publish-docker:
     - docker push "quay.io/ultraio/dkafka:${VERSION}"
     - docker tag "quay.io/ultraio/dkafka:${VERSION}" "quay.io/ultraio/dkafka:latest"
     - docker push "quay.io/ultraio/dkafka:latest"
+  cache:
+    paths: []
