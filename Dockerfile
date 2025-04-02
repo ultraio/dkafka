@@ -7,10 +7,10 @@ COPY go.sum ./
 COPY fork ./fork
 COPY action ./action
 COPY table ./table
-RUN go mod download
-
 COPY *.go ./
 COPY cmd ./cmd
+
+RUN go mod download
 
 RUN go build -o /dkafka -v ./cmd/dkafka
 
