@@ -5,8 +5,8 @@ WORKDIR /app
 COPY go.mod ./
 COPY go.sum ./
 COPY fork ./fork
-COPY fork ./action
-COPY fork ./table
+COPY action ./action
+COPY table ./table
 RUN go mod download
 
 COPY *.go ./
