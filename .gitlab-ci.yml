@@ -83,6 +83,8 @@ build-image:
     - docker:19.03.12-dind
   script:
     - docker build --no-cache --tag "quay.io/ultraio/dkafka:latest" .
+  cache:
+    paths: []
 
 build-publish-docker:
   tags:
@@ -106,3 +108,5 @@ build-publish-docker:
     - docker push "quay.io/ultraio/dkafka:${VERSION}"
     - docker tag "quay.io/ultraio/dkafka:${VERSION}" "quay.io/ultraio/dkafka:latest"
     - docker push "quay.io/ultraio/dkafka:latest"
+  cache:
+    paths: []
