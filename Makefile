@@ -245,3 +245,6 @@ test-avro-generation: build avro-tools.jar ## test avro generation from abi; che
 	mkdir -p $(TEST_AVRO_PATH)/in $(TEST_AVRO_PATH)/out
 	$(BINARY_PATH) cdc schemas -o $(TEST_AVRO_PATH)/in '$(ABI_ACCOUNT):$(ABI_FILE)'
 	for file in $$(ls $(TEST_AVRO_PATH)/in); do java -jar avro-tools.jar compile schema "$(TEST_AVRO_PATH)/in/$$file" $(TEST_AVRO_PATH)/out/; done
+
+docker: ## Build docker image
+	@docker build --no-cache --tag "quay.io/ultraio/dkafka:latest" .

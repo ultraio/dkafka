@@ -72,6 +72,18 @@ build:
     paths:
     - dkafka
 
+build-image:
+  tags:
+    - docker
+  stage: image
+  variables:
+    DOCKER_HOST: "tcp://localhost:2375"
+  image: docker:git
+  services:
+    - docker:19.03.12-dind
+  script:
+    - make docker
+
 build-publish-docker:
   tags:
     - docker
