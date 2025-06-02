@@ -82,6 +82,7 @@ type Config struct {
 	TableNames        []string
 	Executed          bool
 	Irreversible      bool
+	SkipDbOps         bool
 
 	Codec              string
 	SchemaRegistryURL  string
@@ -350,6 +351,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			actionLevelGenerator: ActionGenerator2{
 				keyExtractors: actionKeyExpressions,
 				abiCodec:      abiCodec,
+				skipDbOps:     a.config.SkipDbOps,
 			},
 			abiCodec: abiCodec,
 			headers:  headers,

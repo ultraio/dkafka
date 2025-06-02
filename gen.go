@@ -187,6 +187,7 @@ func (tg TableGenerator) doApply(gc ActionContext) ([]generation, error) {
 type ActionGenerator2 struct {
 	keyExtractors ActionKeyExtractorFinder
 	abiCodec      ABICodec
+	skipDbOps     bool
 }
 
 func (ag ActionGenerator2) Apply(gc ActionContext) ([]Generation2, error) {
@@ -249,10 +250,18 @@ func (ag ActionGenerator2) doApply(gc ActionContext) ([]generation, error) {
 			return nil, err
 		}
 	}
-	indexedDbOps := indexDbOps(gc)
-	dbOpsGen := make([]map[string]interface{}, len(indexedDbOps))
-	for _, dbOp := range indexedDbOps {
-		dbOpsGen[dbOp.Index] = newDBOpBasic(dbOp.Entry, dbOp.Index)
+	var dbOpsGen []map[string]interface{}
+	if ag.skipDbOps {
+		// If we skip DB operations, we return an empty slice
+		dbOpsGen = []map[string]interface{}{}
+	} else {
+		// If we don't skip DB operations, we generate the DB operations
+		// from the indexed DB operations
+		indexedDbOps := indexDbOps(gc)
+		dbOpsGen = make([]map[string]interface{}, len(indexedDbOps))
+		for _, dbOp := range indexedDbOps {
+			dbOpsGen[dbOp.Index] = newDBOpBasic(dbOp.Entry, dbOp.Index)
+		}
 	}
 	value := newActionNotification(
 		notificationContextMap(gc),
