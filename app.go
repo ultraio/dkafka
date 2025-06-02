@@ -18,7 +18,6 @@ import (
 	"github.com/eoscanada/eos-go"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/google/cel-go/cel"
-	"github.com/iancoleman/strcase"
 	"github.com/riferrei/srclient"
 	"github.com/streamingfast/bstream/forkable"
 	"github.com/streamingfast/dgrpc"
@@ -835,17 +834,23 @@ func (msg MessageSchemaGenerator) newNamedSchemaGenOptions(kind string, name str
 		Version:   schemaVersion(msg.Version, msg.MajorVersion, abi.AbiBlockNum),
 		AbiSpec:   abi,
 		Source:    msg.Source,
-		Domain:    msg.Account,
+		Domain:    abi.Account,
 	}
 }
 
 func (msg MessageSchemaGenerator) namespace(kind string, account string) string {
-	accountLowerNameSpace := strcase.ToDelimited(account, '.')
-	if msg.Namespace == "" {
-		return fmt.Sprintf("%s.%s.v%d", accountLowerNameSpace, kind, msg.MajorVersion)
-	} else {
-		return fmt.Sprintf("%s.%s.%s.v%d", msg.Namespace, accountLowerNameSpace, kind, msg.MajorVersion)
+	accountLowerNameSpace := strings.ToLower(account)
+	// Check if the first character is a number, prepend '_' if so
+	if len(accountLowerNameSpace) > 0 && accountLowerNameSpace[0] >= '0' && accountLowerNameSpace[0] <= '9' {
+		accountLowerNameSpace = "_" + accountLowerNameSpace
 	}
+	var result string
+	if msg.Namespace == "" {
+		result = fmt.Sprintf("%s.%s.v%d", accountLowerNameSpace, kind, msg.MajorVersion)
+	} else {
+		result = fmt.Sprintf("%s.%s.%s.v%d", msg.Namespace, accountLowerNameSpace, kind, msg.MajorVersion)
+	}
+	return result
 }
 
 func schemaVersion(version string, majorVersion uint, abiBlockNumber uint32) string {
