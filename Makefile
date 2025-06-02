@@ -11,6 +11,7 @@ CODEC ?= "avro"
 TOPIC ?= "io.dkafka.test"
 CAPTURE ?= true
 BATCH_MODE ?=true
+SKIP_DBOPS ?= false
 
 MESSAGE_TYPE ?= '{"create" : "EosioNftFtCreatedNotification","update" : "EosioNftFtUpdatedNotification","issue" : "EosioNftFtIssuedNotification"}[action]'
 KEY_EXPRESSION ?= '"action"=="create" ? [data.create.memo] : [transaction_id]'
@@ -168,6 +169,7 @@ cdc-actions: ## CDC stream on tables
 		--kafka-message-max-bytes=$(MESSAGE_MAX_SIZE) \
 		--codec=$(CODEC) \
 		--batch-mode=$(BATCH_MODE) \
+		--skip-dbops=$(SKIP_DBOPS) \
 		--actions-expr='$(CDC_ACTIONS_EXPRESSION)' '$(CDC_ACTIONS_ACCOUNT)'
 
 cdc-transactions: build up ## CDC stream on tables

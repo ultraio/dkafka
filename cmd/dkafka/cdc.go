@@ -124,7 +124,8 @@ will never be fetched or updated. Block number, being the default value: 0, will
 	CdCCmd.PersistentFlags().String("abicodec-grpc-addr", "", "if set, will connect to this endpoint to fetch contract ABIs")
 
 	CdCCmd.AddCommand(CdCActionsCmd)
-	CdCActionsCmd.Flags().String("actions-expr", "", "A JSON Object that associate the a name of an action to CEL expression for the message key extration.")
+	CdCActionsCmd.Flags().String("actions-expr", "", "A JSON Object that associate the a name of an action to CEL expression for the message key extraction.")
+	CdCActionsCmd.Flags().Bool("skip-dbops", false, "Will skip the generation of the DbOps array and generate an empty array. This is useful when you only want to capture the action and not the DbOps and when there is too many DbOps.")
 
 	CdCCmd.AddCommand(CdCTablesCmd)
 	CdCTablesCmd.Flags().StringSlice("table-name", []string{}, `table name(s) on which the message must be produced.
@@ -169,6 +170,7 @@ func cdcOnActions(cmd *cobra.Command, args []string) error {
 	SetupLogger()
 	return executeCdC(cmd, args, dkafka.ACTIONS_CDC_TYPE, configAccount(func(c *dkafka.Config) *dkafka.Config {
 		c.ActionExpressions = viper.GetString("cdc-actions-cmd-actions-expr")
+		c.SkipDbOps = viper.GetBool("cdc-actions-cmd-skip-dbops")
 		return c
 	}))
 }
