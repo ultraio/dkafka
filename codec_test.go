@@ -690,6 +690,66 @@ func TestMoreAsset(t *testing.T) {
 	}
 }
 
+func TestAvroCodecExtendedAsset(t *testing.T) {
+	var nullableExtendedAsset = newRecordFQN("dkafka.test", "ExtendedAccount",
+		[]FieldSchema{
+			NewOptionalField("balance", extendedAssetSchema),
+		})
+
+	jsonSchema, err := json.Marshal(nullableExtendedAsset)
+	if err != nil {
+		t.Fatalf("cannot convert to json string the schema: %v", nullableExtendedAsset)
+	}
+	str := string(jsonSchema)
+
+	schema := newSchema(t, 42, str, nil)
+
+	codec := KafkaAvroCodec{
+		"mock://test/schemas/ids/%d",
+		RegisteredSchema{
+			id:      uint32(schema.ID()),
+			schema:  schema.Schema(),
+			version: schema.Version(),
+			codec:   schema.Codec(),
+		},
+	}
+	// null case
+	bytes, err := codec.Marshal(nil, map[string]any{
+		"balance": nil,
+	})
+	if err != nil {
+		t.Fatalf("codec.Marshal() error: %v", err)
+	}
+	value, err := codec.Unmarshal(bytes)
+	t.Logf("%v", value)
+	if err != nil {
+		t.Fatalf("codec.Unmarshal() error: %v", err)
+	}
+	asset := eos.Asset{
+		Amount: eos.Int64(100_000_000),
+		Symbol: eos.Symbol{
+			Precision: uint8(8),
+			Symbol:    "UOS",
+		},
+	}
+	extendedAsset := eos.ExtendedAsset{
+		Asset:    asset,
+		Contract: "eosio.token",
+	}
+	// non-null case
+	bytes, err = codec.Marshal(nil, map[string]any{
+		"balance": extendedAsset,
+	})
+	if err != nil {
+		t.Fatalf("codec.Marshal() error: %v", err)
+	}
+	value, err = codec.Unmarshal(bytes)
+	t.Logf("%v", value)
+	if err != nil {
+		t.Fatalf("codec.Unmarshal() error: %v", err)
+	}
+}
+
 func TestAvroCodecSymbol(t *testing.T) {
 	checkCodec(t, NewSymbolType(), eos.Symbol{
 		Precision: uint8(8),

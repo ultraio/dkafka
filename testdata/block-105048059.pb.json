@@ -1,0 +1,546 @@
+{
+    "id": "0642e7fb22a3c122448cf7db6dcd2a5b3997b7ad3da091a03566a97b67d6bc41",
+    "number": 105048059,
+    "version": 1,
+    "header": {
+        "timestamp": "2023-01-25T09:21:03Z",
+        "producer": "eosriobrazil",
+        "previous": "0642e7fa90bdd8bd6f57f0776871bd175304d77bec5fb03d53b7641e51eb98b6",
+        "transactionMroot": "EVckkl1c3PnT3YWA8S9VAjZ+9C7CDbIWVsLuCylmTK8=",
+        "actionMroot": "nRsxFWsGFgVJLWXgY2r17ryqXZaORZ/3/+nJDdC8F10=",
+        "scheduleVersion": 27
+    },
+    "producerSignature": "SIG_K1_Kas4EyiF8RcU9DpKESzgTRp1FeFuK6jpV8VKa5qTCFukF3k4bKVSQdd2M8vtgyNnVQ6ARnhaHQmh7syfVRHGiZg4ek9oTb",
+    "dposProposedIrreversibleBlocknum": 105048016,
+    "dposIrreversibleBlocknum": 105047968,
+    "blockrootMerkle": {
+        "nodeCount": 105048058,
+        "activeNodes": [
+            "N99zVZ1sw6OpSsYymmUvf6kU5f6a9JXOrQBPmcnTS1k=",
+            "wMU9RYiV+wxjNU9LXkXEca5Ssp1VxngrGnQb9uyCKOI=",
+            "Yhu/IRKG/MGbaWYGmcP5TQNEpLyFc3Ba7Xe0Fsn5OUo=",
+            "ubns1k5fJlXeUEq7ZJRtsSqkU1XejP032NcgWirz55g=",
+            "eh8tdycQjVr7WiQBqrmVeni6k+kKbtomsaY2YNqoNDM=",
+            "0fVoErHH8OXX3Co/bEiIbIi8c7hZFWpidOEkHkjDnDg=",
+            "ZXFgRq7awi0gox39ktRApPUiC/3ZY1Wpi/thVxywakQ=",
+            "gcMxZXrswFmvCiILSx3u7aX860OBxMB3HrCfwrdcbfI=",
+            "gIhP2pYNyOnwAFxFUaxRgvFNzcWJ7Zoc1nLA5Siv8AM=",
+            "x+Bq9UoVR2W87o09TA7EB6dzlzUdozEnQYMoSvRcfGQ=",
+            "ZmeteOR9wDuJ1fI0JY1/xEW1PDUetMddJII+SxmTlUI=",
+            "cDF48B7JYHVhTr74ntWXcPNRbF452PUQcZP0tZjrwvY=",
+            "x41y8dipHU7sxJv22nREswldLo/WcpJL0agDuxqxwOw=",
+            "MEAvPA5vyyK5eM65JW/V8oIJ0waIK9/+crXIGSGStAg=",
+            "GMFq7AYVAA6d492dtbnSDkZLydrPsRDIUZ1iVolhl+I=",
+            "uYx3mCi/XtvUM704bE0oggtbgFlEu+CQC3/kZmimkmM=",
+            "eRGq8oKhJewjwqc0OOpkwZFHzqUo0o9nW5kSqHggbTE="
+        ]
+    },
+    "producerToLastProduced": [
+        {
+            "name": "cryptolions1",
+            "lastBlockNumProduced": 105047992
+        },
+        {
+            "name": "eosnationftw",
+            "lastBlockNumProduced": 105048028
+        },
+        {
+            "name": "eosriobrazil",
+            "lastBlockNumProduced": 105048059
+        },
+        {
+            "name": "eosubisoft1",
+            "lastBlockNumProduced": 105048004
+        },
+        {
+            "name": "ivote4eosusa",
+            "lastBlockNumProduced": 105048040
+        },
+        {
+            "name": "uoseouldotio",
+            "lastBlockNumProduced": 105048052
+        },
+        {
+            "name": "uosswedenorg",
+            "lastBlockNumProduced": 105048016
+        }
+    ],
+    "producerToLastImpliedIrb": [
+        {
+            "name": "cryptolions1",
+            "lastBlockNumProduced": 105047944
+        },
+        {
+            "name": "eosnationftw",
+            "lastBlockNumProduced": 105047980
+        },
+        {
+            "name": "eosriobrazil",
+            "lastBlockNumProduced": 105048016
+        },
+        {
+            "name": "eosubisoft1",
+            "lastBlockNumProduced": 105047956
+        },
+        {
+            "name": "ivote4eosusa",
+            "lastBlockNumProduced": 105047992
+        },
+        {
+            "name": "uoseouldotio",
+            "lastBlockNumProduced": 105048004
+        },
+        {
+            "name": "uosswedenorg",
+            "lastBlockNumProduced": 105047968
+        }
+    ],
+    "confirmCount": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+    ],
+    "pendingSchedule": {
+        "scheduleLibNum": 62666272,
+        "scheduleHash": "F6Mdb32w1liWWNCmH3fd6Ba86YYfbjBcfq/lmiUzfPI=",
+        "scheduleV2": {
+            "version": 27
+        }
+    },
+    "activatedProtocolFeatures": {
+        "protocolFeatures": [
+            "DsfggBd7LAKyeNUIhhFoa0nXOZJaktm/ys1/xrdAU70=",
+            "GpmlnYfgbgnsWwKKnLt3SbSlrYgZAENl0C3EN5qLckE=",
+            "JlL1+WAGKUEJs90LveY2k/VTJK9FK3me4TeoGpBe7SU=",
+            "KZ3LavaSMkuJmznxbVpTCjMGKATkHwncl+nxVrRHZwc=",
+            "SpDADVVFTcWwWQVcohNXnG6oVpZ3EqVgF0h4hqTUzA8=",
+            "TnvzSNoAqUVImypoF0nrVvXeALkAAU4Tfdrjn0j2nWc=",
+            "T8qL2Cu9GB5xTig/g+G0XZXKWvQPuJrTl3tlPESPeMI=",
+            "aNyqNMBRfRlmbmszrdZzUdjF9p6ZnKHjeTG8QQopdCg=",
+            "hhD9I0EwDu2GzgKTqCX+51OHZNeQlH85Frjk0ANrxMQ=",
+            "i6Uv56OVbFzTplajF0uTHTuyq7RVeL78WfKD7NgWpAU=",
+            "rZ49j2UGh3Cf1o9LkLQffYJaNlsCwjpjbO+IrCrADEM=",
+            "4PtksQhcxVOJcBWNBaAJwk4nb7lOGgv2pSi0j7xP9SY=",
+            "70MRLGVDuI2yKDouB3J4wxWuLIRxmosl8lzIhWX76pk=",
+            "8K9W0sWkjWCkpbXJA+37fbOnNqlO1YnQt5ffM/+dPh0="
+        ]
+    },
+    "rlimitOps": [
+        {
+            "operation": "OPERATION_UPDATE",
+            "state": {
+                "averageBlockNetUsage": {
+                    "lastOrdinal": 105048058,
+                    "valueEx": "32437547",
+                    "consumed": "41"
+                },
+                "averageBlockCpuUsage": {
+                    "lastOrdinal": 105048058,
+                    "valueEx": "10246360",
+                    "consumed": "12"
+                },
+                "pendingNetUsage": "272",
+                "pendingCpuUsage": "101",
+                "totalNetWeight": "601000000",
+                "totalCpuWeight": "601000000",
+                "totalRamBytes": "4542727343",
+                "virtualNetLimit": "1048576",
+                "virtualCpuLimit": "400000"
+            }
+        },
+        {
+            "operation": "OPERATION_UPDATE",
+            "state": {
+                "averageBlockNetUsage": {
+                    "lastOrdinal": 105048059,
+                    "valueEx": "34433901",
+                    "consumed": "305"
+                },
+                "averageBlockCpuUsage": {
+                    "lastOrdinal": 105048059,
+                    "valueEx": "11002640",
+                    "consumed": "112"
+                },
+                "totalNetWeight": "601000000",
+                "totalCpuWeight": "601000000",
+                "totalRamBytes": "4542727343",
+                "virtualNetLimit": "1048576",
+                "virtualCpuLimit": "400000"
+            }
+        }
+    ],
+    "filteredTransactions": [
+        {
+            "id": "49cec0e064881247b9175d8d9fe3fc0dfdfa5a8241304ff874fef56596749e72",
+            "status": "TRANSACTIONSTATUS_EXECUTED",
+            "cpuUsageMicroSeconds": 100,
+            "netUsageWords": 33,
+            "packedTransaction": {
+                "signatures": [
+                    "SIG_K1_KcF5YJEcr1yc3eKxqwpvP8XWBUNZ2m7c3peDHFY1EHET9upzyHbeWN2LU9v5Zk6aArds8GUuCXjUXJNNqJ6o2AszkYDGWh"
+                ],
+                "packedTransaction": "m/TQY6DnY4rawAAAAAABAKaCNAPqMFUAAABXLTzNzQFgETFmGCOMCQAAAACo7TIyLmARMWYYI4wJ0A8xZhgjjAkAypo7AAAAAAZURVNUVVNEDXRlc3QgdHJhbnNmZXIA"
+            }
+        }
+    ],
+    "unfilteredTransactionCount": 1,
+    "filteredTransactionCount": 1,
+    "filteredTransactionTraces": [
+        {
+            "id": "49cec0e064881247b9175d8d9fe3fc0dfdfa5a8241304ff874fef56596749e72",
+            "blockNum": "105048059",
+            "index": "1",
+            "blockTime": "2023-01-25T09:21:03Z",
+            "producerBlockId": "0642e7fb22a3c122448cf7db6dcd2a5b3997b7ad3da091a03566a97b67d6bc41",
+            "receipt": {
+                "status": "TRANSACTIONSTATUS_EXECUTED",
+                "cpuUsageMicroSeconds": 100,
+                "netUsageWords": 33
+            },
+            "elapsed": "497",
+            "netUsage": "264",
+            "actionTraces": [
+                {
+                    "receiver": "eosio.token",
+                    "receipt": {
+                        "receiver": "eosio.token",
+                        "digest": "a3ad0ed4f7de204e1fe200a613d8f5b8582da70ca237e65841c57840634365f8",
+                        "globalSequence": "288770331",
+                        "authSequence": [
+                            {
+                                "accountName": "1aa2aa3aa4cq",
+                                "sequence": "7"
+                            }
+                        ],
+                        "recvSequence": "239943",
+                        "codeSequence": "3",
+                        "abiSequence": "2"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "1aa2aa3aa4cq",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"1aa2aa3aa4cq\",\"to\":\"1aa2aa3aa4bx\",\"quantity\":\"1000.000000 TESTUSD\",\"memo\":\"test transfer\"}",
+                        "rawData": "YBExZhgjjAnQDzFmGCOMCQDKmjsAAAAABlRFU1RVU0QNdGVzdCB0cmFuc2Zlcg=="
+                    },
+                    "elapsed": "188",
+                    "transactionId": "49cec0e064881247b9175d8d9fe3fc0dfdfa5a8241304ff874fef56596749e72",
+                    "blockNum": "105048059",
+                    "producerBlockId": "0642e7fb22a3c122448cf7db6dcd2a5b3997b7ad3da091a03566a97b67d6bc41",
+                    "blockTime": "2023-01-25T09:21:03Z",
+                    "actionOrdinal": 1,
+                    "filteringMatched": true
+                },
+                {
+                    "receiver": "1aa2aa3aa4cq",
+                    "receipt": {
+                        "receiver": "1aa2aa3aa4cq",
+                        "digest": "a3ad0ed4f7de204e1fe200a613d8f5b8582da70ca237e65841c57840634365f8",
+                        "globalSequence": "288770332",
+                        "authSequence": [
+                            {
+                                "accountName": "1aa2aa3aa4cq",
+                                "sequence": "8"
+                            }
+                        ],
+                        "recvSequence": "3",
+                        "codeSequence": "3",
+                        "abiSequence": "2"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "1aa2aa3aa4cq",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"1aa2aa3aa4cq\",\"to\":\"1aa2aa3aa4bx\",\"quantity\":\"1000.000000 TESTUSD\",\"memo\":\"test transfer\"}",
+                        "rawData": "YBExZhgjjAnQDzFmGCOMCQDKmjsAAAAABlRFU1RVU0QNdGVzdCB0cmFuc2Zlcg=="
+                    },
+                    "elapsed": "3",
+                    "transactionId": "49cec0e064881247b9175d8d9fe3fc0dfdfa5a8241304ff874fef56596749e72",
+                    "blockNum": "105048059",
+                    "producerBlockId": "0642e7fb22a3c122448cf7db6dcd2a5b3997b7ad3da091a03566a97b67d6bc41",
+                    "blockTime": "2023-01-25T09:21:03Z",
+                    "actionOrdinal": 2,
+                    "creatorActionOrdinal": 1,
+                    "closestUnnotifiedAncestorActionOrdinal": 1,
+                    "executionIndex": 1,
+                    "filteringMatched": true
+                },
+                {
+                    "receiver": "1aa2aa3aa4bx",
+                    "receipt": {
+                        "receiver": "1aa2aa3aa4bx",
+                        "digest": "a3ad0ed4f7de204e1fe200a613d8f5b8582da70ca237e65841c57840634365f8",
+                        "globalSequence": "288770333",
+                        "authSequence": [
+                            {
+                                "accountName": "1aa2aa3aa4cq",
+                                "sequence": "9"
+                            }
+                        ],
+                        "recvSequence": "8",
+                        "codeSequence": "3",
+                        "abiSequence": "2"
+                    },
+                    "action": {
+                        "account": "eosio.token",
+                        "name": "transfer",
+                        "authorization": [
+                            {
+                                "actor": "1aa2aa3aa4cq",
+                                "permission": "active"
+                            }
+                        ],
+                        "jsonData": "{\"from\":\"1aa2aa3aa4cq\",\"to\":\"1aa2aa3aa4bx\",\"quantity\":\"1000.000000 TESTUSD\",\"memo\":\"test transfer\"}",
+                        "rawData": "YBExZhgjjAnQDzFmGCOMCQDKmjsAAAAABlRFU1RVU0QNdGVzdCB0cmFuc2Zlcg=="
+                    },
+                    "elapsed": "225",
+                    "transactionId": "49cec0e064881247b9175d8d9fe3fc0dfdfa5a8241304ff874fef56596749e72",
+                    "blockNum": "105048059",
+                    "producerBlockId": "0642e7fb22a3c122448cf7db6dcd2a5b3997b7ad3da091a03566a97b67d6bc41",
+                    "blockTime": "2023-01-25T09:21:03Z",
+                    "actionOrdinal": 3,
+                    "creatorActionOrdinal": 1,
+                    "closestUnnotifiedAncestorActionOrdinal": 1,
+                    "executionIndex": 2,
+                    "filteringMatched": true
+                }
+            ],
+            "dbOps": [
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "code": "eosio.token",
+                    "scope": "1aa2aa3aa4cq",
+                    "tableName": "accounts",
+                    "primaryKey": ".125apeoeh2p4",
+                    "oldPayer": "eosio.token",
+                    "newPayer": "eosio.token",
+                    "oldData": "AMqaOwAAAAAGVEVTVFVTRA==",
+                    "newData": "AAAAAAAAAAAGVEVTVFVTRA=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "code": "eosio.token",
+                    "scope": "1aa2aa3aa4bx",
+                    "tableName": "accounts",
+                    "primaryKey": ".125apeoeh2p4",
+                    "oldPayer": "eosio.token",
+                    "newPayer": "eosio.token",
+                    "oldData": "AMqaOwAAAAAGVEVTVFVTRA==",
+                    "newData": "AJQ1dwAAAAAGVEVTVFVTRA=="
+                },
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "actionIndex": 2,
+                    "code": "1aa2aa3aa4bx",
+                    "scope": "1aa2aa3aa4cq",
+                    "tableName": "evodexacnts",
+                    "oldPayer": "1aa2aa3aa4bx",
+                    "newPayer": "1aa2aa3aa4bx",
+                    "oldData": "AAAAAAAAAAAGVEVTVFVTRACmgjQD6jBVAAAAAAAAAAA=",
+                    "newData": "AMqaOwAAAAAGVEVTVFVTRACmgjQD6jBVAAAAAAAAAAA="
+                }
+            ],
+            "rlimitOps": [
+                {
+                    "operation": "OPERATION_UPDATE",
+                    "accountUsage": {
+                        "owner": "1aa2aa3aa4cq",
+                        "netUsage": {
+                            "lastOrdinal": 1455907326,
+                            "valueEx": "2943",
+                            "consumed": "265"
+                        },
+                        "cpuUsage": {
+                            "lastOrdinal": 1455907326,
+                            "valueEx": "1114",
+                            "consumed": "101"
+                        }
+                    }
+                }
+            ],
+            "creationTree": [
+                {
+                    "creatorActionIndex": -1
+                },
+                {
+                    "executionActionIndex": 1
+                },
+                {
+                    "executionActionIndex": 2
+                }
+            ]
+        }
+    ],
+    "unfilteredTransactionTraceCount": 2,
+    "filteredTransactionTraceCount": 1,
+    "unfilteredExecutedInputActionCount": 2,
+    "filteredExecutedInputActionCount": 1,
+    "unfilteredExecutedTotalActionCount": 4,
+    "filteredExecutedTotalActionCount": 3,
+    "validBlockSigningAuthorityV2": {
+        "v0": {
+            "threshold": 1,
+            "keys": [
+                {
+                    "publicKey": "EOS7nq54FcLXtDtY8GHqknYk5NqZPZNBVY3wCJQeRrzVzVjyXsEM6",
+                    "weight": 1
+                }
+            ]
+        }
+    },
+    "activeScheduleV2": {
+        "version": 27,
+        "producers": [
+            {
+                "accountName": "eosriobrazil",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS7nq54FcLXtDtY8GHqknYk5NqZPZNBVY3wCJQeRrzVzVjyXsEM6",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "cryptolions1",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS8LioNSB3ugUG7LweRBB2BR8AMJUEFGicXMs9msHByd9vMmxEKe",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "eosubisoft1",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS5FgTg6xtmMaonVo3uo4S8oLTWTEUnSagAMQCvUkczu9e5hXaWp",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "uosswedenorg",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS6j7tqvStvcykc1ysDuNY1J8PqyARpGqWrxbVjiuNBQL8uL7r4A",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "eosnationftw",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS5uMMtMvBp4pPEBiUsfdBR9LVnJnzUonGFvQtwnh1eoXzZZKN8U",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "ivote4eosusa",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS5gKJLRWxMgLWDsvKu7YaTweoQpqin5SSzJ4mDuaXnQ6tZb1F31",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "accountName": "uoseouldotio",
+                "blockSigningAuthority": {
+                    "v0": {
+                        "threshold": 1,
+                        "keys": [
+                            {
+                                "publicKey": "EOS7Tauu774Uz1bisTGUC37NsS6mxYoNaW3QKYF3oD1bUUJdCGxKf",
+                                "weight": 1
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "filteringApplied": true,
+    "filteringIncludeFilterExpr": "account==\"eosio.token\" || (action==\"setabi\" \u0026\u0026 account==\"eosio\")"
+}

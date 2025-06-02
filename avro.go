@@ -41,7 +41,7 @@ func checkNamespace(np string) (string, error) {
 type Schema = interface{}
 
 type TypedSchema struct {
-	EosType     string `json:"eos.type",omitempty`
+	EosType     string `json:"eos.type,omitempty"`
 	LogicalType string `json:"logicalType,omitempty"`
 	Type        string `json:"type"`
 	Convert     string `json:"convert,omitempty"`

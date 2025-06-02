@@ -181,6 +181,14 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 			"*",
 			3,
 		},
+		{
+			"eosio.token-chained-table",
+			"testdata/block-105048059.pb.json",
+			"eosio.token",
+			map[string]string{"eosio.token": "testdata/eosio.token-2.abi", "1aa2aa3aa4bx": "testdata/1aa2aa3aa4bx.abi"},
+			"*",
+			3,
+		},
 	}
 
 	for _, tt := range tests {

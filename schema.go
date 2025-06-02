@@ -319,6 +319,19 @@ func assetConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, in
 	}
 }
 
+func extendedAssetConverter(f func([]byte, any) ([]byte, error)) func([]byte, interface{}) ([]byte, error) {
+	return func(bytes []byte, value any) ([]byte, error) {
+		switch valueType := value.(type) {
+		case eos.ExtendedAsset:
+			return f(bytes, map[string]interface{}{"quantity": valueType.Asset, "contract": valueType.Contract})
+		case *eos.ExtendedAsset:
+			return f(bytes, map[string]interface{}{"quantity": valueType.Asset, "contract": valueType.Contract})
+		default:
+			return bytes, fmt.Errorf("unsupported extended_asset type: %T", value)
+		}
+	}
+}
+
 func publicKeyConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, interface{}) ([]byte, error) {
 	return func(bytes []byte, value interface{}) ([]byte, error) {
 		switch valueType := value.(type) {
@@ -389,12 +402,13 @@ func symbolConverter(f func([]byte, interface{}) ([]byte, error)) func([]byte, i
 }
 
 var schemaTypeConverters = map[string]goavro.ConvertBuild{
-	"eosio.Asset":   assetConverter,
-	"ecc.PublicKey": publicKeyConverter,
-	"ecc.Signature": signatureConverter,
-	"eos.Int128":    int128Converter,
-	"eos.Uint128":   uint128Converter,
-	"eos.Symbol":    symbolConverter,
+	"eosio.Asset":         assetConverter,
+	"eosio.ExtendedAsset": extendedAssetConverter,
+	"ecc.PublicKey":       publicKeyConverter,
+	"ecc.Signature":       signatureConverter,
+	"eos.Int128":          int128Converter,
+	"eos.Uint128":         uint128Converter,
+	"eos.Symbol":          symbolConverter,
 }
 
 var avroPrimitiveTypeByBuiltInTypes map[string]TypedSchema
@@ -422,6 +436,23 @@ var assetSchema RecordSchema = RecordSchema{
 		{
 			Name: "precision",
 			Type: "int",
+		},
+	},
+}
+
+var extendedAssetSchema RecordSchema = RecordSchema{
+	Type:      "record",
+	Name:      "ExtendedAsset",
+	Namespace: "eosio",
+	Convert:   "eosio.ExtendedAsset",
+	Fields: []FieldSchema{
+		{
+			Name: "quantity",
+			Type: assetSchema,
+		},
+		{
+			Name: "contract",
+			Type: "string",
 		},
 	},
 }
@@ -537,9 +568,10 @@ func initBuiltInTypesForTables() {
 		"uint128": NewUint128Type(),
 	}
 	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{
-		"asset":      assetSchema,
-		"public_key": publicKeySchema,
-		"signature":  signatureSchema,
+		"asset":          assetSchema,
+		"extended_asset": extendedAssetSchema,
+		"public_key":     publicKeySchema,
+		"signature":      signatureSchema,
 	}
 	hardcodedVariantType = map[string]interface{}{
 		HardcodedUberVariant: append(convertAllPrimitiveTypeToInterface(), NewArray(allPrimitiveTypes)),

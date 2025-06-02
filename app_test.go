@@ -292,13 +292,200 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 		args   args
 		want   string
 	}{
+		// eosio.eba
 		{
-			name: "actions",
+			name: "eosio.eba-actions",
 			fields: fields{
 				Namespace:    "io.dkafka.data",
 				MajorVersion: 1,
 				Version:      "1.2.3",
+				Account:      "eosio.eba",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "eosio.eba",
+			},
+			want: "io.dkafka.data.eosio.eba.actions.v1",
+		},
+		{
+			name: "eosio.eba-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.eba",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "eosio.eba",
+			},
+			want: "io.dkafka.data.eosio.eba.tables.v1",
+		},
+		// eosio.evm
+		{
+			name: "eosio.evm-actions",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.evm",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "eosio.evm",
+			},
+			want: "io.dkafka.data.eosio.evm.actions.v1",
+		},
+		{
+			name: "eosio.evm-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.evm",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "eosio.evm",
+			},
+			want: "io.dkafka.data.eosio.evm.tables.v1",
+		},
+		// eosio.group
+		{
+			name: "eosio.group-actions",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.group",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "eosio.group",
+			},
+			want: "io.dkafka.data.eosio.group.actions.v1",
+		},
+		{
+			name: "eosio.group-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "eosio.group",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "eosio.group",
+			},
+			want: "io.dkafka.data.eosio.group.tables.v1",
+		},
+		// eosio.nft.ft
+		{
+			name: "eosio.nft.ft-actions",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 2,
+				Version:      "1.2.3",
+				Account:      "eosio.nft.ft",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "eosio.nft.ft",
+			},
+			want: "io.dkafka.data.eosio.nft.ft.actions.v2",
+		},
+		{
+			name: "eosio.nft.ft-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 2,
+				Version:      "1.2.3",
+				Account:      "eosio.nft.ft",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "eosio.nft.ft",
+			},
+			want: "io.dkafka.data.eosio.nft.ft.tables.v2",
+		},
+		// eosio.token
+		{
+			name: "eosio.token-actions",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 2,
+				Version:      "1.2.3",
 				Account:      "eosio.token",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "eosio.token",
+			},
+			want: "io.dkafka.data.eosio.token.actions.v2",
+		},
+		{
+			name: "eosio.token-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 2,
+				Version:      "1.2.3",
+				Account:      "eosio.token",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "eosio.token",
+			},
+			want: "io.dkafka.data.eosio.token.tables.v2",
+		},
+		// ultra.claim
+		{
+			name: "ultra.claim-actions",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "ultra.claim",
+				Source:       "test",
+			},
+			args: args{
+				kind:    ACTIONS_CDC_TYPE,
+				account: "ultra.claim",
+			},
+			want: "io.dkafka.data.ultra.claim.actions.v1",
+		},
+		{
+			name: "ultra.claim-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "ultra.claim",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "ultra.claim",
+			},
+			want: "io.dkafka.data.ultra.claim.tables.v1",
+		},
+		// ultra.rgrab
+		{
+			name: "ultra.rgrab-actions",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "ultra.rgrab",
 				Source:       "test",
 			},
 			args: args{
@@ -308,12 +495,27 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 			want: "io.dkafka.data.ultra.rgrab.actions.v1",
 		},
 		{
+			name: "ultra.rgrab-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "ultra.rgrab",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "ultra.rgrab",
+			},
+			want: "io.dkafka.data.ultra.rgrab.tables.v1",
+		},
+		{
 			name: "empty-namespace-actions",
 			fields: fields{
 				Namespace:    "",
 				MajorVersion: 1,
 				Version:      "1.2.3",
-				Account:      "eosio.token",
+				Account:      "ultra.rgrab",
 				Source:       "test",
 			},
 			args: args{
@@ -328,7 +530,7 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				Namespace:    "io.dkafka.data",
 				MajorVersion: 1,
 				Version:      "1.2.3",
-				Account:      "eosio.token",
+				Account:      "ultra.rgrab",
 				Source:       "test",
 			},
 			args: args{
@@ -343,7 +545,7 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				Namespace:    "",
 				MajorVersion: 1,
 				Version:      "1.2.3",
-				Account:      "eosio.token",
+				Account:      "ultra.rgrab",
 				Source:       "test",
 			},
 			args: args{
@@ -351,6 +553,36 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				account: "ultra.rgrab",
 			},
 			want: "ultra.rgrab.tables.v1",
+		},
+		{
+			name: "eba-account-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "aa1aa2aa3aa4",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "aa1aa2aa3aa4",
+			},
+			want: "io.dkafka.data.aa1aa2aa3aa4.tables.v1",
+		},
+		{
+			name: "non-eba-account-tables",
+			fields: fields{
+				Namespace:    "io.dkafka.data",
+				MajorVersion: 1,
+				Version:      "1.2.3",
+				Account:      "1aa2aa3aa4bx",
+				Source:       "test",
+			},
+			args: args{
+				kind:    TABLES_CDC_TYPE,
+				account: "1aa2aa3aa4bx",
+			},
+			want: "io.dkafka.data._1aa2aa3aa4bx.tables.v1",
 		},
 	}
 	for _, tt := range tests {
