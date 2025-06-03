@@ -414,6 +414,10 @@ var schemaTypeConverters = map[string]goavro.ConvertBuild{
 var avroPrimitiveTypeByBuiltInTypes map[string]TypedSchema
 var avroDecimalLogicalTypeByBuiltInTypes map[string]DecimalLogicalType
 
+type BuiltInRecordTypeGenerator func(map[string]string) RecordSchema
+
+var avroRecordTypeByBuiltInTypes map[string]BuiltInRecordTypeGenerator
+
 var assetSchema RecordSchema = RecordSchema{
 	Type:      "record",
 	Name:      "Asset",
@@ -440,21 +444,33 @@ var assetSchema RecordSchema = RecordSchema{
 	},
 }
 
-var extendedAssetSchema RecordSchema = RecordSchema{
-	Type:      "record",
-	Name:      "ExtendedAsset",
-	Namespace: "eosio",
-	Convert:   "eosio.ExtendedAsset",
-	Fields: []FieldSchema{
-		{
-			Name: "quantity",
-			Type: assetSchema,
+func assetSchemaGenerator(visited map[string]string) RecordSchema {
+	return assetSchema
+}
+
+func extendedAssetSchemaGenerator(visited map[string]string) RecordSchema {
+	var assetType Schema = assetSchema
+	if record, found := visited["asset"]; found {
+		assetType = record
+	}
+	visited["asset"] = reference(assetSchema)
+	var extendedAssetSchema RecordSchema = RecordSchema{
+		Type:      "record",
+		Name:      "ExtendedAsset",
+		Namespace: "eosio",
+		Convert:   "eosio.ExtendedAsset",
+		Fields: []FieldSchema{
+			{
+				Name: "quantity",
+				Type: assetType,
+			},
+			{
+				Name: "contract",
+				Type: "string",
+			},
 		},
-		{
-			Name: "contract",
-			Type: "string",
-		},
-	},
+	}
+	return extendedAssetSchema
 }
 
 var publicKeySchema RecordSchema = RecordSchema{
@@ -474,6 +490,10 @@ var publicKeySchema RecordSchema = RecordSchema{
 	},
 }
 
+func publicKeySchemaGenerator(visited map[string]string) RecordSchema {
+	return publicKeySchema
+}
+
 var signatureSchema RecordSchema = RecordSchema{
 	Type:      "record",
 	Name:      "Signature",
@@ -491,7 +511,9 @@ var signatureSchema RecordSchema = RecordSchema{
 	},
 }
 
-var avroRecordTypeByBuiltInTypes map[string]RecordSchema
+func signatureSchemaGenerator(visited map[string]string) RecordSchema {
+	return signatureSchema
+}
 
 const (
 	HardcodedUberVariant = "variant_int8_int16_int32_int64_uint8_uint16_uint32_uint64_float32_float64_string_INT8_VEC_INT16_VEC_INT32_VEC_INT64_VEC_UINT8_VEC_UINT16_VEC_UINT32_VEC_UINT64_VEC_FLOAT32_VEC_FLOAT64_VEC_STRING_VEC"
@@ -567,11 +589,11 @@ func initBuiltInTypesForTables() {
 		"int128":  NewInt128Type(),
 		"uint128": NewUint128Type(),
 	}
-	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{
-		"asset":          assetSchema,
-		"extended_asset": extendedAssetSchema,
-		"public_key":     publicKeySchema,
-		"signature":      signatureSchema,
+	avroRecordTypeByBuiltInTypes = map[string]BuiltInRecordTypeGenerator{
+		"asset":          assetSchemaGenerator,
+		"extended_asset": extendedAssetSchemaGenerator,
+		"public_key":     publicKeySchemaGenerator,
+		"signature":      signatureSchemaGenerator,
 	}
 	hardcodedVariantType = map[string]interface{}{
 		HardcodedUberVariant: append(convertAllPrimitiveTypeToInterface(), NewArray(allPrimitiveTypes)),
@@ -591,7 +613,7 @@ func initBuiltInTypesForActions() {
 	avroPrimitiveTypeByBuiltInTypes["time_point_sec"] = TypedSchema{Type: "string", EosType: "time_point_sec"}
 	avroPrimitiveTypeByBuiltInTypes["block_timestamp_type"] = TypedSchema{Type: "string", EosType: "block_timestamp_type"}
 	avroPrimitiveTypeByBuiltInTypes["symbol"] = TypedSchema{Type: "string", EosType: "symbol"}
-	avroRecordTypeByBuiltInTypes = map[string]RecordSchema{}
+	avroRecordTypeByBuiltInTypes = map[string]BuiltInRecordTypeGenerator{}
 }
 
 func resolveFieldTypeSchema(abi *ABI, fieldType string, visited map[string]string) (Schema, error) {
@@ -644,7 +666,8 @@ func resolveType(abi *ABI, name string, visited map[string]string) (Schema, erro
 		return referenceName, nil
 	}
 
-	if record, found := avroRecordTypeByBuiltInTypes[name]; found {
+	if recordGenerator, found := avroRecordTypeByBuiltInTypes[name]; found {
+		record := recordGenerator(visited)
 		visited[name] = reference(record)
 		return record, nil
 	}

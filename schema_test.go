@@ -1,6 +1,7 @@
 package dkafka
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"testing"
@@ -418,6 +419,152 @@ func Test_resolveFieldTypeSchema(t *testing.T) {
 						Name:    "nullable_union_field",
 						Type:    []interface{}{"null", TypedSchema{Type: "string", EosType: "string"}, TypedSchema{Type: "int", EosType: "int8"}},
 						Default: _defaultNull,
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "mix-extended-assets-and-assets",
+			args: args{"my_struct", &ABI{ABI: &eos.ABI{
+				Structs: []eos.StructDef{{
+					Name: "my_struct",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "fieldA",
+							Type: "extended_asset",
+						},
+						{
+							Name: "fieldB",
+							Type: "asset",
+						},
+					},
+				}},
+			}}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "MyStruct",
+				Fields: []FieldSchema{
+					{
+						Name: "fieldA",
+						Type: RecordSchema{
+							Type:      "record",
+							Name:      "ExtendedAsset",
+							Namespace: "eosio",
+							Convert:   "eosio.ExtendedAsset",
+							Fields: []FieldSchema{
+								{
+									Name: "quantity",
+									Type: RecordSchema{
+										Type:      "record",
+										Name:      "Asset",
+										Namespace: "eosio",
+										Convert:   "eosio.Asset",
+										Fields: []FieldSchema{
+											{
+												Name: "amount",
+												Type: json.RawMessage(`{
+				"type": "bytes",
+				"logicalType": "decimal",
+				"precision": 32,
+				"scale": 8
+			}`),
+											},
+											{
+												Name: "symbol",
+												Type: "string",
+											},
+											{
+												Name: "precision",
+												Type: "int",
+											},
+										},
+									},
+								},
+								{
+									Name: "contract",
+									Type: "string",
+								},
+							},
+						},
+					},
+					{
+						Name: "fieldB",
+						Type: "eosio.Asset",
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "mix-asset-and-extended-assets",
+			args: args{"my_struct", &ABI{ABI: &eos.ABI{
+				Structs: []eos.StructDef{{
+					Name: "my_struct",
+					Base: "",
+					Fields: []eos.FieldDef{
+						{
+							Name: "fieldA",
+							Type: "asset",
+						},
+						{
+							Name: "fieldB",
+							Type: "extended_asset",
+						},
+					},
+				}},
+			}}},
+			want: RecordSchema{
+				Type: "record",
+				Name: "MyStruct",
+				Fields: []FieldSchema{
+					{
+						Name: "fieldA",
+						Type: RecordSchema{
+							Type:      "record",
+							Name:      "Asset",
+							Namespace: "eosio",
+							Convert:   "eosio.Asset",
+							Fields: []FieldSchema{
+								{
+									Name: "amount",
+									Type: json.RawMessage(`{
+				"type": "bytes",
+				"logicalType": "decimal",
+				"precision": 32,
+				"scale": 8
+			}`),
+								},
+								{
+									Name: "symbol",
+									Type: "string",
+								},
+								{
+									Name: "precision",
+									Type: "int",
+								},
+							},
+						},
+					},
+					{
+						Name: "fieldB",
+						Type: RecordSchema{
+							Type:      "record",
+							Name:      "ExtendedAsset",
+							Namespace: "eosio",
+							Convert:   "eosio.ExtendedAsset",
+							Fields: []FieldSchema{
+								{
+									Name: "quantity",
+									Type: "eosio.Asset",
+								},
+								{
+									Name: "contract",
+									Type: "string",
+								},
+							},
+						},
 					},
 				},
 			},
