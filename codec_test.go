@@ -693,7 +693,7 @@ func TestMoreAsset(t *testing.T) {
 func TestAvroCodecExtendedAsset(t *testing.T) {
 	var nullableExtendedAsset = newRecordFQN("dkafka.test", "ExtendedAccount",
 		[]FieldSchema{
-			NewOptionalField("balance", extendedAssetSchema),
+			NewOptionalField("balance", extendedAssetSchemaGenerator(map[string]string{})),
 		})
 
 	jsonSchema, err := json.Marshal(nullableExtendedAsset)
