@@ -220,7 +220,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 					overrides:   abiDecoder.overrides,
 					abiCodecCli: abiDecoder.abiCodecCli,
 					context:     abiDecoder.context,
-				}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), tt.account, "mock://bench-adapter"),
+				}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), tt.account, "mock://bench-adapter", srclient.Forward),
 			}
 			a := &CdCAdapter{
 				topic:     "test.topic",
@@ -326,7 +326,7 @@ func TestCdCAdapter_Action_pb(t *testing.T) {
 					overrides:   abiDecoder.overrides,
 					abiCodecCli: abiDecoder.abiCodecCli,
 					context:     abiDecoder.context,
-				}, msg.getActionSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter"),
+				}, msg.getActionSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), abiAccount, "mock://bench-adapter", srclient.Forward),
 			}
 			a := &CdCAdapter{
 				topic:     "test.topic",

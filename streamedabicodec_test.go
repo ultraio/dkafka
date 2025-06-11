@@ -761,6 +761,7 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 				srclient.CreateMockSchemaRegistryClient("mock://TestKafkaAvroABICodec_GetCodec"),
 				"eosio.nft.ft",
 				"mock://TestKafkaAvroABICodec_GetCodec",
+				srclient.Forward,
 			),
 			args: args{
 				name:     CheckpointSchema.AsCodecId(),
@@ -788,6 +789,7 @@ func TestStreamedAbiCodec_GetCodec(t *testing.T) {
 				srclient.CreateMockSchemaRegistryClient("mock://TestKafkaAvroABICodec_GetCodec"),
 				"eosio.nft.ft",
 				"mock://TestKafkaAvroABICodec_GetCodec",
+				srclient.Forward,
 			),
 			args: args{
 				name:     CodecId{"eosio.nft.ft", "factory.a"},

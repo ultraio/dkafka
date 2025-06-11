@@ -320,7 +320,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 				overrides:   abiDecoder.overrides,
 				abiCodecCli: abiDecoder.abiCodecCli,
 				context:     abiDecoder.context,
-			}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), msg.Account, "mock://bench-adapter")
+			}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), msg.Account, "mock://bench-adapter", srclient.Forward)
 			abiCodec.GetCodec(CodecId{"eosio.nft.ft", "factory.a"}, 0)
 			finder, _ := buildTableKeyExtractorFinder([]string{"factory.a:k"})
 			adp = &CdCAdapter{
@@ -352,7 +352,7 @@ func Benchmark_adapter_adapt(b *testing.B) {
 				overrides:   abiDecoder.overrides,
 				abiCodecCli: abiDecoder.abiCodecCli,
 				context:     abiDecoder.context,
-			}, msg.getActionSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), msg.Account, "mock://bench-adapter")
+			}, msg.getActionSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), msg.Account, "mock://bench-adapter", srclient.Forward)
 			abiCodec.GetCodec(CodecId{"eosio.nft.ft", "create"}, 0)
 			adp = &CdCAdapter{
 				topic:     "test.topic",
