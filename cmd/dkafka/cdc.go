@@ -9,6 +9,7 @@ import (
 
 	"github.com/dfuse-io/dkafka"
 	"github.com/iancoleman/strcase"
+	"github.com/riferrei/srclient"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/streamingfast/derr"
@@ -16,6 +17,14 @@ import (
 )
 
 var codecTypes = NewEnumFlag(dkafka.JsonCodec, dkafka.AvroCodec)
+var compatibilityTypes = NewEnumFlag(
+	srclient.Forward.String(), // Default compatibility
+	srclient.None.String(),
+	srclient.Full.String(),
+	srclient.Backward.String(),
+	srclient.BackwardTransitive.String(),
+	srclient.ForwardTransitive.String(),
+)
 
 type GenOptions struct {
 	namespace string
@@ -113,6 +122,7 @@ This remove the error messages`)
 
 	CdCCmd.PersistentFlags().Var(codecTypes, "codec", codecTypes.Help("Specify the codec to use to encode the messages."))
 	CdCCmd.PersistentFlags().String("schema-registry-url", "http://localhost:8081", "Schema registry url whose schemas are pushed to")
+	CdCCmd.PersistentFlags().Var(compatibilityTypes, "compatibility", compatibilityTypes.Help("Specify the compatibility mode for the schema registry subjects."))
 
 	CdCCmd.PersistentFlags().StringP("namespace", "n", "", "namespace of the schema(s). Default: account name")
 	CdCCmd.PersistentFlags().Uint("major-version", 0, "Optional but strongly recommended if --version of the schema(s) is not used. It is used in conjunction with the ABI Block Number to version the schema in semver form: [Major].[ABIBlockNumber].0")
@@ -264,6 +274,7 @@ func executeCdC(cmd *cobra.Command, args []string,
 		SchemaNamespace:    viper.GetString("cdc-cmd-namespace"),
 		SchemaMajorVersion: viper.GetUint("cdc-cmd-major-version"),
 		SchemaVersion:      viper.GetString("cdc-cmd-version"),
+		Compatibility:      viper.GetString("cdc-cmd-compatibility"),
 		LocalABIFiles:      localABIFiles,
 		ABICodecGRPCAddr:   viper.GetString("cdc-cmd-abicodec-grpc-addr"),
 	}

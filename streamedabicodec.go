@@ -15,6 +15,11 @@ import (
 	"go.uber.org/zap"
 )
 
+const (
+	// CodecIdPrefix is the prefix used for codec IDs in the StreamedAbiCodec.
+	DefaultCompatibility = srclient.Forward
+)
+
 type AbiRepository interface {
 	GetAbi(contract string, blockNum uint32) (*ABI, error)
 	IsNOOP() bool
@@ -71,6 +76,7 @@ type StreamedAbiCodec struct {
 	codecCache           map[CodecId]Codec
 	schemaRegistryURL    string
 	staticSchemas        []MessageSchema
+	compatibility        srclient.CompatibilityLevel
 }
 
 type StreamAbiCodecConstructor = func(AbiRepository,
@@ -78,6 +84,7 @@ type StreamAbiCodecConstructor = func(AbiRepository,
 	srclient.ISchemaRegistryClient,
 	string,
 	string,
+	srclient.CompatibilityLevel,
 ) ABICodec
 
 func NewStreamedAbiCodec(
@@ -86,6 +93,7 @@ func NewStreamedAbiCodec(
 	schemaRegistryClient srclient.ISchemaRegistryClient,
 	account string,
 	schemaRegistryURL string,
+	compatibility srclient.CompatibilityLevel,
 ) ABICodec {
 	return newStreamedAbiCodec(
 		bootstrapper,
@@ -94,6 +102,7 @@ func NewStreamedAbiCodec(
 		account,
 		schemaRegistryURL,
 		[]MessageSchema{CheckpointMessageSchema},
+		compatibility,
 	)
 }
 
@@ -103,6 +112,7 @@ func NewStreamedAbiCodecWithTransaction(
 	schemaRegistryClient srclient.ISchemaRegistryClient,
 	account string,
 	schemaRegistryURL string,
+	compatibility srclient.CompatibilityLevel,
 ) ABICodec {
 	return newStreamedAbiCodec(
 		bootstrapper,
@@ -111,6 +121,7 @@ func NewStreamedAbiCodecWithTransaction(
 		account,
 		schemaRegistryURL,
 		[]MessageSchema{CheckpointMessageSchema, TransactionMessageSchema},
+		compatibility,
 	)
 }
 
@@ -121,6 +132,7 @@ func newStreamedAbiCodec(
 	account string,
 	schemaRegistryURL string,
 	staticSchemas []MessageSchema,
+	compatibility srclient.CompatibilityLevel,
 ) ABICodec {
 	codec := &StreamedAbiCodec{
 		bootstrapper:         bootstrapper,
@@ -132,6 +144,7 @@ func newStreamedAbiCodec(
 		latestABIs:           make(map[string]*ABI),
 		abiHistories:         make(map[string][]*ABI),
 		codecCache:           make(map[CodecId]Codec),
+		compatibility:        compatibility,
 	}
 	codec.resetCodecs()
 	return codec
@@ -298,8 +311,10 @@ func (s *StreamedAbiCodec) registerStaticSchema(cache map[CodecId]Codec, schema 
 }
 
 func (s *StreamedAbiCodec) setSubjectCompatibilityToForward(subject string) error {
-	zlog.Debug("set subject compatibility to FORWARD", zap.String("subject", subject), zap.String("compatibility", string(srclient.Forward)))
-	_, err := s.schemaRegistryClient.ChangeSubjectCompatibilityLevel(subject, srclient.Forward)
+	compatibility := s.getCompatibility()
+
+	zlog.Debug("set subject compatibility", zap.String("subject", subject), zap.String("compatibility", compatibility.String()))
+	_, err := s.schemaRegistryClient.ChangeSubjectCompatibilityLevel(subject, compatibility)
 	if err != nil {
 		if strings.HasPrefix(err.Error(), "mock") {
 			return nil
@@ -309,7 +324,16 @@ func (s *StreamedAbiCodec) setSubjectCompatibilityToForward(subject string) erro
 	return err
 }
 
+func (s *StreamedAbiCodec) getCompatibility() srclient.CompatibilityLevel {
+	var compatibility = s.compatibility
+	if compatibility == "" {
+		compatibility = DefaultCompatibility
+	}
+	return compatibility
+}
+
 func (s *StreamedAbiCodec) newCodec(messageSchema MessageSchema) (Codec, error) {
+	messageSchema.Meta.Compatibility = s.getCompatibility().String()
 	subject := fmt.Sprintf("%s.%s", messageSchema.Namespace, messageSchema.Name)
 	jsonSchema, err := json.Marshal(messageSchema)
 	if err != nil {
@@ -321,7 +345,7 @@ func (s *StreamedAbiCodec) newCodec(messageSchema MessageSchema) (Codec, error) 
 	unknownSubject := false
 	if err != nil {
 		unknownSubject = true
-	} else if *actualCompatibilityLevel != srclient.Forward {
+	} else if *actualCompatibilityLevel != s.getCompatibility() {
 		err = s.setSubjectCompatibilityToForward(subject)
 		if err != nil {
 			return nil, err

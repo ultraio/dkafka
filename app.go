@@ -89,6 +89,28 @@ type Config struct {
 	SchemaNamespace    string
 	SchemaMajorVersion uint
 	SchemaVersion      string
+	Compatibility      string
+}
+
+var compatibilityMap = map[string]srclient.CompatibilityLevel{
+	srclient.Backward.String():           srclient.Backward,
+	srclient.Forward.String():            srclient.Forward,
+	srclient.Full.String():               srclient.Full,
+	srclient.None.String():               srclient.None,
+	srclient.ForwardTransitive.String():  srclient.ForwardTransitive,
+	srclient.BackwardTransitive.String(): srclient.BackwardTransitive,
+	srclient.FullTransitive.String():     srclient.FullTransitive,
+}
+
+func (c *Config) getCompatibility() (srclient.CompatibilityLevel, error) {
+	if c.Compatibility == "" {
+		return srclient.Forward, nil // default compatibility
+	}
+	if compat, ok := compatibilityMap[c.Compatibility]; ok {
+		return compat, nil
+	}
+	return srclient.Forward, fmt.Errorf("invalid compatibility level: %s", c.Compatibility)
+
 }
 
 type App struct {
@@ -303,8 +325,8 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			Account:      a.config.Account,
 			Source:       source,
 		}
-		abiCodec, err = newABICodec(
-			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
+		abiCodec, err = a.config.newABICodec(
+			abiDecoder,
 			msg.getTableSchema,
 			NewStreamedAbiCodec,
 		)
@@ -339,8 +361,8 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			Account:      a.config.Account,
 			Source:       source,
 		}
-		abiCodec, err = newABICodec(
-			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
+		abiCodec, err = a.config.newABICodec(
+			abiDecoder,
 			msg.getActionSchema,
 			NewStreamedAbiCodec,
 		)
@@ -368,8 +390,8 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			Account:      a.config.Account,
 			Source:       source,
 		}
-		abiCodec, err = newABICodec(
-			a.config.Codec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
+		abiCodec, err = a.config.newABICodec(
+			abiDecoder,
 			msg.getNoopSchema,
 			NewStreamedAbiCodecWithTransaction,
 		)
@@ -591,8 +613,9 @@ func (a *App) NewLegacyCtx(ctx context.Context, producer *kafka.Producer, header
 			headers,
 		)
 	}
-	abiCodec, err := newABICodec(
-		JsonCodec, a.config.Account, a.config.SchemaRegistryURL, abiDecoder,
+	a.config.Codec = JsonCodec
+	abiCodec, err := a.config.newABICodec(
+		abiDecoder,
 		func(s string, a *ABI) (MessageSchema, error) {
 			return MessageSchema{}, fmt.Errorf("json message publisher does not support schema generation. Requested schema: %s", s)
 		},
@@ -793,19 +816,23 @@ func getCompressionLevel(compressionType string, config *Config) int {
 	return level.normalize(compressionLevel)
 }
 
-func newABICodec(codec string, account string, schemaRegistryURL string, abiDecoder *ABIDecoder, getSchema MessageSchemaSupplier, construct StreamAbiCodecConstructor) (ABICodec, error) {
-	switch codec {
+func (c *Config) newABICodec(abiDecoder *ABIDecoder, getSchema MessageSchemaSupplier, construct StreamAbiCodecConstructor) (ABICodec, error) {
+	switch c.Codec {
 	case JsonCodec:
-		return NewJsonABICodec(abiDecoder, account), nil
+		return NewJsonABICodec(abiDecoder, c.Account), nil
 	case AvroCodec:
-		schemaRegistryClient := srclient.CreateSchemaRegistryClient(schemaRegistryURL)
+		schemaRegistryClient := srclient.CreateSchemaRegistryClient(c.SchemaRegistryURL)
+		compatibility, err := c.getCompatibility()
+		if err != nil {
+			return nil, fmt.Errorf("getting compatibility level: %w", err)
+		}
 		return construct(&DfuseAbiRepository{
 			overrides:   abiDecoder.overrides,
 			abiCodecCli: abiDecoder.abiCodecCli,
 			context:     abiDecoder.context,
-		}, getSchema, schemaRegistryClient, account, schemaRegistryURL), nil
+		}, getSchema, schemaRegistryClient, c.Account, c.SchemaRegistryURL, compatibility), nil
 	default:
-		return nil, fmt.Errorf("unsupported codec type: '%s'", codec)
+		return nil, fmt.Errorf("unsupported codec type: '%s'", c.Codec)
 	}
 }
 
