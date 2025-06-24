@@ -49,7 +49,6 @@ type TypedSchema struct {
 
 type MetaSupplier interface {
 	GetVersion() string
-	GetSource() string
 	GetDomain() string
 	GetCompatibility() string
 	GetType() string
@@ -59,7 +58,6 @@ type MetaSchema struct {
 	Compatibility string `json:"compatibility"`
 	Type          string `json:"type"`
 	Version       string `json:"version,omitempty"`
-	Source        string `json:"source,omitempty"`
 	Domain        string `json:"domain,omitempty"`
 }
 
@@ -122,7 +120,6 @@ func newMeta(supplier MetaSupplier) MetaSchema {
 		Compatibility: "FORWARD",
 		Type:          "notification",
 		Version:       supplier.GetVersion(),
-		Source:        supplier.GetSource(),
 		Domain:        supplier.GetDomain(),
 	}
 }

@@ -263,7 +263,7 @@ func (a *App) Run() (err error) {
 
 	var appCtx appCtx
 	if a.config.CdCType != "" {
-		appCtx, err = a.NewCDCCtx(ctx, producer, headers, source, abiDecoder, saveBlock)
+		appCtx, err = a.NewCDCCtx(ctx, producer, headers, abiDecoder, saveBlock)
 	} else {
 		appCtx, err = a.NewLegacyCtx(ctx, producer, headers, abiDecoder, saveBlock)
 	}
@@ -302,7 +302,7 @@ type appCtx struct {
 	cursor  string
 }
 
-func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers []kafka.Header, source string, abiDecoder *ABIDecoder, saveBlock SaveBlock) (appCtx, error) {
+func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers []kafka.Header, abiDecoder *ABIDecoder, saveBlock SaveBlock) (appCtx, error) {
 	var adapter Adapter
 	var filter string
 	var cursor string
@@ -323,7 +323,6 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			MajorVersion: a.config.SchemaMajorVersion,
 			Version:      a.config.SchemaVersion,
 			Account:      a.config.Account,
-			Source:       source,
 		}
 		abiCodec, err = a.config.newABICodec(
 			abiDecoder,
@@ -359,7 +358,6 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			MajorVersion: a.config.SchemaMajorVersion,
 			Version:      a.config.SchemaVersion,
 			Account:      a.config.Account,
-			Source:       source,
 		}
 		abiCodec, err = a.config.newABICodec(
 			abiDecoder,
@@ -388,7 +386,6 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 			MajorVersion: a.config.SchemaMajorVersion,
 			Version:      a.config.SchemaVersion,
 			Account:      a.config.Account,
-			Source:       source,
 		}
 		abiCodec, err = a.config.newABICodec(
 			abiDecoder,
@@ -841,7 +838,6 @@ type MessageSchemaGenerator struct {
 	MajorVersion uint
 	Version      string
 	Account      string
-	Source       string
 }
 
 func (msg MessageSchemaGenerator) getTableSchema(tableName string, abi *ABI) (MessageSchema, error) {
@@ -862,7 +858,6 @@ func (msg MessageSchemaGenerator) newNamedSchemaGenOptions(kind string, name str
 		Namespace: msg.namespace(kind, abi.Account),
 		Version:   schemaVersion(msg.Version, msg.MajorVersion, abi.AbiBlockNum),
 		AbiSpec:   abi,
-		Source:    msg.Source,
 		Domain:    abi.Account,
 	}
 }

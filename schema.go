@@ -37,15 +37,11 @@ type NamedSchemaGenOptions struct {
 	Namespace string
 	Version   string
 	AbiSpec   *ABI
-	Source    string
 	Domain    string
 }
 
 func (o NamedSchemaGenOptions) GetVersion() string {
 	return o.Version
-}
-func (o NamedSchemaGenOptions) GetSource() string {
-	return o.Source
 }
 func (o NamedSchemaGenOptions) GetDomain() string {
 	return o.Domain

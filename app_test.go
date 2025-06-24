@@ -280,7 +280,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 		MajorVersion uint
 		Version      string
 		Account      string
-		Source       string
 	}
 	type args struct {
 		kind    string
@@ -300,7 +299,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "eosio.eba",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -315,7 +313,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "eosio.eba",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -331,7 +328,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "eosio.evm",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -346,7 +342,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "eosio.evm",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -362,7 +357,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "eosio.group",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -377,7 +371,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "eosio.group",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -393,7 +386,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 2,
 				Version:      "1.2.3",
 				Account:      "eosio.nft.ft",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -408,7 +400,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 2,
 				Version:      "1.2.3",
 				Account:      "eosio.nft.ft",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -424,7 +415,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 2,
 				Version:      "1.2.3",
 				Account:      "eosio.token",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -439,7 +429,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 2,
 				Version:      "1.2.3",
 				Account:      "eosio.token",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -455,7 +444,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "ultra.claim",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -470,7 +458,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "ultra.claim",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -486,7 +473,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "ultra.rgrab",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -501,7 +487,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "ultra.rgrab",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -516,7 +501,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "ultra.rgrab",
-				Source:       "test",
 			},
 			args: args{
 				kind:    ACTIONS_CDC_TYPE,
@@ -531,7 +515,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "ultra.rgrab",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -546,7 +529,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "ultra.rgrab",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -561,7 +543,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "aa1aa2aa3aa4",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -576,7 +557,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: 1,
 				Version:      "1.2.3",
 				Account:      "1aa2aa3aa4bx",
-				Source:       "test",
 			},
 			args: args{
 				kind:    TABLES_CDC_TYPE,
@@ -592,7 +572,6 @@ func TestMessageSchemaGenerator_namespace(t *testing.T) {
 				MajorVersion: tt.fields.MajorVersion,
 				Version:      tt.fields.Version,
 				Account:      tt.fields.Account,
-				Source:       tt.fields.Source,
 			}
 			if got := msg.namespace(tt.args.kind, tt.args.account); got != tt.want {
 				t.Errorf("MessageSchemaGenerator.namespace() = %v, want %v", got, tt.want)
