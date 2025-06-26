@@ -413,8 +413,9 @@ func Test_adapter_correlation_id(t *testing.T) {
 		saveBlock: saveBlockNoop,
 		generator: transaction2ActionsGenerator{
 			actionLevelGenerator: TableGenerator{
-				getExtractKey: finder,
-				abiCodec:      abiCodec,
+				getExtractKey:   finder,
+				abiCodec:        abiCodec,
+				targetedAccount: "eosio.token",
 			},
 			abiCodec: abiCodec,
 			headers:  default_headers,

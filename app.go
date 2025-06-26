@@ -332,15 +332,16 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		if err != nil {
 			return appCtx, err
 		}
-		filter = addAllABIFilter(table.Filter(a.config.Account))
+		filter = addAccountABIFilter(table.Filter(a.config.Account), a.config.Account)
 		var finder TableKeyExtractorFinder
 		if finder, err = buildTableKeyExtractorFinder(a.config.TableNames); err != nil {
 			return appCtx, err
 		}
 		generator = transaction2ActionsGenerator{
 			actionLevelGenerator: TableGenerator{
-				getExtractKey: finder,
-				abiCodec:      abiCodec,
+				getExtractKey:   finder,
+				abiCodec:        abiCodec,
+				targetedAccount: a.config.Account,
 			},
 			abiCodec: abiCodec,
 			headers:  headers,
@@ -731,10 +732,6 @@ func blockHandler(ctx context.Context, appCtx appCtx, in <-chan BlockStep, ticks
 			}
 		}
 	}
-}
-
-func addAllABIFilter(filter string) string {
-	return fmt.Sprintf("%s || (action==\"setabi\" && account==\"eosio\")", filter)
 }
 
 func addAccountABIFilter(filter string, account string) string {
