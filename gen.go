@@ -100,8 +100,9 @@ type TableKeyExtractorFinder func(string) (ExtractKey, bool)
 type ActionKeyExtractorFinder func(string) (cel.Program, bool)
 
 type TableGenerator struct {
-	getExtractKey TableKeyExtractorFinder
-	abiCodec      ABICodec
+	getExtractKey   TableKeyExtractorFinder
+	abiCodec        ABICodec
+	targetedAccount string
 }
 
 type void struct{}
@@ -139,6 +140,9 @@ func (tg TableGenerator) doApply(gc ActionContext) ([]generation, error) {
 	indexedDbOps := indexDbOps(gc)
 	generations := []generation{}
 	for _, indexedDbOp := range indexedDbOps {
+		if indexedDbOp.Entry.Code != tg.targetedAccount {
+			continue // we only care about DB operations that are related to the action's account
+		}
 		dbOp := indexedDbOp.Entry
 		dbOpIndex := indexedDbOp.Index
 		if dbOp.Operation == pbcodec.DBOp_OPERATION_UNKNOWN {

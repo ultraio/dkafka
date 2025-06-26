@@ -76,6 +76,7 @@ func TestCdCAdapter_AdaptJSON(t *testing.T) {
 				t.Errorf("CdCAdapter.Adapt() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+			assert.Equal(t, len(got), 1, "Expected one message to be produced")
 			kafkaMessage := got[0]
 
 			assert.Equal(t, findHeader("content-type", kafkaMessage.Headers), "application/json")
@@ -105,8 +106,9 @@ func newTableGen4Test(t testing.TB, tableName string) TableGenerator {
 	abiDecoder := NewABIDecoder(abiFiles, nil, context.Background())
 	finder, _ := buildTableKeyExtractorFinder([]string{fmt.Sprintf("%s:s+k", tableName)})
 	return TableGenerator{
-		getExtractKey: finder,
-		abiCodec:      NewJsonABICodec(abiDecoder, "eosio.nft.ft"),
+		getExtractKey:   finder,
+		abiCodec:        NewJsonABICodec(abiDecoder, "eosio.nft.ft"),
+		targetedAccount: "eosio.nft.ft",
 	}
 }
 
@@ -142,17 +144,17 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 		nbMessages int
 	}{
 		{
-			"accounts",
-			"testdata/block-49608395.pb.json",
-			"testdata/eosio.token.abi",
-			map[string]string{"eosio.token": "testdata/eosio.token.abi"},
-			"accounts",
-			2,
+			name:       "accounts",
+			file:       "testdata/block-49608395.pb.json",
+			account:    "eosio.token",
+			abis:       map[string]string{"eosio.token": "testdata/eosio.token.abi"},
+			table:      "accounts",
+			nbMessages: 2,
 		},
 		{
 			"nft-factory",
 			"testdata/block-50705256.pb.json",
-			"testdata/eosio.nft.ft.abi",
+			"eosio.nft.ft",
 			map[string]string{"eosio.nft.ft": "testdata/eosio.nft.ft.abi"},
 			"factory.a",
 			1,
@@ -160,7 +162,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 		{
 			"nft-factory-b",
 			"testdata/block-135283216.pb.json",
-			"testdata/eosio.nft.ft-4.0.6-snapshot.abi",
+			"eosio.nft.ft",
 			map[string]string{"eosio.nft.ft": "testdata/eosio.nft.ft-4.0.6-snapshot.abi"},
 			"factory.b",
 			1,
@@ -168,26 +170,34 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 		{
 			"eosio.oracle",
 			"testdata/block-43922498.pb.json",
-			"testdata/eosio.oracle.abi",
+			"eosio.oracle",
 			map[string]string{"eosio.oracle": "testdata/eosio.oracle.abi"},
 			"*",
 			4,
 		},
 		{
-			"eosio.token-chained-table",
+			"eosio.token-chained-table-with-ultra.rgrab",
 			"testdata/block-224785515.pb.json",
 			"eosio.token",
 			map[string]string{"eosio.token": "testdata/eosio.token-2.abi", "ultra.rgrab": "testdata/ultra.rgrab.abi"},
 			"*",
-			3,
+			2,
 		},
 		{
-			"eosio.token-chained-table",
+			"ultra.rgrab-chained-table-with-eosio.token",
+			"testdata/block-224785515.pb.json",
+			"ultra.rgrab",
+			map[string]string{"eosio.token": "testdata/eosio.token-2.abi", "ultra.rgrab": "testdata/ultra.rgrab.abi"},
+			"*",
+			1,
+		},
+		{
+			"eosio.token-chained-table-with-1aa2aa3aa4bx",
 			"testdata/block-105048059.pb.json",
 			"eosio.token",
 			map[string]string{"eosio.token": "testdata/eosio.token-2.abi", "1aa2aa3aa4bx": "testdata/1aa2aa3aa4bx.abi"},
 			"*",
-			3,
+			2,
 		},
 	}
 
@@ -209,10 +219,6 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 				Version:   "1.2.3",
 				Account:   tt.account,
 			}
-			// abi, _ := abiDecoder.abi(abiAccount, 0, false)
-			// schema, _ := msg.getTableSchema("accounts", abi)
-			// jsonSchema, err := json.Marshal(schema)
-			// fmt.Println(string(jsonSchema))
 			finder, _ := buildTableKeyExtractorFinder([]string{fmt.Sprintf("%s:s+k", tt.table)})
 			g := TableGenerator{
 				getExtractKey: finder,
@@ -221,6 +227,7 @@ func TestCdCAdapter_Adapt_pb(t *testing.T) {
 					abiCodecCli: abiDecoder.abiCodecCli,
 					context:     abiDecoder.context,
 				}, msg.getTableSchema, srclient.CreateMockSchemaRegistryClient("mock://bench-adapter"), tt.account, "mock://bench-adapter", srclient.Forward),
+				targetedAccount: tt.account,
 			}
 			a := &CdCAdapter{
 				topic:     "test.topic",
