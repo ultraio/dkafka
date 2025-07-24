@@ -149,6 +149,8 @@ a subset of tables. You can also specify key mapping with
 the wildcard.
 Example: --table-name=factory.a:k,token.a:k,*:s+k`)
 
+	CdCTablesCmd.Flags().StringSlice("inline-source", []string{}, `smart contract name(s) where inline action can DML your smart contract tables.
+Example: --inline-source=eosio.token,eosio.nft,ft`)
 	CdCCmd.AddCommand(CdCSchemasCmd)
 	CdCSchemasCmd.Flags().StringP("output-dir", "o", "./", `Optional output directory for the avro schema. The file name pattern is
 	the <account>-<schema-type>.avsc in snake-case.`)
@@ -172,6 +174,7 @@ func cdcOnTables(cmd *cobra.Command, args []string) error {
 	)
 	return executeCdC(cmd, args, dkafka.TABLES_CDC_TYPE, configAccount(func(c *dkafka.Config) *dkafka.Config {
 		c.TableNames = viper.GetStringSlice("cdc-tables-cmd-table-name")
+		c.InlineSources = viper.GetStringSlice("cdc-tables-cmd-inline-source")
 		return c
 	}))
 }
@@ -372,7 +375,7 @@ func saveSchema(schema dkafka.MessageSchema, prefix string, outputDir string) er
 	if err != nil {
 		return fmt.Errorf("cannot convert schema to json error: %v", err)
 	}
-	os.WriteFile(filePath, jsonString, 0664)
+	err = os.WriteFile(filePath, jsonString, 0664)
 	if err != nil {
 		return fmt.Errorf("cannot write schema to '%s', error: %v", filePath, err)
 	}

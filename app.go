@@ -80,6 +80,7 @@ type Config struct {
 	Account           string
 	ActionExpressions string
 	TableNames        []string
+	InlineSources     []string
 	Executed          bool
 	Irreversible      bool
 	SkipDbOps         bool
@@ -332,7 +333,7 @@ func (a *App) NewCDCCtx(ctx context.Context, producer *kafka.Producer, headers [
 		if err != nil {
 			return appCtx, err
 		}
-		filter = addAccountABIFilter(table.Filter(a.config.Account), a.config.Account)
+		filter = addAccountABIFilter(table.Filter(a.config.Account, a.config.InlineSources), a.config.Account)
 		var finder TableKeyExtractorFinder
 		if finder, err = buildTableKeyExtractorFinder(a.config.TableNames); err != nil {
 			return appCtx, err
