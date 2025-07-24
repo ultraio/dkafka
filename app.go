@@ -741,7 +741,7 @@ func addAccountABIFilter(filter string, account string) string {
 
 func addExecutedFilter(filter string, executed bool) string {
 	if filter != "" && executed {
-		filter = fmt.Sprintf(" && %s", filter)
+		filter = fmt.Sprintf(" && (%s)", filter)
 	}
 	if executed {
 		filter = fmt.Sprintf("executed%s", filter)

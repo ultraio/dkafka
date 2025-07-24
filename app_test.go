@@ -238,7 +238,7 @@ func Test_addExecutedFilter(t *testing.T) {
 				filter:   "filter",
 				executed: true,
 			},
-			want: "executed && filter",
+			want: "executed && (filter)",
 		},
 		{
 			name: "executed without filter",
